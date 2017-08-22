@@ -3,16 +3,18 @@
 const ble = require('./lib/blootstrap')
 const restify = require('restify')
 const logger = require('winston')
-
 const gpio = require('gpio')
+const fs = require('fs')
 const pin = {}
 
+const PACKAGE = require('./package.json')
 const PORT = process.env.PORT || 6699
-const APPNAME = 'intval3'
+const APPNAME = PACKAGE.name
+const INDEX = fs.readFileSync('./app/www/index.html', 'utf8')
 
 let app = restify.createServer({
 	name: APPNAME,
-	version: '1.0.0'
+	version: '0.0.1'
 })
 
 function createPins () {
@@ -20,32 +22,53 @@ function createPins () {
 		direction: 'out',
 		interval: 100,
 		ready : () => {
-
+			logger.info(`Set pin 4 to OUTPUT`)
 		}
 	})
 }
 
-function Frame (dir = true, length = 0, delay = 0) {
+function createServer () {
+	app.get('/', index)
+	//app.all('/frame', rFrame)
+	app.get('/status', status)
+	app.listen(PORT, () => {
+		console.log(`${APPNAME} listening on port ${PORT}!`)
+	})
+}
 
+function rFrame (req, res, next) {
+	res.send({})
+	return next()
+}
+
+function frame (dir = true, length = 0, delay = 0) {
+
+}
+
+function rStatus (req, res, next) {
+	const obj = status()
+	res.send(obj)
+	return next()
+}
+
+function status () {
+	const obj = {}
+	return obj
 }
 
 function index (req, res, next) {
-	res.send(
-	`<h1>Welcome to my app!</h1>
-	<form action="/blink" method="post">
-	<input type="submit" value="Blink!" />
-	</form>`)
-	next()
+	res.end(INDEX)
+	return next()
 }
 
-ble.on('data', (str) => {
-	console.log(str)
-	blink()
-})
 
-app.get('/', index)
-app.all('/blink', blink)
+function init () {
+	createPins()
+	createServer()
 
-app.listen(PORT, () => {
-	console.log(`${APPNAME} listening on port ${PORT}!`)
-})
+	ble.on('data', (str) => {
+		console.log(str)
+	})
+}
+
+init()
