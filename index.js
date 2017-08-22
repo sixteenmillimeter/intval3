@@ -1,9 +1,9 @@
 'use strict'
 
 const ble = require('./lib/blootstrap')
+const intval = require('intval')
 const restify = require('restify')
 const logger = require('winston')
-const gpio = require('gpio')
 const fs = require('fs')
 const pin = {}
 
@@ -17,20 +17,10 @@ let app = restify.createServer({
 	version: '0.0.1'
 })
 
-function createPins () {
-	pin.four = gpio.export(4, {
-		direction: 'out',
-		interval: 100,
-		ready : () => {
-			logger.info(`Set pin 4 to OUTPUT`)
-		}
-	})
-}
-
 function createServer () {
 	app.get('/', index)
-	//app.all('/frame', rFrame)
-	app.get('/status', status)
+	app.all('/frame', rFrame)
+	app.get('/status', rStatus)
 	app.listen(PORT, () => {
 		console.log(`${APPNAME} listening on port ${PORT}!`)
 	})
@@ -39,10 +29,6 @@ function createServer () {
 function rFrame (req, res, next) {
 	res.send({})
 	return next()
-}
-
-function frame (dir = true, length = 0, delay = 0) {
-
 }
 
 function rStatus (req, res, next) {
