@@ -1,26 +1,32 @@
 'use strict'
 
 const ble = require('./lib/blootstrap')
-const express = require('express')
-const app = express()
-const gpio = require('gpio')
-const gpio4 = gpio.export(4, {
-	direction: 'out',
-	interval: 100,
-	ready : () => {
-	}
-})
-const PORT = process.env.PORT || 6699
-const APPNAME = 'my_project'
+const restify = require('restify')
+const logger = require('winston')
 
-function blink (req, res, next) {
-	console.log('Blinking!')
-	gpio4.set(1)
-	setTimeout(() => {
-		gpio4.set(0)
-		res.send('<h1>You blinked!</h1>')
-		next()
-	}, 1000)
+const gpio = require('gpio')
+const pin = {}
+
+const PORT = process.env.PORT || 6699
+const APPNAME = 'intval3'
+
+let app = restify.createServer({
+	name: APPNAME,
+	version: '1.0.0'
+})
+
+function createPins () {
+	pin.four = gpio.export(4, {
+		direction: 'out',
+		interval: 100,
+		ready : () => {
+
+		}
+	})
+}
+
+function Frame (dir = true, length = 0, delay = 0) {
+
 }
 
 function index (req, res, next) {
