@@ -49,7 +49,6 @@ function index (req, res, next) {
 
 
 function init () {
-	createPins()
 	createServer()
 
 	ble.on('data', (str) => {
