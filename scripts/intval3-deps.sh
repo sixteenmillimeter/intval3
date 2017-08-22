@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Running blootstrap install script"
+echo "Running intval3 install script"
 apt-get update
 apt-get install git ufw nginx -y
 
@@ -14,4 +14,4 @@ npm install -g pm2
 echo "Installing bluetooth dependencies..."
 apt-get install bluetooth bluez libbluetooth-dev libudev-dev -y
 
-echo "Finished installing blootstrap dependencies"
+echo "Finished installing intval3 dependencies"
