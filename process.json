@@ -1,0 +1,12 @@
+{
+		"apps" : [
+		{
+			"name" : "ble",
+			"script" : "./services/bluetooth/index.js",
+			"watch" : false,
+			"env" : {
+				"BLENO_DEVICE_NAME" : "intval3"
+			}
+		}
+	]
+}
