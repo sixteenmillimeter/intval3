@@ -31,11 +31,11 @@ function createChar(name, uuid, prop, write, read) {
 		})
 	}
 	util.inherits(characteristic, bleno.Characteristic)
-	if (prop.indexOf('read')) {
+	if (prop.indexOf('read') !== -1) {
 		//data, offset, withoutResponse, callback
 		characteristic.prototype.onReadRequest = read
 	}
-	if (prop.indexOf('write')) {
+	if (prop.indexOf('write') !== -1) {
 		characteristic.prototype.onWriteRequest = write	
 	}
 	chars.push(new characteristic())
