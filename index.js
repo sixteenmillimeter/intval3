@@ -19,7 +19,10 @@ let app = restify.createServer({
 
 function createServer () {
 	app.get('/', index)
-	app.all('/frame', rFrame)
+	app.get('/frame', rFrame)
+	app.post('/frame', rFrame)
+	app.get('/sequence', () => {})
+	app.post('/sequence', () => {})
 	app.get('/status', rStatus)
 	app.listen(PORT, () => {
 		console.log(`${APPNAME} listening on port ${PORT}!`)
@@ -32,14 +35,9 @@ function rFrame (req, res, next) {
 }
 
 function rStatus (req, res, next) {
-	const obj = status()
-	res.send(obj)
+	const obj = intval.status()
+	res.send({})
 	return next()
-}
-
-function status () {
-	const obj = {}
-	return obj
 }
 
 function index (req, res, next) {
