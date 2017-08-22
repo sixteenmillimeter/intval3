@@ -24,6 +24,7 @@
   "homepage": "https://github.com/sixteenmillimeter/intval3#readme",
   "dependencies": {
     "bleno": "^0.4.2",
+    "cron": "^1.2.1",
     "gpio": "^0.2.7",
     "node-ipc": "^9.1.0",
     "restify": "^5.2.0",
