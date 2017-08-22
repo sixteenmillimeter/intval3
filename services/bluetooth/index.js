@@ -42,7 +42,7 @@ function createChar(name, uuid, prop, write, read) {
 }
 
 function createChars () {
-	createChar('wifi')
+	createChar('wifi', WIFI_ID, ['read', 'write'], onWifiWrite, onWifiRead)
 }
 
 function onWifiWrite (data, offset, withoutResponse, callback) {
