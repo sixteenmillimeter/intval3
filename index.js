@@ -1,7 +1,7 @@
 'use strict'
 
 const ble = require('./lib/blootstrap')
-const intval = require('intval')
+const intval = require('./lib/intval')
 const restify = require('restify')
 const logger = require('winston')
 const fs = require('fs')
