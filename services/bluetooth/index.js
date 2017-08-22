@@ -1,6 +1,7 @@
 'use strict'
 
 const ipc = require('node-ipc')
+const os = require('os')
 const bleno = require('bleno')
 const util = require('util')
 const wifi = require('../../lib/wifi')
@@ -8,7 +9,12 @@ const wifi = require('../../lib/wifi')
 const BLENO_DEVICE_NAME = process.env.BLENO_DEVICE_NAME || 'my_project'
 const DEVICE_ID = process.env.DEVICE_ID || 'my_project_id'
 const SERVICE_ID = process.env.SERVICE_ID || 'blootstrap'
-const CHAR_ID = process.env.CHAR_ID || 'blootstrapwifi'
+const CHAR_ID = process.env.CHAR_ID || 'blootstrapchar'
+const WIFI_ID = process.env.WIFI_ID || 'blootstrapwifi'
+const NETWORK = os.networkInterfaces()
+const MAC = getMac() || spoofMac()
+
+let currentWifi = 'disconnected'
 
 const chars = []
 
@@ -32,7 +38,11 @@ function createChar(name, uuid, prop, write, read) {
 	if (prop.indexOf('write')) {
 		characteristic.prototype.onWriteRequest = write	
 	}
-	char.push(new characteristic())
+	chars.push(new characteristic())
+}
+
+function createChars () {
+	createChar('wifi')
 }
 
 function onWifiWrite (data, offset, withoutResponse, callback) {
@@ -57,6 +67,7 @@ function onWifiWrite (data, offset, withoutResponse, callback) {
  			result = bleno.Characteristic.RESULT_UNLIKELY_ERROR
 			return callback(result)
  		}
+ 		currentWifi = ssid
  		console.log(`Connected to ${ssid}`)
  		result = bleno.Characteristic.RESULT_SUCCESS
 		return callback(result)
@@ -65,17 +76,49 @@ function onWifiWrite (data, offset, withoutResponse, callback) {
 
 function onWifiRead (offset, callback) {
 	const result = bleno.Characteristic.RESULT_SUCCESS
-	
+	const data = new Buffer(JSON.stringify(currentWifi))
 	callback(result, data.slice(offset, data.length))
+}
+
+function getMac () {
+	const colonRe = new RegExp(':', 'g')
+	if (NETWORK && NETWORK.wlan0 && NETWORK.wlan0[0] && NETWORK.wlan0[0].mac) {
+		return NETWORK.wlan0[0].mac.replace(colonRe, '')
+	}
+	return undefined
+}
+
+function spoofMac () {
+	const fs = require('fs')
+	const FSPATH = require.resolve('uuid')
+	const IDFILE = os.homedir() + '/.intval3id'
+	let uuid
+	let UUIDPATH
+	let TMP
+	let MACTMP
+	let dashRe
+	delete require.cache[FSPATH]
+	if (fs.existsSync(IDFILE)) {
+		return fs.readFileSync(IDFILE, 'utf8')
+	}
+	uuid = require('uuid').v4
+	UUIDPATH = require.resolve('uuid')
+	delete require.cache[UUIDPATH]
+	TMP = uuid()
+	MACTMP = TMP.replace(dashRe, '').substring(0, 12)
+	dashRe = new RegExp('-', 'g')
+	fs.writeFileSync(IDFILE, MACTMP, 'utf8')
+	return MACTMP
 }
 
 console.log('Starting bluetooth service')
 
 bleno.on('stateChange', state  => {
-	console.log('on -> stateChange: ' + state)
+	const BLE_ID = `${DEVICE_ID}_${MAC}`
+	console.log(`on -> stateChange: ${state}`)
 	if (state === 'poweredOn') {
-		console.log('Started advertising blootstrap services')
-		bleno.startAdvertising(BLENO_DEVICE_NAME, [DEVICE_ID])
+		console.log(`Started advertising BLE serveses as ${BLE_ID}`)
+		bleno.startAdvertising(BLENO_DEVICE_NAME, [BLE_ID])
 	} else {
 		bleno.stopAdvertising()
 	}
@@ -83,6 +126,7 @@ bleno.on('stateChange', state  => {
 
 bleno.on('advertisingStart', err => {
 	console.log('on -> advertisingStart: ' + (err ? 'error ' + err : 'success'))
+	createChars()
 	if (!err) {
 		bleno.setServices([
 			new bleno.PrimaryService({
