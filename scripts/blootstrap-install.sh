@@ -23,8 +23,6 @@ ufw allow https
 ufw enable
 
 echo "Installing blootstrap project..."
-mkdir /var/node
-cd /var/node
 wget https://github.com/mattmcw/blootstrap/archive/master.zip
 unzip master.zip -d blootstrap/
 rm master.zip
