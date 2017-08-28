@@ -4,6 +4,7 @@ const ipc = require('node-ipc')
 const os = require('os')
 const bleno = require('bleno')
 const util = require('util')
+
 const wifi = require('../../lib/wifi')
 
 const BLENO_DEVICE_NAME = process.env.BLENO_DEVICE_NAME || 'my_project'

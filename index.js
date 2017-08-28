@@ -1,16 +1,16 @@
 'use strict'
 
-const ble = require('./lib/blootstrap')
-const intval = require('./lib/intval')
 const restify = require('restify')
 const logger = require('winston')
 const fs = require('fs')
-const pin = {}
+
+const ble = require('./lib/blootstrap')
+const intval = require('./lib/intval')
 
 const PACKAGE = require('./package.json')
 const PORT = process.env.PORT || 6699
 const APPNAME = PACKAGE.name
-const INDEX = fs.readFileSync('./app/www/index.html', 'utf8')
+const INDEXPATH = './app/www/index.html'
 
 let app = restify.createServer({
 	name: APPNAME,
@@ -41,8 +41,13 @@ function rStatus (req, res, next) {
 }
 
 function index (req, res, next) {
-	res.end(INDEX)
-	return next()
+	fs.readFile(INDEXPATH, (err, data) => {
+		if (err) {
+			return next(err)
+		}
+		res.end(data)
+		next()
+	}, 'utf8')
 }
 
 
