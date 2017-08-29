@@ -2,7 +2,7 @@
 
 echo "Running intval3 install script"
 apt-get update
-apt-get install git ufw nginx -y
+apt-get install git ufw nginx jq -y
 
 echo "Installing node.js dependencies.."
 apt-get install nodejs npm -y
