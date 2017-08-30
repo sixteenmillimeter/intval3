@@ -12,6 +12,12 @@
 				"WIFI_ID" : "3fe7d9cf-7bd2-4ff0-97c5-ebe87288c2cc",
 				"PORT" : 6699
 			}
+		},
+		{
+			"name" : "intval3",
+			"script" : "./index.js",
+			"watch" : false,
+			"env" : {}
 		}
 	]
 }
