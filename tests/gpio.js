@@ -2,9 +2,9 @@
 
 const Gpio = require('onoff').Gpio
 
-const btn = Gpio(18, 'in', 'both')
+const btn = Gpio(5, 'in', 'both')
 
-console.log('Watching input on button 18')
+console.log('Watching input on GPIO 05')
 
 /*btn.watch((err, val) => {
 	if (err) {
