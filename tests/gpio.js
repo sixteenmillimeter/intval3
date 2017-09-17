@@ -29,9 +29,9 @@ btn.watch((err, val) => {
 		}
 	} else if (val === 1) {
 		if (active) {
-			if (NOW - saveTime > 100) {
+			if (NOW - saveTime > 50 && NOW - saveTime < 1000) {
 				console.log('Started Frame')
-			} else if (NOW - saveTime > 1000) {
+			} else if (NOW - saveTime >= 1000) {
 				console.log('Started Sequence')
 			}
 			console.log(`Release closed for ${NOW - saveTime}`)
