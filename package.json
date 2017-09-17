@@ -4,7 +4,8 @@
   "description": "Intervalometer for the Bolex",
   "main": "index.js",
   "scripts": {
-    "test": "mocha tests"
+    "test": "mocha tests",
+    "docs" : "sh docs.sh"
   },
   "repository": {
     "type": "git",
@@ -31,5 +32,8 @@
     "restify": "^5.2.0",
     "uuid": "^3.1.0",
     "winston": "^2.3.1"
+  },
+  "devDependencies": {
+    "jsdoc-to-markdown": "^3.0.0"
   }
 }
