@@ -8,7 +8,7 @@ Object representing a fake onoff Gpio class
 
 ### onoffsim.Gpio(no, dir, additional) ⇒ <code>object</code>
 Gpio() - 
-Create's a Gpio class in the case of running on a dev machine
+Returns a Gpio class in the case of running on a dev machine
 
 **Kind**: static method of [<code>onoffsim</code>](#onoffsim)  
 **Returns**: <code>object</code> - Fake Gpio object  
