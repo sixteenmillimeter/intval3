@@ -17,11 +17,18 @@ btn.watch((err, val) => {
 		return console.error(err)
 	}
 	console.log(`Release switch val: ${val}`)
+	if (val === 1) {
+		console.log('open')
+	} else if (val === 0) {
+		console.log('closed')
+	}
 	if (val === 0) {
 		if (saveTime === 0) {
 			saveTime = NOW
 			active = true //maybe unncecessary 
-		} else if (active) {
+		}
+	} else if (val === 1) {
+		if (active) {
 			if (NOW - saveTime > 100) {
 				console.log('Started Frame')
 			} else if (NOW - saveTime > 1000) {
