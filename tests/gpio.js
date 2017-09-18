@@ -16,16 +16,19 @@ btn.watch((err, val) => {
 	if (err) {
 		return console.error(err)
 	}
-	console.log(`Release switch val: ${val}`)
+	//console.log(`Release switch val: ${val}`)
 	if (val === 1) {
-		console.log('open')
+		//console.log('open')
 	} else if (val === 0) {
-		console.log('closed')
+		//console.log('closed')
 	}
 	if (val === 0) {
 		if (saveTime === 0) {
 			saveTime = NOW
 			active = true //maybe unncecessary 
+		} else {
+			//saveTime = 0
+			//active = false
 		}
 	} else if (val === 1) {
 		if (active) {
