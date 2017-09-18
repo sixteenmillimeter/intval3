@@ -16,7 +16,7 @@ btn.watch((err, val) => {
 	if (err) {
 		return console.error(err)
 	}
-	//console.log(`Release switch val: ${val}`)
+	console.log(`Release switch val: ${val}`)
 	if (val === 1) {
 		//console.log('open')
 	} else if (val === 0) {
