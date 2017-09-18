@@ -23,7 +23,7 @@ btn.watch((err, val) => {
 		//console.log('closed')
 	}
 	if (val === 0) {
-		if (saveTime === 0) {
+		if ((!active && saveTime === 0) || (active && NOW - saveTime > 10 * 1000)) {
 			saveTime = NOW
 			active = true //maybe unncecessary 
 		} else {
