@@ -13,7 +13,9 @@ Class representing the intval3 features
     * [._stop()](#Intval+_stop)
     * [._watchMicro(err, val)](#Intval+_watchMicro)
     * [._watchRelease(err, val)](#Intval+_watchRelease)
+    * [.setDir([dir])](#Intval+setDir)
     * [.frame([dir], [time], [delay])](#Intval+frame)
+    * [.sequence()](#Intval+sequence)
 
 <a name="Intval+_declarePins"></a>
 
@@ -87,6 +89,19 @@ Button + 10K ohm resistor
 | err | <code>object</code> | Error object present if problem reading pin |
 | val | <code>integer</code> | Current value of the pin |
 
+<a name="Intval+setDir"></a>
+
+### intval.setDir([dir])
+Set the default direction of the camera.
+* forward = true
+* backward = false
+
+**Kind**: instance method of [<code>Intval</code>](#Intval)  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [dir] | <code>boolean</code> | <code>true</code> | Direction of the camera |
+
 <a name="Intval+frame"></a>
 
 ### intval.frame([dir], [time], [delay])
@@ -100,3 +115,9 @@ Begin a single frame with set variables or defaults
 | [time] | <code>integer</code> | <code>&quot;null&quot;</code> | (optional) Exposure time, 0 = minimum |
 | [delay] | <code>integer</code> | <code>&quot;null&quot;</code> | (optional) Delay after frame before another can be started |
 
+<a name="Intval+sequence"></a>
+
+### intval.sequence()
+Start a sequence of frames, using defaults or explicit instructions
+
+**Kind**: instance method of [<code>Intval</code>](#Intval)  
