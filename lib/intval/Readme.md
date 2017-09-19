@@ -18,14 +18,12 @@ Class representing the intval3 features
 <a name="Intval+_declarePins"></a>
 
 ### intval._declarePins()
-Intval._declarePins() - 
 (internal function) Declares all Gpio pins that will be used
 
 **Kind**: instance method of [<code>Intval</code>](#Intval)  
 <a name="Intval+_undeclarePins"></a>
 
 ### intval._undeclarePins()
-Intval._undeclarePins() - 
 (internal function) Undeclares all Gpio in event of uncaught error
 that interupts the node process
 
@@ -33,28 +31,24 @@ that interupts the node process
 <a name="Intval+_startFwd"></a>
 
 ### intval._startFwd()
-Intval._startFwd() - 
 Start motor in forward direction by setting correct pins in h-bridge
 
 **Kind**: instance method of [<code>Intval</code>](#Intval)  
 <a name="Intval+_startBwd"></a>
 
 ### intval._startBwd()
-Intval._startBwd() - 
 Start motor in backward direction by setting correct pins in h-bridge
 
 **Kind**: instance method of [<code>Intval</code>](#Intval)  
 <a name="Intval+_stop"></a>
 
 ### intval._stop()
-Intval._stop() - 
 Stop motor by setting both motor pins to 0 (LOW)
 
 **Kind**: instance method of [<code>Intval</code>](#Intval)  
 <a name="Intval+_watchMicro"></a>
 
 ### intval._watchMicro(err, val)
-Intval._watchMicro() - 
 Callback for watching relese switch state changes.
 Using GPIO 06 on Raspberry Pi Zero W.
 * If closed, start timer.
@@ -74,7 +68,6 @@ Microswitch + 10K ohm resistor
 <a name="Intval+_watchRelease"></a>
 
 ### intval._watchRelease(err, val)
-Intval._watchRelease() - 
 Callback for watching relese switch state changes.
 Using GPIO 05 on Raspberry Pi Zero W.
 
@@ -97,7 +90,6 @@ Button + 10K ohm resistor
 <a name="Intval+frame"></a>
 
 ### intval.frame([dir], [time], [delay])
-Intval.frame() -
 Begin a single frame with set variables or defaults
 
 **Kind**: instance method of [<code>Intval</code>](#Intval)  

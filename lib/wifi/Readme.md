@@ -17,7 +17,6 @@ Class representing the wifi features
 <a name="Wifi+list"></a>
 
 ### wifi.list(callback)
-Wifi.list() - 
 List available wifi access points
 
 **Kind**: instance method of [<code>Wifi</code>](#Wifi)  
@@ -29,7 +28,6 @@ List available wifi access points
 <a name="Wifi+_readConfigCb"></a>
 
 ### wifi._readConfigCb(err, data)
-Wifi._readConfigCb() -
 (internal function) Invoked after config file is read, 
 then invokes file write on the config file
 
@@ -43,7 +41,6 @@ then invokes file write on the config file
 <a name="Wifi+_writeConfigCb"></a>
 
 ### wifi._writeConfigCb(err)
-Wifi._writeConfigCb() -
 (internal function) Invoked after config file is written, 
 then executes reconfiguration command
 
@@ -56,7 +53,6 @@ then executes reconfiguration command
 <a name="Wifi+_reconfigureCb"></a>
 
 ### wifi._reconfigureCb(err, stdout, stderr)
-Wifi._reconfigureCb() - 
 (internal function) Invoked after reconfiguration command is complete
 
 **Kind**: instance method of [<code>Wifi</code>](#Wifi)  
@@ -70,7 +66,6 @@ Wifi._reconfigureCb() -
 <a name="Wifi+_refreshCb"></a>
 
 ### wifi._refreshCb(err, stdout, stderr)
-Wifi._refreshCb() - 
 (internal function) Invoked after wifi refresh command is complete
 
 **Kind**: instance method of [<code>Wifi</code>](#Wifi)  
@@ -84,7 +79,6 @@ Wifi._refreshCb() -
 <a name="Wifi+setNetwork"></a>
 
 ### wifi.setNetwork(ssid, pwd, callback)
-Wifi.setNetwork() - 
 Function which initializes the processes for adding a wifi access point authentication
 
 **Kind**: instance method of [<code>Wifi</code>](#Wifi)  
@@ -98,7 +92,6 @@ Function which initializes the processes for adding a wifi access point authenti
 <a name="Wifi+getNetwork"></a>
 
 ### wifi.getNetwork(callback)
-Wifi.getNetwork() - 
 Executes command which gets the currently connected network
 
 **Kind**: instance method of [<code>Wifi</code>](#Wifi)  
