@@ -13,7 +13,7 @@ Class representing the intval3 features
     * [._stop()](#Intval+_stop)
     * [._watchMicro(err, val)](#Intval+_watchMicro)
     * [._watchRelease(err, val)](#Intval+_watchRelease)
-    * [.frame(dir, time, delay)](#Intval+frame)
+    * [.frame([dir], [time], [delay])](#Intval+frame)
 
 <a name="Intval+_declarePins"></a>
 
@@ -55,8 +55,14 @@ Stop motor by setting both motor pins to 0 (LOW)
 
 ### intval._watchMicro(err, val)
 Intval._watchMicro() - 
-Callback for watching microswitch state changes
-Using GPIO 06 on raspberry pi zero w
+Callback for watching relese switch state changes.
+Using GPIO 06 on Raspberry Pi Zero W.
+* If closed, start timer.
+* If opened, check timer AND
+
+Microswitch + 10K ohm resistor 
+* 1 === open 
+* 0 === closed
 
 **Kind**: instance method of [<code>Intval</code>](#Intval)  
 
@@ -69,12 +75,17 @@ Using GPIO 06 on raspberry pi zero w
 
 ### intval._watchRelease(err, val)
 Intval._watchRelease() - 
-Callback for watching relese switch state changes
-Using GPIO 05 on raspberry pi zero w
-* If closed, start timer.
-* If opened, check timer AND
-* If time closed longer than minimum and less than `this._releaseSequence`, start frame
-* If time closed longer than `this._releaseSequence`, start sequence
+Callback for watching relese switch state changes.
+Using GPIO 05 on Raspberry Pi Zero W.
+
+1) If closed, start timer.
+2) If opened, check timer AND
+3) If `press` (`NOW - this._state.release.time`) greater than minimum and less than `this._releaseSequence`, start frame
+4) If `press` greater than `this._releaseSequence`, start sequence
+
+Button + 10K ohm resistor 
+* 1 === open 
+* 0 === closed
 
 **Kind**: instance method of [<code>Intval</code>](#Intval)  
 
@@ -85,7 +96,7 @@ Using GPIO 05 on raspberry pi zero w
 
 <a name="Intval+frame"></a>
 
-### intval.frame(dir, time, delay)
+### intval.frame([dir], [time], [delay])
 Intval.frame() -
 Begin a single frame with set variables or defaults
 
@@ -93,7 +104,7 @@ Begin a single frame with set variables or defaults
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| dir | <code>boolean</code> | <code></code> | (optional) Direction of the frame |
-| time | <code>integer</code> | <code></code> | (optional) Exposure time, 0 = minimum |
-| delay | <code>delay</code> | <code></code> | (optional) Delay after frame before another can be started |
+| [dir] | <code>boolean</code> | <code>&quot;null&quot;</code> | (optional) Direction of the frame |
+| [time] | <code>integer</code> | <code>&quot;null&quot;</code> | (optional) Exposure time, 0 = minimum |
+| [delay] | <code>integer</code> | <code>&quot;null&quot;</code> | (optional) Delay after frame before another can be started |
 
