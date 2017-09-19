@@ -11,6 +11,8 @@ Class representing the intval3 features
     * [._startFwd()](#Intval+_startFwd)
     * [._startBwd()](#Intval+_startBwd)
     * [._stop()](#Intval+_stop)
+    * [._watchMicro(err, val)](#Intval+_watchMicro)
+    * [._watchRelease(err, val)](#Intval+_watchRelease)
     * [.frame(dir, time, delay)](#Intval+frame)
 
 <a name="Intval+_declarePins"></a>
@@ -49,6 +51,38 @@ Intval._stop() -
 Stop motor by setting both motor pins to 0 (LOW)
 
 **Kind**: instance method of [<code>Intval</code>](#Intval)  
+<a name="Intval+_watchMicro"></a>
+
+### intval._watchMicro(err, val)
+Intval._watchMicro() - 
+Callback for watching microswitch state changes
+Using GPIO 06 on raspberry pi zero w
+
+**Kind**: instance method of [<code>Intval</code>](#Intval)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| err | <code>object</code> | Error object present if problem reading pin |
+| val | <code>integer</code> | Current value of the pin |
+
+<a name="Intval+_watchRelease"></a>
+
+### intval._watchRelease(err, val)
+Intval._watchRelease() - 
+Callback for watching relese switch state changes
+Using GPIO 05 on raspberry pi zero w
+* If closed, start timer.
+* If opened, check timer AND
+* If time closed longer than minimum and less than `this._releaseSequence`, start frame
+* If time closed longer than `this._releaseSequence`, start sequence
+
+**Kind**: instance method of [<code>Intval</code>](#Intval)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| err | <code>object</code> | Error object present if problem reading pin |
+| val | <code>integer</code> | Current value of the pin |
+
 <a name="Intval+frame"></a>
 
 ### intval.frame(dir, time, delay)
