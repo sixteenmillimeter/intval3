@@ -8,6 +8,9 @@ Class representing the intval3 features
 * [Intval](#Intval)
     * [._declarePins()](#Intval+_declarePins)
     * [._undeclarePins()](#Intval+_undeclarePins)
+    * [._startFwd()](#Intval+_startFwd)
+    * [._startBwd()](#Intval+_startBwd)
+    * [._stop()](#Intval+_stop)
     * [.frame(dir, time, delay)](#Intval+frame)
 
 <a name="Intval+_declarePins"></a>
@@ -23,6 +26,27 @@ Intval._declarePins() -
 Intval._undeclarePins() - 
 (internal function) Undeclares all Gpio in event of uncaught error
 that interupts the node process
+
+**Kind**: instance method of [<code>Intval</code>](#Intval)  
+<a name="Intval+_startFwd"></a>
+
+### intval._startFwd()
+Intval._startFwd() - 
+Start motor in forward direction by setting correct pins in h-bridge
+
+**Kind**: instance method of [<code>Intval</code>](#Intval)  
+<a name="Intval+_startBwd"></a>
+
+### intval._startBwd()
+Intval._startBwd() - 
+Start motor in backward direction by setting correct pins in h-bridge
+
+**Kind**: instance method of [<code>Intval</code>](#Intval)  
+<a name="Intval+_stop"></a>
+
+### intval._stop()
+Intval._stop() - 
+Stop motor by setting both motor pins to 0 (LOW)
 
 **Kind**: instance method of [<code>Intval</code>](#Intval)  
 <a name="Intval+frame"></a>
