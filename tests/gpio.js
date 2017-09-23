@@ -91,7 +91,7 @@ function stepupTest () {
 	const bwd = Gpio(BWD, 'out')
 
 	console.log(`Setting pin ${FWD} high`)
-	fwd.set(1)
+	fwd.writeSync(1)
 }
 
 //releaseTest()
