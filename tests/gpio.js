@@ -82,5 +82,18 @@ function microTest () {
 	})
 }
 
+//test stepping up of 3.3V RPI logic via 
+//Sparkfun PRT-10967 (NPC1402)
+function stepupTest () {
+	const FWD = 13
+	const BWD = 19
+	const fwd = Gpio(FWD, 'out')
+	const bwd = Gpio(BWD, 'out')
+
+	console.log(`Setting pin ${FWD} high`)
+	fwd.set(1)
+}
+
 //releaseTest()
-microTest()
+//microTest()
+stepupTest()
