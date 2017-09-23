@@ -94,6 +94,6 @@ function stepupTest () {
 	fwd.writeSync(1)
 }
 
-//releaseTest()
-//microTest()
+releaseTest()
+microTest()
 stepupTest()
