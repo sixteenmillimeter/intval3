@@ -48,7 +48,7 @@ function releaseTest () {
 }
 
 function microTest () {
-	const PIN = 5
+	const PIN = 6
 	const btn = Gpio(PIN, 'in', 'both')
 	console.log(`Watching input on GPIO 0${PIN}`)
 	let saveTime = 0
