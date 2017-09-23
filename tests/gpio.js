@@ -2,11 +2,10 @@
 
 const Gpio = require('onoff').Gpio
 
-const btn = Gpio(5, 'in', 'both')
-
-console.log('Watching input on GPIO 05')
-
 function releaseTest () {
+	const PIN = 5
+	const btn = Gpio(PIN, 'in', 'both')
+	console.log(`Watching input on GPIO 0${PIN}`)
 	let saveTime = 0
 	let active = false
 	btn.watch((err, val) => {
@@ -49,8 +48,11 @@ function releaseTest () {
 }
 
 function microTest () {
+	const PIN = 5
+	const btn = Gpio(PIN, 'in', 'both')
+	console.log(`Watching input on GPIO 0${PIN}`)
 	let saveTime = 0
-	let active = false //this._state.active
+	let frameActive = true //this._state.frame.active
 	let primed = false //this._state.primed
 	btn.watch((err, val) => {
 		const NOW = +new Date()
@@ -63,10 +65,19 @@ function microTest () {
 		} else if (val === 1) {
 			//console.log('open')
 		}
-		if (val === 0) {
-			//console.log('closed')
-		} else if (val === 1) {
-			//console.log('open')
+		if (val === 0 && frameActive) {
+			if (!primed) {
+				primed = true
+				saveTime = NOW
+				console.log('Primed')
+			}
+		} else if (val === 1 && frameActive) {
+			if (primed) {
+				primed = false
+				setTimeout( () => {
+					console.log(`Stop Frame after ${NOW - saveTime}`)
+				}, 10)
+			}
 		}
 	})
 }
