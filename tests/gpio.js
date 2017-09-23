@@ -85,7 +85,7 @@ function microTest () {
 //test stepping up of 3.3V RPI logic via 
 //Sparkfun PRT-10967 (NPC1402)
 function stepupTest () {
-	const FWD = 18 // RPIO PIN 13
+	const FWD = 13 // RPIO PIN 13
 	const BWD = 19
 	const fwd = Gpio(FWD, 'out')
 	const bwd = Gpio(BWD, 'out')
