@@ -2,13 +2,29 @@
 
 const Gpio = require('onoff').Gpio
 
+let release
+let micro
+let fwd
+let bwd
+
+process.on('SIGINT', () => {
+	if (fwd && fwd.writeSync) {
+		console.log(`Setting fwd to 0`)
+		fwd.writeSync(0)
+	}
+	if (bwd && bwd.writeSync) {
+		console.log(`Setting bwd to 0`)
+		bwd.writeSync(0)
+	}
+})
+
 function releaseTest () {
-	const PIN = 5
-	const btn = Gpio(PIN, 'in', 'both')
+	const PIN = 6
+	release = Gpio(PIN, 'in', 'both')
 	console.log(`Watching input on GPIO 0${PIN}`)
 	let saveTime = 0
 	let active = false
-	btn.watch((err, val) => {
+	release.watch((err, val) => {
 		const NOW = +new Date()
 		/* Button + 10K ohm resistor */
 		/* 1 = open */
@@ -48,13 +64,13 @@ function releaseTest () {
 }
 
 function microTest () {
-	const PIN = 6
-	const btn = Gpio(PIN, 'in', 'both')
+	const PIN = 5
+	micro = Gpio(PIN, 'in', 'both')
 	console.log(`Watching input on GPIO 0${PIN}`)
 	let saveTime = 0
 	let frameActive = true //this._state.frame.active
 	let primed = false //this._state.primed
-	btn.watch((err, val) => {
+	micro.watch((err, val) => {
 		const NOW = +new Date()
 		if (err) {
 			return console.error(err)
@@ -83,15 +99,16 @@ function microTest () {
 }
 
 //test stepping up of 3.3V RPI logic via 
-//Sparkfun PRT-10967 (NPC1402)
+//Sparkfun PRT-10968 (NPC1402)
 function stepupTest () {
 	const FWD = 13 // RPIO PIN 13
 	const BWD = 19
-	const fwd = Gpio(FWD, 'out')
-	const bwd = Gpio(BWD, 'out')
+	fwd = Gpio(FWD, 'out')
+	bwd = Gpio(BWD, 'out')
 
 	console.log(`Setting pin ${FWD} high`)
 	fwd.writeSync(1)
+	bwd.writeSync(1)
 }
 
 releaseTest()
