@@ -16,6 +16,7 @@ process.on('SIGINT', () => {
 		console.log(`Setting bwd to 0`)
 		bwd.writeSync(0)
 	}
+	process.exit()
 })
 
 function releaseTest () {
@@ -108,7 +109,7 @@ function stepupTest () {
 
 	console.log(`Setting pin ${FWD} high`)
 	fwd.writeSync(1)
-	bwd.writeSync(1)
+	bwd.writeSync(0)
 }
 
 releaseTest()
