@@ -53,8 +53,9 @@ Stop motor by setting both motor pins to 0 (LOW)
 ### intval._watchMicro(err, val)
 Callback for watching relese switch state changes.
 Using GPIO 06 on Raspberry Pi Zero W.
-* If closed, start timer.
-* If opened, check timer AND
+
+1) If closed AND frame active, start timer, set state primed to `true`.
+1) If opened AND frame active, stop frame
 
 Microswitch + 10K ohm resistor 
 * 1 === open 
