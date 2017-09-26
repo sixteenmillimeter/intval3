@@ -1,7 +1,7 @@
 'use strict'
 
 const restify = require('restify')
-const logger = require('winston')
+const log = require('./lib/log')('main')
 const fs = require('fs')
 
 const ble = require('./lib/blootstrap')
@@ -25,18 +25,19 @@ function createServer () {
 	app.post('/sequence', () => {})
 	app.get('/status', rStatus)
 	app.listen(PORT, () => {
-		console.log(`${APPNAME} listening on port ${PORT}!`)
+		log.info('server', { name : APPNAME, port : PORT })
 	})
 }
 
 function rFrame (req, res, next) {
+	intval.frame()
 	res.send({})
 	return next()
 }
 
 function rStatus (req, res, next) {
 	const obj = intval.status()
-	res.send({})
+	res.send(obj)
 	return next()
 }
 
