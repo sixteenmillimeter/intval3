@@ -14,7 +14,7 @@ Class representing the intval3 features
     * [._watchMicro(err, val)](#Intval+_watchMicro)
     * [._watchRelease(err, val)](#Intval+_watchRelease)
     * [.setDir([dir])](#Intval+setDir)
-    * [.frame([dir], [time], [delay])](#Intval+frame)
+    * [.frame([dir], [time])](#Intval+frame)
     * [.sequence()](#Intval+sequence)
 
 <a name="Intval+_declarePins"></a>
@@ -105,7 +105,7 @@ Set the default direction of the camera.
 
 <a name="Intval+frame"></a>
 
-### intval.frame([dir], [time], [delay])
+### intval.frame([dir], [time])
 Begin a single frame with set variables or defaults
 
 **Kind**: instance method of [<code>Intval</code>](#Intval)  
@@ -114,7 +114,6 @@ Begin a single frame with set variables or defaults
 | --- | --- | --- | --- |
 | [dir] | <code>boolean</code> | <code>&quot;null&quot;</code> | (optional) Direction of the frame |
 | [time] | <code>integer</code> | <code>&quot;null&quot;</code> | (optional) Exposure time, 0 = minimum |
-| [delay] | <code>integer</code> | <code>&quot;null&quot;</code> | (optional) Delay after frame before another can be started |
 
 <a name="Intval+sequence"></a>
 
