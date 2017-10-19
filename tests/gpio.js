@@ -34,7 +34,7 @@ function releaseTest () {
 			return console.error(err)
 		}
 		//console.log(`Release switch val: ${val}`)
-		console.log(`RELEASE: ${val} ${active} ${NOW} ${saveTime}`)
+		//console.log(`RELEASE: ${val} ${active} ${NOW} ${saveTime}`)
 		if (val === 0) {
 			//console.log('closed')
 		} else if (val === 1) {
@@ -57,7 +57,7 @@ function releaseTest () {
 				} else if (NOW - saveTime >= 1000) {
 					console.log('Started Sequence')
 				}
-				console.log(`Release closed for ${NOW - saveTime}`)
+				//console.log(`Release closed for ${NOW - saveTime}`)
 				saveTime = 0
 				active = false
 			}
