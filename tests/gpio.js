@@ -114,5 +114,5 @@ function stepupTest () {
 }
 
 releaseTest()
-//microTest()
+microTest()
 //stepupTest()
