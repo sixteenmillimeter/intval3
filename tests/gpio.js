@@ -33,7 +33,8 @@ function releaseTest () {
 		if (err) {
 			return console.error(err)
 		}
-		console.log(`Release switch val: ${val}`)
+		//console.log(`Release switch val: ${val}`)
+		console.log(`RELEASE: ${val} ${active} ${NOW} ${saveTime}`)
 		if (val === 0) {
 			//console.log('closed')
 		} else if (val === 1) {
