@@ -19,6 +19,8 @@ let app = restify.createServer({
 
 function createServer () {
 	app.get('/', index)
+	app.get('/dir', rDir)
+	app.post('/dir', rDir)
 	app.get('/frame', rFrame)
 	app.post('/frame', rFrame)
 	app.get('/sequence', () => {})
@@ -27,6 +29,10 @@ function createServer () {
 	app.listen(PORT, () => {
 		log.info('server', { name : APPNAME, port : PORT })
 	})
+}
+
+function rDir (req, res, next) {
+
 }
 
 function rFrame (req, res, next) {
