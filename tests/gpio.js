@@ -113,6 +113,6 @@ function stepupTest () {
 	bwd.writeSync(1)
 }
 
-//releaseTest()
+releaseTest()
 microTest()
-stepupTest()
+//stepupTest()
