@@ -121,11 +121,10 @@ function rDelay (req, res, next) {
 
 function rFrame (req, res, next) {
 	log.info('/frame', { method : req.method })
-	intval.frame(true, 0, () => {
-		log.info('frame stopped')
+	intval.frame(true, 0, (dir, len) => {
+		res.send({ dir : true, len : len})
+		return next()
 	})
-	res.send({})
-	return next()
 }
 
 function rStatus (req, res, next) {
