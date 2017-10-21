@@ -20,16 +20,16 @@ let app = restify.createServer({
 function createServer () {
 	app.use(restify.plugins.queryParser())
 	app.use(restify.plugins.bodyParser({ mapParams: false }))
-	app.get('/', index)
-	app.get('/dir', rDir)
+	app.get( '/', index)
+	app.get( '/dir', rDir)
 	app.post('/dir', rDir)
-	app.get('/exposure', rExposure)
+	app.get( '/exposure', rExposure)
 	app.post('/exposure', rExposure)
-	app.get('/frame', rFrame)
+	app.get( '/frame', rFrame)
 	app.post('/frame', rFrame)
-	app.get('/sequence', () => {})
+	app.get( '/sequence', () => {})
 	app.post('/sequence', () => {})
-	app.get('/status', rStatus)
+	app.get( '/status', rStatus)
 	app.listen(PORT, () => {
 		log.info('server', { name : APPNAME, port : PORT })
 	})
@@ -58,6 +58,7 @@ function rDir (req, res, next) {
 	} else {
 		dir = intval._state.frame.dir
 	}
+	log.info('/dir', { method: req.method, set : set, dir : dir})
 	res.send({ dir : dir })
 	return next()
 }
@@ -85,7 +86,9 @@ function rExposure (req, res, next) {
 	} else {
 		exposure = intval._state.frame.exposure
 	}
+	log.info('/exposure', { method: req.method, set : set, exposure : exposure })
 	res.send({ exposure : exposure })
+	return next()
 }
 
 function rDelay (req, res, next) {
@@ -111,11 +114,15 @@ function rDelay (req, res, next) {
 	} else {
 		delay = intval._state.frame.delay
 	}
+	log.info('/delay', { method: req.method, set : set, delay : delay })
 	res.send({ delay : delay })
+	return next()
 }
 
 function rFrame (req, res, next) {
-	intval.frame()
+	intval.frame(cb=()=>{
+		log.info('happened')
+	})
 	res.send({})
 	return next()
 }
