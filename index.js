@@ -142,7 +142,7 @@ function init () {
 	/*ble.on('data', (str) => {
 		console.log(str)
 	})*/
-	//intval.init()
+	intval.init()
 }
 
 init()
