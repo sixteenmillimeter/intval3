@@ -322,7 +322,13 @@ null==d?void 0:d))},attrHooks:{type:{set:function(a,b){if(!o.radioValue&&"radio"
 	};
 	web.getStateSuccess = function (res) {
 		'use strict';
-		console.dir(res);
+		if (res.frame.dir !== true) {
+			$('#dir').prop('checked', true);
+			setDirLabel(false);
+		}
+		$('#counter').val(res.counter);
+		$('#exposure').val(res.frame.exposure);
+		$('#delay').val(res.frame.delay);
 	};
 	web.init = function () {
 		'use strict';
@@ -330,6 +336,7 @@ null==d?void 0:d))},attrHooks:{type:{set:function(a,b){if(!o.radioValue&&"radio"
 		getState = web.getState;
 		setDir = web.setDir;
 		setExposure = web.setExposure;
+
 		web.getState();
 	};
 	web.init();

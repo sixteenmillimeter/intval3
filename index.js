@@ -25,6 +25,8 @@ function createServer () {
 	app.post('/dir', rDir)
 	app.get( '/exposure', rExposure)
 	app.post('/exposure', rExposure)
+	app.get( '/counter', rCounter)
+	app.post('/counter', rCounter)
 	app.get( '/frame', rFrame)
 	app.post('/frame', rFrame)
 	app.get( '/sequence', () => {})
@@ -116,6 +118,35 @@ function rDelay (req, res, next) {
 	}
 	log.info('/delay', { method: req.method, set : set, delay : delay })
 	res.send({ delay : delay })
+	return next()
+}
+
+function rCounter (req, res, next) {
+	let counter = 0
+	let set = false
+	if (req.query && typeof req.query.counter !== 'undefined') {
+		if (typeof req.query.counter === 'string') {
+			counter = parseInt(req.query.counter)
+		} else {
+			counter = req.query.counter
+		}
+		set = true
+	}
+	if (req.body && typeof req.body.counter !== 'undefined') {
+		if (typeof req.body.counter !== 'string') {
+			counter = parseInt(req.body.counter)
+		} else {
+			counter = req.body.counter
+		}
+		set = true
+	}
+	if (set) {
+		intval.setCounter(counter)
+	} else {
+		counter = intval._state.counter
+	}
+	log.info('/counter', { method : req.method, set : set, counter : counter })
+	req.send({ counter : counter })
 	return next()
 }
 
