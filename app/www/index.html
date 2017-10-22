@@ -202,6 +202,8 @@ null==d?void 0:d))},attrHooks:{type:{set:function(a,b){if(!o.radioValue&&"radio"
 		$.ajax({
 			method : 'POST',
 			url : '/frame',
+			contentType: 'application/json; charset=utf-8',
+			dataType : 'json',
 			success : web.frameSuccess
 		});
 	}
@@ -218,6 +220,7 @@ null==d?void 0:d))},attrHooks:{type:{set:function(a,b){if(!o.radioValue&&"radio"
 			method : 'POST',
 			url : '/dir',
 			body : JSON.stringify({ dir : dir}),
+			contentType: 'application/json; charset=utf-8',
 			dataType : 'json',
 			success : web.setDirSuccess
 		})
