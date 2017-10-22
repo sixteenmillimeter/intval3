@@ -19,7 +19,12 @@
 	body{
 	}
 	#app{
-		padding: 10% 0;
+		padding: 20px 10% 0 10%;
+	}
+	#bar{
+		height: 70px;
+		border-bottom: 1px solid #444;
+		width: 100%;
 	}
 	/* The switch - the box around the slider */
 	.switch {
@@ -62,7 +67,7 @@
 	}
 
 	input:focus + .slider {
-		box-shadow: 0 0 1px #2196F3;
+		
 	}
 
 	input:checked + .slider:before {
@@ -80,8 +85,8 @@
 		border-radius: 50%;
 	}
 	input[type=number]{
-		width: 80%;
-		border: 1px solid #fff;
+		width: 100%;
+		border: 2px solid #fff;
 		border-radius: 5px;
 		color: #fff;
 		font-size: 18px;
@@ -93,7 +98,7 @@
 		box-sizing: border-box;
 	}
 	button{
-		width: 80%;
+		width: 100%;
 		border: 2px solid #fff;
 		border-radius: 5px;
 		color: #fff;
@@ -105,37 +110,62 @@
 		margin: 5px 0;
 		padding: 5px 0;
 		text-align: center;
-		text-transform: uppercase;
 	}
 	button:focus{
 		background-color: #20ce45;
 		border-color: #20ce45;
 		color: #212121;
+		font-weight: bold;
+	}
+	#fwdLabel,#bwdLabel{
+		display: block;
+	    line-height: 34px;
+	    height: 33px;
+	    color: #444;
+	}
+	#fwdLabel.selected,
+	#bwdLabel.selected{
+		color: #fff;
+	}
+	#fwdLabel{
+		float: left;
+	}
+	#bwdLabel{
+		float: right;
+	}
+	.label{
+		text-align: right;
+		color: #666;
 	}
 	</style>
 </head>
 <body>
+<div id="bar">
+	
+</div>
 <div id="app">
 	<div>
-		<div>Direction</div>
+		<div class="label">Direction</div>
+		<span id="fwdLabel" class="selected">FORWARD</span>
 		<label class="switch" onclick="setDir();">
 			<input type="checkbox" id="dir">
 			<span class="slider round"></span>
 		</label>
+		<span id="bwdLabel">BACKWARD</span>
 	</div>
 	<div>
-		<div>Exposure (ms)</div>
+		<div class="label">Exposure (ms)</div>
 		<input type="number" id="exposure" value="630" min="630" step="1" />
 	</div>
 	<div>
-		<div>Delay (ms)</div>
+		<div class="label">Delay (ms)</div>
 		<input type="number" id="delay" value="0" min="0" step="1" />
 	</div>
 	<div>
-		<button id="seq">Sequence</button>
+		<button id="seq">START SEQUENCE</button>
 	</div>
 	<div>
-		<button id="frame" onclick="frame();">Frame</button>
+		<button id="frame" onclick="frame();">FRAME</button>
 	</div>
 </div>
 <script>
