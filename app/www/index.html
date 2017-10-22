@@ -4,14 +4,22 @@
 	<title>intval 3</title>
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="format-detection" content="telephone=no">
-	<meta name = "viewport" content = "width = 320, initial-scale = 2.3, user-scalable = no">
+	<meta name = "viewport" content = "width = 320, initial-scale = 1.0, user-scalable = no">
 	<style>
 	html,body{
 		background: #212121;
+		height: 100%;
+		padding: 0;
+		margin: 0;
 	}
 	*{
 		color: #fff;
 		font-family: 'Arial Neue', Helvetical, Arial, sans-serif;
+	}
+	body{
+	}
+	#app{
+		padding: 10% 0;
 	}
 	/* The switch - the box around the slider */
 	.switch {
@@ -72,6 +80,7 @@
 		border-radius: 50%;
 	}
 	input[type=number]{
+		width: 80%;
 		border: 1px solid #fff;
 		border-radius: 5px;
 		color: #fff;
@@ -80,9 +89,12 @@
 		background: transparent;
 		box-shadow: none;
 		margin: 5px 0;
+		padding: 5px 10px;
+		box-sizing: border-box;
 	}
 	button{
-		border: 1px solid #fff;
+		width: 80%;
+		border: 2px solid #fff;
 		border-radius: 5px;
 		color: #fff;
 		font-size: 18px;
@@ -91,6 +103,9 @@
 		box-shadow: none;
 		outline: none;
 		margin: 5px 0;
+		padding: 5px 0;
+		text-align: center;
+		text-transform: uppercase;
 	}
 	button:focus{
 		background-color: #20ce45;
@@ -100,26 +115,28 @@
 	</style>
 </head>
 <body>
-<div>
-	<div>Direction</div>
-	<label class="switch" onclick="setDir();">
-		<input type="checkbox" id="dir">
-		<span class="slider round"></span>
-	</label>
-</div>
-<div>
-	<div>Exposure (ms)</div>
-	<input type="number" id="exposure" value="630" min="630" step="1" />
-</div>
-<div>
-	<div>Delay (ms)</div>
-	<input type="number" id="delay" value="0" min="0" step="1" />
-</div>
-<div>
-	<button id="seq">Sequence</button>
-</div>
-<div>
-	<button id="frame" onclick="frame();">Frame</button>
+<div id="app">
+	<div>
+		<div>Direction</div>
+		<label class="switch" onclick="setDir();">
+			<input type="checkbox" id="dir">
+			<span class="slider round"></span>
+		</label>
+	</div>
+	<div>
+		<div>Exposure (ms)</div>
+		<input type="number" id="exposure" value="630" min="630" step="1" />
+	</div>
+	<div>
+		<div>Delay (ms)</div>
+		<input type="number" id="delay" value="0" min="0" step="1" />
+	</div>
+	<div>
+		<button id="seq">Sequence</button>
+	</div>
+	<div>
+		<button id="frame" onclick="frame();">Frame</button>
+	</div>
 </div>
 <script>
 	/*! jQuery v3.2.1 | (c) JS Foundation and other contributors | jquery.org/license */
@@ -150,6 +167,7 @@ null==d?void 0:d))},attrHooks:{type:{set:function(a,b){if(!o.radioValue&&"radio"
 	};
 	web.setDir = function () {
 		var dir = $('#dir').val();
+		console.dir(dir);
 	};
 	web.setDirSuccess = function (res) {
 		'use strict';
