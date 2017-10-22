@@ -94,6 +94,7 @@
 		-webkit-appearance: none;
 		background: transparent;
 		box-shadow: none;
+		outline: none;
 		margin: 5px 0;
 		padding: 5px 10px;
 		box-sizing: border-box;
@@ -136,8 +137,10 @@
 		right: 10%;
 	}
 	.label{
-		text-align: right;
+		text-align: center;
 		color: #666;
+		margin-top: 10px;
+    	margin-bottom: 5px;
 	}
 	</style>
 </head>
@@ -150,8 +153,8 @@
 		<div class="label">Direction</div>
 		<span id="bwdLabel">BACKWARD</span>
 		<span id="fwdLabel" class="selected">FORWARD</span>
-		<label class="switch" onclick="setDir();">
-			<input type="checkbox" id="dir">
+		<label class="switch">
+			<input type="checkbox" id="dir" onclick="setDir();">
 			<span class="slider round"></span>
 		</label>
 	</div>
@@ -181,6 +184,16 @@ null==d?void 0:d))},attrHooks:{type:{set:function(a,b){if(!o.radioValue&&"radio"
 	var setDir;
 	var setExposure;
 	var setDelay;
+	var setDirLabel = function (dir) {
+		'use strict';
+		if (dir) {
+			$('#bwdLabel').removeClass();
+			$('#fwdLabel').addClass('selected');
+		} else {
+			$('#fwdLabel').removeClass();
+			$('#bwdLabel').addClass('selected');
+		}
+	};
 </script>
 <script>
 	var web = {};
@@ -198,8 +211,17 @@ null==d?void 0:d))},attrHooks:{type:{set:function(a,b){if(!o.radioValue&&"radio"
 		console.dir(res);
 	};
 	web.setDir = function () {
-		var dir = $('#dir').val();
-		console.dir(dir);
+		'use strict';
+		var dir = !$('#dir').is(':checked');
+		setDirLabel(dir)
+		$.ajax({
+			method : 'POST',
+			url : '/dir',
+			body : {
+				dir : dir
+			},
+			success : web.setDirSuccess
+		})
 	};
 	web.setDirSuccess = function (res) {
 		'use strict';
