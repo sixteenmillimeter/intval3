@@ -120,9 +120,45 @@ function rDelay (req, res, next) {
 }
 
 function rFrame (req, res, next) {
-	log.info('/frame', { method : req.method })
-	intval.frame(true, 0, (dir, len) => {
-		res.send({ dir : true, len : len})
+	let dir = true
+	let exposure = 0
+	if (intval._state.frame.dir !== true) {
+		dir = false
+	}
+	if (intval._state.frame.exposure !== 0) {
+		exposure = intval._state.frame.exposure
+	}
+	if (req.query && typeof req.query.dir !== 'undefined') {
+		if (typeof req.query.dir === 'string') {
+			dir = (req.query.dir === 'true')
+		} else {
+			dir = req.query.dir
+		}
+	}
+	if (req.body && typeof req.body.dir !== 'undefined') {
+		if (typeof req.body.dir === 'string') {
+			dir = (req.body.dir === 'true')
+		} else {
+			dir = req.body.dir
+		}
+	}
+	if (req.query && typeof req.query.exposure !== 'undefined') {
+		if (typeof req.query.exposure === 'string') {
+			exposure = parseInt(req.query.exposure)
+		} else {
+			exposure = req.query.exposure
+		}
+	}
+	if (req.body && typeof req.body.exposure !== 'undefined') {
+		if (typeof req.body.exposure === 'string') {
+			exposure = parseInt(req.body.exposure)
+		} else {
+			exposure = req.body.exposure
+		}
+	}
+	log.info('/frame', { method : req.method, dir : dir, exposure : exposure })
+	intval.frame(dir, exposure, (len) => {
+		res.send({ dir : dir, len : len})
 		return next()
 	})
 }
