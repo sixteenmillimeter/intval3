@@ -217,9 +217,8 @@ null==d?void 0:d))},attrHooks:{type:{set:function(a,b){if(!o.radioValue&&"radio"
 		$.ajax({
 			method : 'POST',
 			url : '/dir',
-			body : {
-				dir : dir
-			},
+			body : JSON.stringify({ dir : dir}),
+			dataType : 'json',
 			success : web.setDirSuccess
 		})
 	};
