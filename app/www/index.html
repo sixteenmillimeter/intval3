@@ -229,7 +229,7 @@
 		</label>
 	</div>
 	<div>
-		<div class="label">Exposure = <span id="str">1/5</span></div>
+		<div class="label">Exposure <span id="str">1/5</span></div>
 		<input type="number" id="exposure" value="630" min="0" oninput="setExposure();" />
 		<select id="scale" onchange="setExposureScale();">
 			<option value="ms" selected>ms</option>
@@ -283,7 +283,8 @@ null==d?void 0:d))},attrHooks:{type:{set:function(a,b){if(!o.radioValue&&"radio"
 <script>
 	var BOLEX = {
 		angle : 133,
-		prism : 0.8
+		prism : 0.8,
+		expected : 630
 	};
 	var STATE = {
 		dir : true,
@@ -302,11 +303,11 @@ null==d?void 0:d))},attrHooks:{type:{set:function(a,b){if(!o.radioValue&&"radio"
 	//ms
 	var shutter = function (exposure) {
 		'use strict';
-		var fraction = 630 / 1000;
+		var fraction = BOLEX.expected / 1000;
 		var speed;
 		var corrected;
 		var str;
-		if (typeof exposure !== 'undefined' && exposure !== 0) {
+		if ((typeof exposure !== 'undefined' && exposure !== 0) || exposure > BOLEX.expected) {
 			//if exposure is explicitly set
 			fraction = exposure / 1000;
 			speed = fraction;
@@ -316,7 +317,7 @@ null==d?void 0:d))},attrHooks:{type:{set:function(a,b){if(!o.radioValue&&"radio"
 		corrected = speed * BOLEX.prism;
 		if (corrected < 1.0) {
 			//less than a second
-			str = '1/' + Math.round(Math.pow(corrected, -1));
+			str = '1/' + Math.round(Math.pow(corrected, -1)) + ' sec';
 		}  else if (corrected >= 1.0 && corrected < 60) {
 			//greater than a second, less than a minute
 			str = '' + (Math.round(corrected * 10) / 10) + ' sec'
@@ -472,6 +473,7 @@ null==d?void 0:d))},attrHooks:{type:{set:function(a,b){if(!o.radioValue&&"radio"
 	web.getStateSuccess = function (res) {
 		'use strict';
 		var exposure;
+		var scale;
 		if (res.frame.dir !== true) {
 			$('#dir').prop('checked', true);
 			STATE.dir = res.frame.dir;
@@ -480,12 +482,14 @@ null==d?void 0:d))},attrHooks:{type:{set:function(a,b){if(!o.radioValue&&"radio"
 		$('#counter').val(res.counter);
 		STATE.count = res.counter;
 		if (res.frame.exposure === 0) {
-			res.frame.exposure = 630;
+			res.frame.exposure = BOLEX.expected;
 		}
 		$('#exposure').val(res.frame.exposure);
 		STATE.exposure = res.frame.exposure;
 		exposure = shutter(STATE.exposure);
 		$('#str').text(exposure.str);
+		scale = autoScale(STATE.exposure);
+		$('#scale').val(scale);
 		$('#delay').val(res.frame.delay);
 		STATE.delay = res.frame.delay;
 	};
@@ -495,7 +499,7 @@ null==d?void 0:d))},attrHooks:{type:{set:function(a,b){if(!o.radioValue&&"radio"
 		$.ajax({
 			method : 'POST',
 			url : '/exposure',
-			data : JSON.stringify({ exposure : exposure }),
+			data : JSON.stringify({ exposure : scaledExposure }),
 			contentType: 'application/json',
 			dataType : 'json',
 			success : web.setExposureSuccess
@@ -506,7 +510,7 @@ null==d?void 0:d))},attrHooks:{type:{set:function(a,b){if(!o.radioValue&&"radio"
 		'use strict';
 		var exposure;
 		if (res.exposure) {
-			res.exposure = 630;
+			res.exposure = BOLEX.expected;
 		}
 		STATE.exposure = res.exposure;
 		exposure = shutter(STATE.exposure);
