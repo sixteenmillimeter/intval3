@@ -509,11 +509,10 @@ null==d?void 0:d))},attrHooks:{type:{set:function(a,b){if(!o.radioValue&&"radio"
 	web.setExposureSuccess = function (res) {
 		'use strict';
 		var exposure;
-		if (res.exposure) {
+		if (res.exposure < BOLEX.expected) {
 			res.exposure = BOLEX.expected;
 		}
 		STATE.exposure = res.exposure;
-		console.log(STATE.exposure);
 		exposure = shutter(STATE.exposure);
 		$('#str').text(exposure.str);
 		console.log('setExposure to ' + res.exposure);
