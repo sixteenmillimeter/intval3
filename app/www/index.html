@@ -474,7 +474,6 @@ null==d?void 0:d))},attrHooks:{type:{set:function(a,b){if(!o.radioValue&&"radio"
 		'use strict';
 		var exposure;
 		var scale;
-		var scaledExposure;
 		if (res.frame.dir !== true) {
 			$('#dir').prop('checked', true);
 			STATE.dir = res.frame.dir;
@@ -489,11 +488,9 @@ null==d?void 0:d))},attrHooks:{type:{set:function(a,b){if(!o.radioValue&&"radio"
 		STATE.exposure = res.frame.exposure;
 		exposure = shutter(STATE.exposure);
 		scale = scaleAuto(STATE.exposure);
-		STATE.scale = scale;
-		scaledExposure = scaleTime(STATE.exposure, STATE.scale);
 		$('#str').text(exposure.str);
-		$('#exposure').val(scaledExposure);
 		$('#scale').val(scale);
+		setExposureScale();
 
 		$('#delay').val(res.frame.delay);
 		STATE.delay = res.frame.delay;
