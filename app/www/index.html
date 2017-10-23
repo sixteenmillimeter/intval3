@@ -488,10 +488,11 @@ null==d?void 0:d))},attrHooks:{type:{set:function(a,b){if(!o.radioValue&&"radio"
 		}
 		STATE.exposure = res.frame.exposure;
 		exposure = shutter(STATE.exposure);
-		$('#str').text(exposure.str);
 		scale = scaleAuto(STATE.exposure);
 		STATE.scale = scale;
-		$('#exposure').val(STATE.exposure);
+		scaledExposure = scaleTime(STATE.exposure, STATE.scale);
+		$('#str').text(exposure.str);
+		$('#exposure').val(scaledExposure);
 		$('#scale').val(scale);
 
 		$('#delay').val(res.frame.delay);
