@@ -31,6 +31,7 @@ function createServer () {
 	app.post('/frame', rFrame)
 	app.get( '/sequence', () => {})
 	app.post('/sequence', () => {})
+	app.post('/reset', rReset)
 	app.get( '/status', rStatus)
 	app.listen(PORT, () => {
 		log.info('server', { name : APPNAME, port : PORT })
@@ -201,6 +202,14 @@ function rStatus (req, res, next) {
 	const obj = intval.status()
 	res.send(obj)
 	return next()
+}
+
+function rRest (req, res, next) {
+	intval.reset()
+	setTimeout(() => {
+		res.send(intval._state)
+		return next()
+	}, 10)
 }
 
 function index (req, res, next) {
