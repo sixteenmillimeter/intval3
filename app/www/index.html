@@ -307,7 +307,7 @@ null==d?void 0:d))},attrHooks:{type:{set:function(a,b){if(!o.radioValue&&"radio"
 		var speed;
 		var corrected;
 		var str;
-		if ((typeof exposure !== 'undefined' && exposure !== 0) || exposure >= BOLEX.expected) {
+		if (exposure > BOLEX.expected) {
 			//if exposure is explicitly set
 			fraction = exposure / 1000;
 			speed = fraction;
