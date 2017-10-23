@@ -84,6 +84,9 @@ function rExposure (req, res, next) {
 		set = true
 	}
 	if (set) {
+		if (exposure <= intval._frame.expected) {
+			exposure = 0;
+		}
 		intval.setExposure(exposure)
 	} else {
 		exposure = intval._state.frame.exposure
