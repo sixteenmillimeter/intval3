@@ -474,6 +474,7 @@ null==d?void 0:d))},attrHooks:{type:{set:function(a,b){if(!o.radioValue&&"radio"
 		'use strict';
 		var exposure;
 		var scale;
+		var scaledExposure;
 		if (res.frame.dir !== true) {
 			$('#dir').prop('checked', true);
 			STATE.dir = res.frame.dir;
@@ -481,15 +482,19 @@ null==d?void 0:d))},attrHooks:{type:{set:function(a,b){if(!o.radioValue&&"radio"
 		}
 		$('#counter').val(res.counter);
 		STATE.count = res.counter;
+		
 		if (res.frame.exposure === 0) {
 			res.frame.exposure = BOLEX.expected;
 		}
-		$('#exposure').val(res.frame.exposure);
 		STATE.exposure = res.frame.exposure;
 		exposure = shutter(STATE.exposure);
 		$('#str').text(exposure.str);
 		scale = scaleAuto(STATE.exposure);
 		$('#scale').val(scale);
+		STATE.scale = scale;
+		scaledExposure = scaleTime(STATE.exposure, STATE.scale);
+		$('#exposure').val(scaledExposure);
+
 		$('#delay').val(res.frame.delay);
 		STATE.delay = res.frame.delay;
 	};
