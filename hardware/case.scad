@@ -174,7 +174,7 @@ module bearing_laser (x, y, z, width= 8, hole = true) {
 
 module intval_laser_panel_cover (LASER = false, DEBUG = false, ALL_RED = false) {
     $fn = 60;
-    cover_h = 16 + 3 + 4;
+    cover_h = 16 + 3 + 4 + 10;
     MATERIAL = 25.4 / 8;
 
     module top () {
@@ -377,75 +377,6 @@ module bearing (x, y, z, width= 8, hole = true, calval = 0) {
 	}
 }
 
-module panel_cover (DECOYS = false) { 
-    $fn = 60;
-    HEIGHT = 85;
-    WIDTH = 37;
-    z = 25 + 8 + 5;
-    translate([0, 0, (z/2) + 9.5])  {
-        difference () {
-            union () {
-                difference () {
-                    rounded_cube([WIDTH, HEIGHT, z], d = 20, center = true); //main body of case
-                    translate([0, 0, -1]) rounded_cube([WIDTH - 4, HEIGHT - 4, z-2], d = 18, center = true);
-                    translate([-5, 35, 5]) rotate([0, 0, 15]) cube([50, 25, 400],  center = true); //heatsink
-                    translate([-10, 12, -9]) rotate([0, 0, 13]) cube([70, 40, 20],  center = true); //L289N hole
-                    translate([13, -36, -15]) rotate([0, 0, 13])cube([24, 45, 8], center = true); //trinket
-                    //buttons
-                    translate([7, -32, 8]) cylinder(r = 3.1, h = 190, center = true);
-                    translate([7, -19, 8]) cylinder(r = 3.1, h = 190, center = true);
-                    translate([7, -5, 8]) cylinder(r = 3.1, h = 190, center = true);
-                    
-                    translate([-20, -30, 0]) rotate([90, 0, 90]) cylinder(r = 1.75, h = 10, center = true); //hole for trigger cable
-                    translate([-20, -30, -19]) cube([15, 0.5, 40], center = true);
-                    translate([-15, -20, 0]) rotate([90, 0, 90]) cylinder(r = 3.1, h = 19, center = true); //power
-                    
-                    translate([-5, -12, 7]) cylinder(r= 2, h = z + 5, center= true); //LED
-                }
-               // translate([-5, -26.5, 0]) cylinder(r = 5, h = z, center = true);
-            }
-            translate([-5, -26.5, 0]) cylinder(r = 4, h = z + 10, center = true); //access hole for
-        }
-        
-    }
-    
-    //decoys
-    if (DECOYS){
-        DECOY_H = 40.5;
-        DECOY_W = 28;
-        translate([DECOY_W, 33, DECOY_H]) cube([4, 4, 4], center = true);
-        translate([DECOY_W, -40, DECOY_H]) cube([4, 4, 4], center = true);
-        translate([-DECOY_W, 20, DECOY_H]) cube([4, 4, 4], center = true);
-        translate([-DECOY_W, -40, DECOY_H]) cube([4, 4, 4], center = true);
-        translate([-DECOY_W, -10, DECOY_H]) cube([4, 4, 4], center = true);
-        translate([DECOY_W, -10, DECOY_H]) cube([4, 4, 4], center = true);
-    }
-}
-
-module button_nuts () {
-    difference () {
-        cylinder(r = 5, h = 2, center = true, $fn = 6);
-        cylinder(r = 3.1, h = 19, center = true, $fn = 60);
-    }
-}
-
-module button_nuts_plate (decoys = false) {
-    
-    translate([0, 0, 0]) button_nuts();
-    translate([0, 11, 0]) button_nuts();
-    translate([11, 11, 0]) button_nuts();
-    translate([11, 0, 0]) button_nuts();
-    translate([22, 0, 0]) button_nuts();
-    translate([22, 11, 0]) button_nuts();
-    
-    if (decoys){
-        translate([30, 24, 1]) cube([4, 4, 4], center = true);
-        translate([30, -14, 1]) cube([4, 4, 4], center = true);
-        translate([-10, 24, 1]) cube([4, 4, 4], center = true);
-        translate([-10, -14, 1]) cube([4, 4, 4], center = true);
-    }
-}
-
 module key_cap () {
     $fn = 40;
 	outerD = 22.1;
@@ -457,22 +388,6 @@ module key_cap () {
     //decoys(23, 7);
 }
 
-module motor_cap (DECOYS = false, HALF = false) {
-    $fn = 60;
-	base_d = 47;
-    difference () {
-        translate([-6, 0, 40]) cylinder(r = base_d/2, h = 52, center = true);
-        translate([-6, 0, -5.75]) cylinder(r = base_d/2 - 1, h = 50, center = true);
-        translate([-6, 0, 39]) cylinder(r = base_d/2 - 3, h = 50, center = true);
-        translate([-25, 0, 19]) cube([10, 10, 15], center = true); //wire access
-        if (HALF){
-            translate([100, 0, 0]) cube([200, 200, 200], center = true);
-        }
-    }
-    if (DECOYS) {
-        translate([-6, 0, 0]) decoys(32, 64);
-    }
-}
 module motor_cap_120 (HALF = false) {
     $fn = 60;
 	base_d = 47;
@@ -505,4 +420,12 @@ module bearing_calibrate (val = 0) {
     }
 }
 
-
+translate([-37, -25, 15]) rotate([0, 0, -13]) {
+    difference () {
+        cube([73, 38, 3], center = true);
+        translate([58 / 2, 23 / 2, 0]) cylinder(r = 1.6, h = 3 + 1, center = true);
+        translate([-58 / 2, 23 / 2, 0]) cylinder(r = 1.6, h = 3 + 1, center = true);
+        translate([58 / 2, -23 / 2, 0]) cylinder(r = 1.6, h = 3 + 1, center = true);
+        translate([-58 / 2, -23 / 2, 0]) cylinder(r = 1.6, h = 3 + 1, center = true);
+    }
+}

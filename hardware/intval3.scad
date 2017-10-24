@@ -31,9 +31,10 @@ module exploded_view () {
     translate([0, 0, 5]) motor_mount_bottom();
     translate([0, 0, 20]) motor_key_120();
     translate([one_to_one_x, one_to_one_y, 50]) geared_motor_mount_120();
-    translate([one_to_one_x, one_to_one_y, 50]) motor_cap(false);
+    translate([one_to_one_x, one_to_one_y, 50]) motor_cap_120(false);
     translate([0, 0, 60]) intval_laser_panel_cover(false, ALL_RED=true);
 }
+
 
 //bolex_pin_laser(0, 0);
 //intval_laser_standoffs_plate();
