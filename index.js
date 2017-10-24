@@ -204,7 +204,7 @@ function rStatus (req, res, next) {
 	return next()
 }
 
-function rRest (req, res, next) {
+function rReset (req, res, next) {
 	intval.reset()
 	setTimeout(() => {
 		res.send(intval._state)
