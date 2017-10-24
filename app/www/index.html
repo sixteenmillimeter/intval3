@@ -217,7 +217,7 @@
 <div id="app">
 	<div>
 		<div class="label">Counter</div>
-		<input type="number" id="counter" value="0" step="1" />
+		<input type="number" id="counter" oninput="setCounter();" value="0" step="1" />
 	</div>
 	<div>
 		<div class="label">Direction</div>
@@ -512,7 +512,6 @@ null==d?void 0:d))},attrHooks:{type:{set:function(a,b){if(!o.radioValue&&"radio"
 			dataType : 'json',
 			success : web.setExposureSuccess
 		});
-		STATE.exposure = scaledExposure;
 	};
 	web.setExposureSuccess = function (res) {
 		'use strict';
@@ -531,16 +530,30 @@ null==d?void 0:d))},attrHooks:{type:{set:function(a,b){if(!o.radioValue&&"radio"
 		$.ajax({
 			method : 'POST',
 			url : '/delay',
-			data : JSON.stringify({ exposure : exposure }),
+			data : JSON.stringify({ delay : scaledDelay }),
 			contentType: 'application/json',
 			dataType : 'json',
 			success : web.setDelaySuccess
-		})
-		STATE.delay = scaledDelay;
+		});
 	};
 	web.setDelaySuccess = function (res) {
 		STATE.delay = res.delay;
-		console.log('setDelay to ' + res.delay)
+		console.log('setDelay to ' + res.delay);
+	};
+	web.setCounter = function () {
+		var counter = $('#counter').val();
+		$.ajax({
+			method : 'POST',
+			url : '/counter',
+			data : JSON.stringify({ counter : counter }),
+			contentType: 'application/json',
+			dataType : 'json',
+			success : web.setCounterSuccess
+		});
+	};
+	web.setCounterSuccess = function (res) {
+		STATE.counter = res.counter;
+		console.log('setCounter to ' + res.counter);
 	};
 	web.init = function () {
 		'use strict';
@@ -548,6 +561,7 @@ null==d?void 0:d))},attrHooks:{type:{set:function(a,b){if(!o.radioValue&&"radio"
 		getState = web.getState;
 		setDir = web.setDir;
 		setExposure = web.setExposure;
+		setCounter = web.setCounter;
 
 		web.getState();
 	};
