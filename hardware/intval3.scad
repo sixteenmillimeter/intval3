@@ -21,7 +21,7 @@ module stl_plate () {
 };
 
 module dxf_plate () {
-    translate([105, 0, 0]) rotate([0, 0, 13]) projection() intval_panel_laser();
+    translate([125, 0, 0]) rotate([0, 0, 13]) projection() intval_panel_laser();
     rotate([0, 0, 13]) intval_laser_panel_cover(LASER=true, ALL_RED=true);
 };
 
@@ -50,6 +50,6 @@ module exploded_view () {
 //motor_cap(false);
 //motor_cap_120(false);
 
-exploded_view();
+//exploded_view();
 //stl_plate();
-//dxf_plate();
+dxf_plate();
