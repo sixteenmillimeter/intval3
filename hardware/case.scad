@@ -207,6 +207,10 @@ module intval_laser_panel_cover (LASER = false, DEBUG = false, ALL_RED = false) 
             //top negatives (strange)
             translate([-(cover_h / 2) - (MATERIAL * 1.5), 20, 0]) cube([MATERIAL, 20, MATERIAL], center = true);
             translate([-(cover_h / 2) - (MATERIAL * 1.5), -20, 0]) cube([MATERIAL, 20, MATERIAL], center = true);
+            
+            translate([-(cover_h / 2) - (MATERIAL * 1.5), 47, 0]) cube([MATERIAL, 10, MATERIAL], center = true);
+            translate([-(cover_h / 2) - (MATERIAL * 1.5), -47, 0]) cube([MATERIAL, 10, MATERIAL], center = true);
+
             //bottom negatives
             translate([(cover_h / 2) + (MATERIAL * 1.5), 20, 0]) cube([MATERIAL, 20, MATERIAL], center = true);
             translate([(cover_h / 2) + (MATERIAL * 1.5), -20 - 11, 0]) cube([MATERIAL, 35, MATERIAL], center = true);
@@ -221,15 +225,15 @@ module intval_laser_panel_cover (LASER = false, DEBUG = false, ALL_RED = false) 
     
     module top_side () {
         difference () {
-            translate([-2.5 - 10, 0, 0]) cube([ panel_2_x - 41 + 20, cover_h + 2 + (MATERIAL * 2) + 1  + 3, MATERIAL], center = true);
+            translate([-2.5 - 10 - 1, 0, 0]) cube([ panel_2_x - 41 + 20, cover_h + 2 + (MATERIAL * 2) + 1  + 3, MATERIAL], center = true);
             //top and bottom negatives
             translate([28 - 5, -(cover_h / 2) - (MATERIAL * 1.5), 0]) cube([35, MATERIAL, MATERIAL], center = true);
-            translate([-28 - 10 - 1, -(cover_h / 2) - (MATERIAL * 1.5), 0]) cube([30, MATERIAL, MATERIAL], center = true);
             translate([28 - 5, (cover_h / 2) + (MATERIAL * 1.5), 0]) cube([35, MATERIAL, MATERIAL], center = true);
-            translate([-28 - 10 - 1, (cover_h / 2) + (MATERIAL * 1.5), 0]) cube([30, MATERIAL, MATERIAL], center = true);
+            translate([-28 - 10 - 2, -(cover_h / 2) - (MATERIAL * 1.5), 0]) cube([30, MATERIAL, MATERIAL], center = true);
+            translate([-28 - 10 - 2, (cover_h / 2) + (MATERIAL * 1.5), 0]) cube([30, MATERIAL, MATERIAL], center = true);
             //back side negatives
-            translate([-35.5 - 20, -13 - 8.1, 0]) cube([MATERIAL, 25, MATERIAL], center = true); //side tabs
-            translate([-35.5 - 20, 13 + 8.1, 0]) cube([MATERIAL, 25, MATERIAL], center = true); //side tabs
+            translate([-35.5 - 20 - 1, -13 - 8.1, 0]) cube([MATERIAL, 25, MATERIAL], center = true); //side tabs
+            translate([-35.5 - 20 - 1, 13 + 8.1, 0]) cube([MATERIAL, 25, MATERIAL], center = true); //side tabs
        }
 
     }
@@ -237,7 +241,7 @@ module intval_laser_panel_cover (LASER = false, DEBUG = false, ALL_RED = false) 
    module bottom_side () {
         difference () {
             //main piece
-            translate([.25 - 10, 0, 0]) cube([ panel_2_x - 39.5 + 20, cover_h + 2 + (MATERIAL * 2) + 1  + 3, MATERIAL], center = true);
+            translate([.25 - 10 - 1, 0, 0]) cube([ panel_2_x - 39.5 + 20, cover_h + 2 + (MATERIAL * 2) + 1  + 3, MATERIAL], center = true);
             //top and bottom negatives
             translate([25 - 27.5, -(cover_h / 2) - (MATERIAL * 1.5), 0]) cube([35, MATERIAL, MATERIAL], center = true);
             translate([-25 - 29, -(cover_h / 2) - (MATERIAL * 1.5), 0]) cube([30, MATERIAL, MATERIAL], center = true);
@@ -246,11 +250,12 @@ module intval_laser_panel_cover (LASER = false, DEBUG = false, ALL_RED = false) 
             translate([30, (cover_h / 2) + (MATERIAL * 1.5), 0]) cube([35, MATERIAL, MATERIAL], center = true);
             translate([-30 - 10 - 2, (cover_h / 2) + (MATERIAL * 1.5), 0]) cube([30, MATERIAL, MATERIAL], center = true);
             
-            translate([-15, 1 + 5, 0]) cylinder(r = 6/2, h = 50, center = true); //hole for audio jack -> add countersink
-            translate([9, 1 + 5, 0]) cylinder(r = 8/2, h = 20, center = true); //hole for female DC power jack, 12vdc
             //back side negatives
-            translate([-33.5 - 20, 17.3, 0]) cube([MATERIAL, 17.5, MATERIAL], center = true);
-            translate([-33.5 - 20, -17.3, 0]) cube([MATERIAL, 17.5, MATERIAL], center = true);
+            translate([-33.5 - 20 - 1, 17.3, 0]) cube([MATERIAL, 17.5, MATERIAL], center = true);
+            translate([-33.5 - 20 - 1, -17.3, 0]) cube([MATERIAL, 17.5, MATERIAL], center = true);
+            
+            translate([9 - 20, 1 + 5, 0]) cylinder(r = 6/2, h = 50, center = true); //hole for audio jack -> add countersink
+            translate([-15 - 20, 1 + 5, 0])  cylinder(r = 8/2, h = 20, center = true); //hole for female DC power jack, 12vdc
             //usb negative
             translate([0, -15, 0]) cube([30, 10, 20], center = true);
 
