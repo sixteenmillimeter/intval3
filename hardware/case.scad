@@ -198,10 +198,10 @@ module intval_laser_panel_cover (LASER = false, DEBUG = false, ALL_RED = false) 
     module back_side () {
         difference () {
             translate([0, 1.75, 0]) cube([cover_h + 2 + (MATERIAL * 2) + 1 + 3, panel_2_y - 10, MATERIAL], center = true);
-            translate([-13 - 3.1, 20, 0]) cube([MATERIAL, 20, MATERIAL], center = true);
-            translate([-13 - 3.1, -20, 0]) cube([MATERIAL, 20, MATERIAL], center = true);
-            translate([13 + 3.1, 20, 0]) cube([MATERIAL, 20, MATERIAL], center = true);
-            translate([13 + 3.1, -20, 0]) cube([MATERIAL, 20, MATERIAL], center = true);
+            translate([-(cover_h / 2) - (MATERIAL * 1.5), 20, 0]) cube([MATERIAL, 20, MATERIAL], center = true);
+            translate([-(cover_h / 2) - (MATERIAL * 1.5), -20, 0]) cube([MATERIAL, 20, MATERIAL], center = true);
+            translate([(cover_h / 2) + (MATERIAL * 1.5), 20, 0]) cube([MATERIAL, 20, MATERIAL], center = true);
+            translate([(cover_h / 2) + (MATERIAL * 1.5), -20, 0]) cube([MATERIAL, 20, MATERIAL], center = true);
             translate([10 , -22 ,0]) cube([10, 15, 30], center = true); //access for usb
             translate([0, 50.5, 0]) cube([17.5, MATERIAL, MATERIAL], center = true);
             translate([0, -50.5 + (1.75 / 2) + MATERIAL - 0.25, 0]) cube([17.5, MATERIAL, MATERIAL], center = true);
@@ -212,10 +212,10 @@ module intval_laser_panel_cover (LASER = false, DEBUG = false, ALL_RED = false) 
     module top_side () {
         difference () {
             translate([-2.5, 0, 0]) cube([ panel_2_x - 41, cover_h + 2 + (MATERIAL * 2) + 1  + 3, MATERIAL], center = true);
-            translate([28, -13 - 3.1, 0]) cube([25, MATERIAL, MATERIAL], center = true);
-            translate([-28, -13 - 3.1, 0]) cube([25, MATERIAL, MATERIAL], center = true);
-            translate([28, 13 + 3.1, 0]) cube([25, MATERIAL, MATERIAL], center = true);
-            translate([-28, 13 + 3.1, 0]) cube([25, MATERIAL, MATERIAL], center = true);
+            translate([28, -(cover_h / 2) - (MATERIAL * 1.5), 0]) cube([25, MATERIAL, MATERIAL], center = true);
+            translate([-28, -(cover_h / 2) - (MATERIAL * 1.5), 0]) cube([25, MATERIAL, MATERIAL], center = true);
+            translate([28, (cover_h / 2) + (MATERIAL * 1.5), 0]) cube([25, MATERIAL, MATERIAL], center = true);
+            translate([-28, (cover_h / 2) + (MATERIAL * 1.5), 0]) cube([25, MATERIAL, MATERIAL], center = true);
             
             translate([-35.5, -13 - 8.1, 0]) cube([MATERIAL, 25, MATERIAL], center = true); //side tabs
             translate([-35.5, 13 + 8.1, 0]) cube([MATERIAL, 25, MATERIAL], center = true); //side tabs
@@ -226,10 +226,10 @@ module intval_laser_panel_cover (LASER = false, DEBUG = false, ALL_RED = false) 
    module bottom_side () {
         difference () {
             translate([.25, 0, 0]) cube([ panel_2_x - 39.5, cover_h + 2 + (MATERIAL * 2) + 1  + 3, MATERIAL], center = true);
-            translate([25, -13 - 3.1, 0]) cube([25, MATERIAL, MATERIAL], center = true);
-            translate([-25, -13 - 3.1, 0]) cube([25, MATERIAL, MATERIAL], center = true);
-            translate([30, 13 + 3.1, 0]) cube([25, MATERIAL, MATERIAL], center = true);
-            translate([-30, 13 + 3.1, 0]) cube([25, MATERIAL, MATERIAL], center = true);
+            translate([25, -(cover_h / 2) - (MATERIAL * 1.5), 0]) cube([25, MATERIAL, MATERIAL], center = true);
+            translate([-25, -(cover_h / 2) - (MATERIAL * 1.5), 0]) cube([25, MATERIAL, MATERIAL], center = true);
+            translate([30, (cover_h / 2) + (MATERIAL * 1.5), 0]) cube([25, MATERIAL, MATERIAL], center = true);
+            translate([-30, (cover_h / 2) + (MATERIAL * 1.5), 0]) cube([25, MATERIAL, MATERIAL], center = true);
             translate([-15, 1, 0]) cylinder(r = 6/2, h = 50, center = true); //hole for audio jack -> add countersink
             translate([9, 1, 0]) cylinder(r = 8/2, h = 20, center = true); //hole for female DC power jack, 12vdc
             
