@@ -132,7 +132,7 @@ module geared_motor_mount_120 (DECOYS = false) {
 }
 
 
-module motor_mount_bottom (DECOYS = false) {
+module motor_mount_bottom () {
     $fn = 60;
 	mount_d = 45;
 	base_d = 45;
@@ -192,10 +192,10 @@ module motor_mount_bottom (DECOYS = false) {
 	module panel_attachment () {
             difference () {
                 union() {
-                    translate([0, 0, 2]) cylinder(r = 7/2, h = height - shelf_h, center = true);
+                    translate([0, 0, 7.75 + 3.5]) cylinder(r = 7/2, h = 44 - shelf_h, center = true);
                     translate([3.5, 0, 0]) cube([7, 7, height - shelf_h - 4], center = true);
                 }
-                cylinder(r = 3.2/2, h = height, center = true);
+                translate([0, 0, 25]) cylinder(r = 3.2/2, h = 50, center = true);
             }
     }
     translate([8, -9, (height - shelf_h) / 2 + 3.75]) panel_attachment();
@@ -203,13 +203,6 @@ module motor_mount_bottom (DECOYS = false) {
 	microswitch_holder();
 	bolt_holder([mm_x[2], mm_y[2], ((height - shelf_h)/ 2) + 3.75], 0, height - shelf_h - 4, 6); //bottom left mount
 	bolt_holder([mm_x[3], mm_y[3], ((height - shelf_h)/ 2) + 3.75], 180, height - shelf_h - 4, 6); //bottom right mount
-    if (DECOYS) {
-        difference () {
-            translate([35, 0 , 0]) decoys(44, 8, 6);
-        }
-        translate([0, 0, 8]) cube([4, 4, 4], center = true);
-        translate([40, 55, 8]) cube([4, 4, 4], center = true);
-    }
 }
 module bolt_holder (position = [0, 0, 0], rotate_z = 0, h = 17, length = 4.5, hole = true, tight = 0) {
     bolt_r = 6; 
