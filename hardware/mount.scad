@@ -192,7 +192,7 @@ module motor_mount_bottom () {
 	module panel_attachment () {
             difference () {
                 union() {
-                    translate([0, 0, 7.75 + 3.5]) cylinder(r = 7/2, h = 44 - shelf_h, center = true);
+                    translate([0, 0, 7.75 + 3]) cylinder(r = 7/2, h = 44 - shelf_h, center = true);
                     translate([3.5, 0, 0]) cube([7, 7, height - shelf_h - 4], center = true);
                 }
                 translate([0, 0, 25]) cylinder(r = 3.2/2, h = 50, center = true);
@@ -203,6 +203,13 @@ module motor_mount_bottom () {
 	microswitch_holder();
 	bolt_holder([mm_x[2], mm_y[2], ((height - shelf_h)/ 2) + 3.75], 0, height - shelf_h - 4, 6); //bottom left mount
 	bolt_holder([mm_x[3], mm_y[3], ((height - shelf_h)/ 2) + 3.75], 180, height - shelf_h - 4, 6); //bottom right mount
+	if (DECOYS) {
+		difference () {
+			translate([35, 0 , 0]) decoys(44, 8, 6);
+		}
+		translate([0, 0, 8]) cube([4, 4, 4], center = true);
+		translate([40, 55, 8]) cube([4, 4, 4], center = true);
+	}
 }
 module bolt_holder (position = [0, 0, 0], rotate_z = 0, h = 17, length = 4.5, hole = true, tight = 0) {
     bolt_r = 6; 
@@ -270,4 +277,17 @@ module pcb_mount () {
 	translate([DISTANCE_X, DISTANCE_Y, 0]) stand();
 	translate([0, DISTANCE_Y, 0]) stand();
 	translate([DISTANCE_X/2, DISTANCE_Y/2, -4]) rounded_cube([DISTANCE_X + OUTER, DISTANCE_Y + OUTER, 4], OUTER, center = true);
+}
+
+module bolt_guide () {
+	$fn = 60;
+	H = 39;
+	difference () {
+		union() {
+			cylinder(r = 10 / 2, h = H, center = true);
+			translate([0, 0, -(H / 2) + 1]) cylinder(r = 14 / 2, h = 2, center = true);
+		}
+		cylinder(r = 7 / 2, h = H + 1, center = true);
+		translate([12, 0, -(H / 2) + 1]) cube([14, 14, 3], center = true);
+	}
 }
