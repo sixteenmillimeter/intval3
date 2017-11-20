@@ -254,8 +254,12 @@ module intval_laser_panel_cover (LASER = false, DEBUG = false, ALL_RED = false) 
             translate([-33.5 - 20 - 1, 17.3, 0]) cube([MATERIAL, 17.5, MATERIAL], center = true);
             translate([-33.5 - 20 - 1, -17.3, 0]) cube([MATERIAL, 17.5, MATERIAL], center = true);
             
-            translate([9 - 20, 1 + 5, 0]) cylinder(r = 6/2, h = 50, center = true); //hole for audio jack -> add countersink
-            translate([-15 - 20, 1 + 5, 0])  cylinder(r = 8/2, h = 20, center = true); //hole for female DC power jack, 12vdc
+            //hole for audio jack -> add countersink
+            translate([7, 10, 0]) cylinder(r = 6/2, h = 50, center = true);
+            //hole for female DC power jack, 12vdc
+            //translate([-15 - 20, 1 + 5, 0])  cylinder(r = 8/2, h = 20, center = true); //smaller DC jack
+            translate([23, 8, 0])  cylinder(r = 12/2, h = 20, center = true); //larger DC jack
+
             //usb negative
             translate([0, -15, 0]) cube([30, 10, 20], center = true);
 

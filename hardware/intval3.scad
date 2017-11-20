@@ -39,9 +39,9 @@ module exploded_view () {
 //bolex_pin_laser(0, 0);
 //intval_laser_standoffs_plate();
 //intval_electronics_mount("METRO");
-motor_mount_bottom();
+//motor_mount_bottom();
 //projection () intval_panel_laser();
-//intval_laser_panel_cover(true, ALL_RED=true);
+intval_laser_panel_cover(true, ALL_RED=true);
 //rotate([0, 0, 13]) intval_panel_laser();
 //rotate([0, 0, 13]) intval_laser_panel_cover();
 //key_cap();
