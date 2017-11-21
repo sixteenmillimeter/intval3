@@ -443,7 +443,9 @@
 	web.getState = function () {
 		fetch('/status')
 			.then(res => {
-				return res.json()
+				let r = res.json();
+				console.dir(r);
+				return r;
 			})
 			.then(web.getStateSuccess)
 			.catch(err => {
