@@ -328,15 +328,16 @@
 
 	var setExposureScale = function () {
 		'use strict';
-		var scale = $('#scale').val();
+		const scale = document.getElementById('scale').value;
+		const elem = document.getElementById('exposure');
 		if (scale === 'ms') {
-			$('#exposure').val(STATE.exposure);
+			elem.STATE.exposure;
 		} else if (scale === 'sec') {
-			$('#exposure').val(STATE.exposure / 1000);
+			elem.value = STATE.exposure / 1000;
 		} else if (scale === 'min') {
-			$('#exposure').val(STATE.exposure / (1000 * 60));
+			elem.value = STATE.exposure / (1000 * 60);
 		} else if (scale === 'hour') {
-			$('#exposure').val(STATE.exposure / (1000 * 60 * 60));
+			elem.value = STATE.exposure / (1000 * 60 * 60);
 		}
 		STATE.scale = scale;
 	};
@@ -446,9 +447,7 @@
 		}
 		fetch('/status', opts)
 			.then(res => {
-				let r = res.json();
-				console.dir(r);
-				return r;
+				return res.json();
 			})
 			.then(web.getStateSuccess)
 			.catch(err => {
@@ -457,16 +456,14 @@
 			});
 	};
 	web.getStateSuccess = function (res) {
-		console.dir(res)
-		return;
-		var exposure;
-		var scale;
+		let exposure;
+		let scale;
 		if (res.frame.dir !== true) {
-			$('#dir').prop('checked', true);
+			document.getElementById('dir').checked = true;
 			STATE.dir = res.frame.dir;
 			setDirLabel(false);
 		}
-		$('#counter').val(res.counter);
+		document.getElementById('counter').value = res.counter;
 		STATE.counter = res.counter;
 		//Exposure
 		if (res.frame.exposure === 0) {
@@ -475,11 +472,11 @@
 		STATE.exposure = res.frame.exposure;
 		exposure = shutter(STATE.exposure);
 		scale = scaleAuto(STATE.exposure);
-		$('#str').text(exposure.str);
-		$('#scale').val(scale);
+		document.getElementById('str').value = exposure.str;
+		document.getElementById('scale').value = scale;
 		setExposureScale();
 
-		$('#delay').val(res.frame.delay);
+		document.getElementById('delay').value = res.frame.delay;
 		STATE.delay = res.frame.delay;
 	};
 	web.setExposure = function () {
