@@ -408,7 +408,7 @@
 		}
 	};
 	web.setDir = function () {
-		var dir = document.getElementById('dir').checked;
+		var dir = !document.getElementById('dir').checked;
 		/*$.ajax({
 			method : 'POST',
 			url : '/dir',
@@ -418,7 +418,7 @@
 			success : web.setDirSuccess
 		});*/
 		var opts = {
-			method : '/POST',
+			method : 'POST',
 			body : { dir : dir}
 		};
 		fetch('/dir', opts).then(web.setDirSuccess);
