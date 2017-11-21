@@ -441,7 +441,10 @@
 		console.log(`setDir to ${res.dir}`);
 	};
 	web.getState = function () {
-		fetch('/status')
+		const opts = {
+			method : 'GET'
+		}
+		fetch('/status', opts)
 			.then(res => {
 				let r = res.json();
 				console.dir(r);
@@ -454,6 +457,8 @@
 			});
 	};
 	web.getStateSuccess = function (res) {
+		console.dir(res)
+		return;
 		var exposure;
 		var scale;
 		if (res.frame.dir !== true) {
