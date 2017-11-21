@@ -258,6 +258,7 @@
 		delayScale : 'ms',
 		counter : 0
 	}
+	//functions
 	var frame;
 	var getState;
 	var setDir;
@@ -386,15 +387,10 @@
 		$('#mscriptIcon').removeClass('selected');
 		$('#settingsIcon').addClass('selected');
 	};
-
-	function () {
-		
-	};
 </script>
 <script>
 	var web = {};
 	web.frame = function () {
-		'use strict';
 		$.ajax({
 			method : 'POST',
 			url : '/frame',
@@ -404,7 +400,6 @@
 		});
 	}
 	web.frameSuccess = function (res) {
-		'use strict';
 		$('#frame').blur();
 		if (res.dir === true) {
 			incCounter(1);
@@ -413,8 +408,7 @@
 		}
 	};
 	web.setDir = function () {
-		'use strict';
-		var dir = !$('#dir').is(':checked');
+		var dir = document.getElementById('dir').checked;
 		/*$.ajax({
 			method : 'POST',
 			url : '/dir',
