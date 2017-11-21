@@ -344,15 +344,16 @@
 
 	var setDelayScale = function () {
 		'use strict';
-		var scale = $('#scale').val();
+		const scale = document.getElementById('scale').value;
+		const elem = document.getElementsById('delay');
 		if (scale === 'ms') {
-			$('#delay').val(STATE.delay);
+			elem.value = STATE.delay;
 		} else if (scale === 'sec') {
-			$('#delay').val(STATE.delay / 1000);
+			elem.value = STATE.delay / 1000;
 		} else if (scale === 'min') {
-			$('#delay').val(STATE.delay / (1000 * 60));
+			elem.value = STATE.delay / (1000 * 60);
 		} else if (scale === 'hour') {
-			$('#delay').val(STATE.delay / (1000 * 60 * 60));
+			elem.value = STATE.delay / (1000 * 60 * 60);
 		}
 		STATE.delayScale = scale;
 	};
@@ -479,62 +480,78 @@
 		STATE.delay = res.frame.delay;
 	};
 	web.setExposure = function () {
-		var exposure = $('#exposure').val();
+		let exposure = document.getElementById('exposure').value;
+		let scaledExposure;
+		let opts
 		if (exposure === '' || exposure === null) {
 			exposure = 0;
 		}
-		var scaledExposure = scaleTime(exposure, STATE.scale);
-		$.ajax({
+		scaledExposure = scaleTime(exposure, STATE.scale);
+		opts = {
 			method : 'POST',
-			url : '/exposure',
-			data : JSON.stringify({ exposure : scaledExposure }),
-			contentType: 'application/json',
-			dataType : 'json',
-			success : web.setExposureSuccess
-		});
-
+			headers : web._header,
+			body : JSON.stringify({ eposure : scaledExposure })
+		}
+		fetch('/exposure', opts)
+			.then(web.useJson)
+			.then(web.setExposureSuccess)
+			.catch(err => {
+				console.error('Error setting exposure');
+				console.error(err);
+			});
 	};
 	web.setExposureSuccess = function (res) {
-		var exposure;
+		let exposure;
 		if (res.exposure < BOLEX.expected) {
 			res.exposure = BOLEX.expected;
 		}
 		STATE.exposure = res.exposure;
 		exposure = shutter(STATE.exposure);
-		$('#str').text(exposure.str);
-		console.log('setExposure to ' + res.exposure);
+		document.getElementById('str').value = exposure.str;
+		console.log(`setExposure to ${res.exposure}`);
 	};
 	web.setDelay = function () {
-		var delay = $('#delay').val();
-		var scaledDelay = scaleTime(delay, STATE.delayScale);
-		$.ajax({
+		const delay = document.getElementById('delay').value;
+		const scaledDelay = scaleTime(delay, STATE.delayScale)
+		let opts = {
 			method : 'POST',
-			url : '/delay',
-			data : JSON.stringify({ delay : scaledDelay }),
-			contentType: 'application/json',
-			dataType : 'json',
-			success : web.setDelaySuccess
-		});
+			headers : web._header,
+			body : JSON.stringify({ delay : scaledDelay })
+		}
+		fetch('/delay', opts)
+			.then(web.useJson)
+			.then(web.setDelaySuccess)
+			.catch(err => {
+				console.error('Error setting delay');
+				console.error(err);
+			})
 	};
 	web.setDelaySuccess = function (res) {
 		STATE.delay = res.delay;
-		console.log('setDelay to ' + res.delay);
+		console.log(`setDelay to ${res.delay}`);
 	};
 	web.setCounter = function () {
-		var counter = $('#counter').val();
-		$.ajax({
+		const counter = document.getElementById('counter').value;
+		const opts = {
 			method : 'POST',
-			url : '/counter',
-			data : JSON.stringify({ counter : counter }),
-			contentType: 'application/json',
-			dataType : 'json',
-			success : web.setCounterSuccess
-		});
+			headers : web._header,
+			data : JSON.stringify({ counter : counter })
+		}
+		fetch('/counter', opt)
+			.then(web.useJson)
+			.then(web.setCounterSuccess)
+			.catch(err => {
+				console.error('Error setting counter');
+				console.error(err);
+			})
 	};
 	web.setCounterSuccess = function (res) {
 		STATE.counter = res.counter;
-		console.log('setCounter to ' + res.counter);
+		console.log(`setCounter to ${res.counter}`);
 	};
+	web.useJson = function (res) {
+		return res.json();
+	}
 	web.init = function () {
 		frame = web.frame;
 		getState = web.getState;
