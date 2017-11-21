@@ -398,8 +398,7 @@
 	web.frame = function () {
 		const opts = {
 			method : 'POST',
-			headers : web._header,
-			body : JSON.stringify({})
+			headers : web._header
 		};
 		fetch('/frame', opts)
 			.then(res => {
