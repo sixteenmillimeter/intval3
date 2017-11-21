@@ -410,7 +410,7 @@
 		}
 	};
 	web.setDir = function () {
-		const dir = !document.getElementById('dir').checked;
+		const dir = document.getElementById('dir').checked;
 		/*$.ajax({
 			method : 'POST',
 			url : '/dir',
@@ -423,7 +423,14 @@
 			method : 'POST',
 			body : { dir : dir}
 		};
-		fetch('/dir', opts).then(web.setDirSuccess);
+		fetch('/dir', opts)
+			.then(res => {
+				return res.json()
+			})
+			.then(web.setDirSuccess).catch(err => {
+				console.error('Error setting direction')
+				console.error(err);
+			});
 	};
 	web.setDirSuccess = function (res) {
 		STATE.dir = res.dir;
