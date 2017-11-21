@@ -268,7 +268,6 @@
 	var setCounter;
 	//ms
 	var shutter = function (exposure) {
-		'use strict';
 		var fraction = BOLEX.expected / 1000;
 		var speed;
 		var corrected;
@@ -301,7 +300,6 @@
 	};
 
 	var scaleAuto = function (ms) {
-		'use strict';
 		if (ms < 1000) {
 			return 'ms'
 		} else if (ms >= 1000 && ms < 1000 * 60) {
@@ -314,7 +312,6 @@
 	};
 
 	var scaleTime = function (raw, scale) {
-		'use strict';
 		if (scale === 'ms') {
 			return raw
 		} else if (scale === 'sec') {
@@ -327,7 +324,6 @@
 	};
 
 	var setExposureScale = function () {
-		'use strict';
 		const scale = document.getElementById('scale').value;
 		const elem = document.getElementById('exposure');
 		if (scale === 'ms') {
@@ -343,7 +339,6 @@
 	};
 
 	var setDelayScale = function () {
-		'use strict';
 		const scale = document.getElementById('scale').value;
 		const elem = document.getElementsById('delay');
 		if (scale === 'ms') {
@@ -490,7 +485,7 @@
 		opts = {
 			method : 'POST',
 			headers : web._header,
-			body : JSON.stringify({ eposure : scaledExposure })
+			body : JSON.stringify({ exposure : scaledExposure })
 		}
 		fetch('/exposure', opts)
 			.then(web.useJson)
