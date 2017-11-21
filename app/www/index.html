@@ -392,6 +392,7 @@
 <script>
 	'use strict'
 	const web = {};
+	web._header = new Headers({ 'content-type' : 'application/json' })
 	web.frame = function () {
 		$.ajax({
 			method : 'POST',
@@ -414,6 +415,7 @@
 		console.log('set to => ' + dir)
 		const opts = {
 			method : 'POST',
+			headers : web._header,
 			body : JSON.stringify({ dir : dir })
 		};
 		console.dir(opts)
