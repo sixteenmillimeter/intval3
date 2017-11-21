@@ -411,18 +411,14 @@
 	};
 	web.setDir = function () {
 		const dir = document.getElementById('dir').checked;
-		/*$.ajax({
-			method : 'POST',
-			url : '/dir',
-			data : JSON.stringify({ dir : dir}),
-			contentType: 'application/json',
-			dataType : 'json',
-			success : web.setDirSuccess
-		});*/
+		const formData = new FormData()
+		console.log('set to => ' + dir)
+		formData.append('json', JSON.stringify({ dir : dir }))
 		const opts = {
 			method : 'POST',
-			body : { dir : dir}
+			body : formData
 		};
+		console.dir(opts)
 		fetch('/dir', opts)
 			.then(res => {
 				return res.json()
