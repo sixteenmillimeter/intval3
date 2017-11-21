@@ -408,6 +408,7 @@
 	}
 	web.frameSuccess = function (res) {
 		document.getElementById('frame').blur();
+		console.log(`Frame ${res.dir ? 'forward' : 'backward'} took ${res.len}ms`)
 		if (res.dir === true) {
 			incCounter(1);
 		} else {
