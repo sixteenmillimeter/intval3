@@ -331,7 +331,7 @@
 		const scale = document.getElementById('scale').value;
 		const elem = document.getElementById('exposure');
 		if (scale === 'ms') {
-			elem.STATE.exposure;
+			elem.value = STATE.exposure;
 		} else if (scale === 'sec') {
 			elem.value = STATE.exposure / 1000;
 		} else if (scale === 'min') {
