@@ -381,6 +381,9 @@
 		elem.value = (parseInt(current) + val);
 		STATE.counter += val;
 	};
+	var forceCounter = function (val) {
+		document.getElementById('counter').value = val;
+	}
 	var unsetPages = function () {
 		const pages = document.getElementsByClassName('page');
 		const icons = document.getElementsByClassName('icon');
@@ -573,6 +576,7 @@
 	};
 	web.setCounterSuccess = function (res) {
 		STATE.counter = res.counter;
+		forceCounter(res.counter);
 		console.log(`setCounter to ${res.counter}`);
 	};
 	web.useJson = function (res) {
