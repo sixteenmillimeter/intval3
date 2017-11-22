@@ -1,6 +1,6 @@
 {
   "name": "intval3",
-  "version": "0.0.1",
+  "version": "3.0.1",
   "description": "Intervalometer for the Bolex",
   "main": "index.js",
   "scripts": {
