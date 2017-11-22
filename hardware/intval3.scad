@@ -50,7 +50,7 @@ intval_laser_panel_cover(true, ALL_RED=true);
 //motor_key_120();
 //plunger_plate();
 //motor_cap(false);
-//motor_cap_120(false);
+motor_cap_120(false);
 //translate([0, 0, 39 / 2 + 5.75]) bolt_guide();
 
 //exploded_view();
