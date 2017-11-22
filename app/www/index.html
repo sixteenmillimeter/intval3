@@ -557,7 +557,8 @@
 	web.setCounter = function () {
 		const counter = document.getElementById('counter').value;
 		const change = prompt(`Change counter value?`, counter);
-		if (change === null || !isNumeric(change)) return false
+		if (change === null || !isNumeric(change)) return false;
+		console.log(change);
 		const opts = {
 			method : 'POST',
 			headers : web._header,
