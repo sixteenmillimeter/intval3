@@ -76,8 +76,8 @@ Using GPIO 05 on Raspberry Pi Zero W.
 
 1) If closed, start timer.
 2) If opened, check timer AND
-3) If `press` (`now - intval._state.release.time`) greater than minimum and less than `intval._releaseSequence`, start frame
-4) If `press` greater than `intval._releaseSequence`, start sequence
+3) If `press` (`now - intval._state.release.time`) greater than minimum and less than `intval._release.seq`, start frame
+4) If `press` greater than `intval._release.seq`, start sequence
 
 Button + 10K ohm resistor 
 * 1 === open 
