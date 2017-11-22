@@ -563,7 +563,7 @@
 			headers : web._header,
 			data : JSON.stringify({ counter : change })
 		}
-		fetch('/counter', opt)
+		fetch('/counter', opts)
 			.then(web.useJson)
 			.then(web.setCounterSuccess)
 			.catch(err => {
