@@ -154,7 +154,7 @@ function rCounter (req, res, next) {
 		counter = intval._state.counter
 	}
 	log.info('/counter', { method : req.method, set : set, counter : counter })
-	req.send({ counter : counter })
+	res.send({ counter : counter })
 	return next()
 }
 
