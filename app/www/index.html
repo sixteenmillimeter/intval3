@@ -558,11 +558,10 @@
 		const counter = document.getElementById('counter').value;
 		const change = prompt(`Change counter value?`, counter);
 		if (change === null || !isNumeric(change)) return false;
-		console.log(change);
 		const opts = {
 			method : 'POST',
 			headers : web._header,
-			data : JSON.stringify({ counter : change })
+			body : JSON.stringify({ counter : change })
 		}
 		fetch('/counter', opts)
 			.then(web.useJson)
