@@ -4,7 +4,7 @@ const restify = require('restify')
 const log = require('./lib/log')('main')
 const fs = require('fs')
 
-//const ble = require('./lib/blootstrap')
+const ble = require('./lib/ble')
 const intval = require('./lib/intval')
 
 const PACKAGE = require('./package.json')
@@ -36,6 +36,10 @@ function createServer () {
 	app.listen(PORT, () => {
 		log.info('server', { name : APPNAME, port : PORT })
 	})
+}
+
+function bleBindings () {
+	
 }
 
 function rDir (req, res, next) {
