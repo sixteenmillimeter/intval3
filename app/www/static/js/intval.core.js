@@ -11,14 +11,15 @@ const STATE = {
 	scale : 'ms',
 	delayScale : 'ms',
 	counter : 0
-}
+};
 //functions
-let frame;
-let getState;
-let setDir;
-let setExposure;
-let setDelay;
-let setCounter;
+window.frame = null;
+window.getState = null;
+window.setDir = null;
+window.setExposure = null;
+window.setDelay = null;
+window.setCounter = null;
+
 //ms
 var shutter = function (exposure) {
 	let fraction = BOLEX.expected / 1000;
