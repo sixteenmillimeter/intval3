@@ -170,4 +170,3 @@ web.init = function () {
 
 	web.getState();
 };
-web.init();
