@@ -7,7 +7,7 @@ apt-get install git ufw nginx jq -y
 echo "Installing node.js dependencies.."
 apt-get install nodejs npm -y
 npm install -g n
-n latest
+n 9.1.0
 npm install -g npm@latest
 npm install -g pm2
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Running intval3 install script"
+echo "Running intval3 dependency install script"
 apt-get update
 apt-get install git ufw nginx jq -y
 
