@@ -148,11 +148,6 @@ var settingsPage = function () {
 	document.getElementById('settings').classList.add('selected');
 	document.getElementById('settingsIcon').classList.add('selected');
 };
-var sequencerPage = function () {
-	unsetPages();
-	document.getElementById('sequencer').classList.add('selected');
-	document.getElementById('sequencerIcon').classList.add('selected');
-};
 var mscriptPage = function () {
 	unsetPages();
 	document.getElementById('mscript').classList.add('selected');
