@@ -3,7 +3,7 @@
 		{
 			"name" : "intval3",
 			"script" : "./index.js",
-			"watch" : true,
+			"watch" : false,
 			"env" : {
 				"BLENO_DEVICE_NAME" : "intval3",
 				"DEVICE_ID" : "intval3",
