@@ -6,6 +6,7 @@ const fs = require('fs')
 
 const ble = require('./lib/ble')
 const intval = require('./lib/intval')
+const sequence = require('./lib/sequence')
 
 const PACKAGE = require('./package.json')
 const PORT = process.env.PORT || 6699
@@ -29,8 +30,8 @@ function createServer () {
 	app.post('/counter', rCounter)
 	app.get( '/frame', rFrame)
 	app.post('/frame', rFrame)
-	app.get( '/sequence', () => {})
-	app.post('/sequence', () => {})
+	app.get( '/sequence', rSequence)
+	app.post('/sequence', rSequence)
 	app.post('/reset', rReset)
 	app.get( '/status', rStatus)
 	app.listen(PORT, () => {
@@ -111,7 +112,8 @@ function rDelay (req, res, next) {
 			delay = req.query.delay
 		}
 		set = true
-	} else if (req.body && typeof req.body.delay !== 'udnefined') {
+	}
+	if (req.body && typeof req.body.delay !== 'udnefined') {
 		if (typeof req.body.delay === 'string') {
 			delay = parseInt(req.body.delay)
 		} else {
@@ -195,6 +197,20 @@ function rFrame (req, res, next) {
 			exposure = req.body.exposure
 		}
 	}
+	if (req.query && typeof req.query.delay !== 'undefined') {
+		if (typeof req.query.delay === 'string') {
+			delay = parseInt(req.query.delay)
+		} else {
+			delay = req.query.delay
+		}
+	}
+	if (req.body && typeof req.body.delay !== 'udnefined') {
+		if (typeof req.body.delay === 'string') {
+			delay = parseInt(req.body.delay)
+		} else {
+			delay = req.body.delay
+		}
+	}
 	log.info('/frame', { method : req.method, dir : dir, exposure : exposure })
 	intval.frame(dir, exposure, (len) => {
 		res.send({ dir : dir, len : len})
@@ -214,6 +230,51 @@ function rReset (req, res, next) {
 		res.send(intval._state)
 		return next()
 	}, 10)
+}
+
+function rSequence (req, res, next) {
+	let dir = true
+	let exposure = 0
+	let delay = 0
+	if (req.query && typeof req.query.dir !== 'undefined') {
+		if (typeof req.query.dir === 'string') {
+			dir = (req.query.dir === 'true')
+		} else {
+			dir = req.query.dir
+		}
+	}
+	if (req.body && typeof req.body.dir !== 'undefined') {
+		if (typeof req.body.dir === 'string') {
+			dir = (req.body.dir === 'true')
+		} else {
+			dir = req.body.dir
+		}
+	}
+	if (req.query && typeof req.query.exposure !== 'undefined') {
+		if (typeof req.query.exposure === 'string') {
+			exposure = parseInt(req.query.exposure)
+		} else {
+			exposure = req.query.exposure
+		}
+	}
+	if (req.body && typeof req.body.exposure !== 'undefined') {
+		if (typeof req.body.exposure === 'string') {
+			exposure = parseInt(req.body.exposure)
+		} else {
+			exposure = req.body.exposure
+		}
+	}
+	if (sequence.active) {
+		return sequence.stop(() => {
+			res.send({ stopped : true })
+			return next()
+		})
+	} else {
+		return sequence.start({}, (seq) => {
+			res.send(seq)
+			return next()
+		})
+	}
 }
 
 function index (req, res, next) {
