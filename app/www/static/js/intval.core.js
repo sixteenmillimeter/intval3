@@ -128,14 +128,15 @@ var forceCounter = function (val) {
 	document.getElementById('counter').value = val;
 }
 var unsetPages = function () {
-	const pages = document.getElementsByClassName('page');
-	const icons = document.getElementsByClassName('icon');
+	const pages = document.querySelectorAll('.page');
+	const icons = document.querySelectorAll('.icon');
 	for (let icon of icons) {
 		if (icon.classList.contains('selected')) icon.classList.remove('selected');
-	}
+	};
 	for (let page of pages){;
 		if (page.classList.contains('selected')) page.classList.remove('selected');
 	}
+
 };
 var appPage = function () {
 	unsetPages();
@@ -156,6 +157,7 @@ var mscriptPage = function () {
 	unsetPages();
 	document.getElementById('mscript').classList.add('selected');
 	document.getElementById('mscriptIcon').classList.add('selected');
+	editor.cm.refresh();
 };
 var isNumeric = function (n) {
 		return !isNaN(parseFloat(n)) && isFinite(n);
