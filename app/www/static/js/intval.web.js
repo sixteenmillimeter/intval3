@@ -162,10 +162,10 @@ web.useJson = function (res) {
 	return res.json();
 }
 web.init = function () {
-	//window.frame = web.frame;
-	//window.getState = web.getState;
-	//window.setDir = web.setDir;
-	//window.setExposure = web.setExposure;
-	//window.setCounter = web.setCounter;
+	window.frame = web.frame;
+	window.getState = web.getState;
+	window.setDir = web.setDir;
+	window.setExposure = web.setExposure;
+	window.setCounter = web.setCounter;
 	console.log('started web')
 };
