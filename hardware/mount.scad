@@ -192,7 +192,7 @@ module motor_mount_bottom () {
 	module panel_attachment () {
             difference () {
                 union() {
-                    translate([0, 0, 7.75 + 3]) cylinder(r = 7/2, h = 44 - shelf_h, center = true);
+                    translate([0, 0, 7.75 + 3]) cylinder(r = 10/2, h = 44 - shelf_h, center = true);
                     translate([3.5, 0, 0]) cube([7, 7, height - shelf_h - 4], center = true);
                 }
                 translate([0, 0, 25]) cylinder(r = 3.2/2, h = 50, center = true);
