@@ -290,9 +290,9 @@ function index (req, res, next) {
 function init () {
 	createServer()
 
-	/*ble.on('data', (str) => {
+	ble.on('data', (str) => {
 		console.log(str)
-	})*/
+	})
 	intval.init()
 }
 
