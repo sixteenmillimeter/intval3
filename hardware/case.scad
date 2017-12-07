@@ -406,12 +406,16 @@ module bearing (x, y, z, width= 8, hole = true, calval = 0) {
 }
 
 module key_cap () {
-    $fn = 40;
-	outerD = 22.1;
-	fuzz = 0.1;
+    $fn = 60;
+    thickness = .75;
+    innerD = 22.1;
+	outerD = innerD + (thickness * 2);
+    h = 18 - 2.5;
+    
     difference () {
-        cylinder(r = outerD / 2 + fuzz + 1, h = 18, center = true); 
-        translate([0, 0, -1]) cylinder(r = outerD / 2, h = 16, center = true); 
+        cylinder(r = outerD / 2, h = h, center = true); 
+        translate([0, 0, -1.01]) cylinder(r = innerD / 2, h = h - thickness, center = true); 
+        //translate([100, 0, 0]) cube([200, 200, 200], center = true);
     }
     //decoys(23, 7);
 }
