@@ -289,14 +289,12 @@ function index (req, res, next) {
 	})
 }
 
-function bleGetState () {
-	return intval.state
-}
-
 function init () {
 	createServer()
 	intval.init()
-	ble = new BLE(bleGetState)
+	ble = new BLE(() => {
+		return intval.status()
+	})
 	ble.on('data', (str) => {
 		console.log(str)
 	})
