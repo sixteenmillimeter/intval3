@@ -295,12 +295,11 @@ function bleGetState () {
 
 function init () {
 	createServer()
-
+	intval.init()
+	ble = new BLE(bleGetState)
 	ble.on('data', (str) => {
 		console.log(str)
 	})
-	intval.init()
-	ble = new BLE(bleGetState)
 }
 
 init()
