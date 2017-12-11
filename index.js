@@ -4,7 +4,7 @@ const restify = require('restify')
 const log = require('./lib/log')('main')
 const fs = require('fs')
 
-const ble = require('./lib/ble')
+const BLE = require('./lib/ble')
 const intval = require('./lib/intval')
 const sequence = require('./lib/sequence')
 
@@ -17,6 +17,8 @@ let app = restify.createServer({
 	name: APPNAME,
 	version: '0.0.1'
 })
+
+let ble
 
 function createServer () {
 	app.use(restify.plugins.queryParser())
@@ -287,6 +289,10 @@ function index (req, res, next) {
 	})
 }
 
+function bleGetState () {
+	return intval.state
+}
+
 function init () {
 	createServer()
 
@@ -294,6 +300,7 @@ function init () {
 		console.log(str)
 	})
 	intval.init()
+	ble = new BLE(bleGetState)
 }
 
 init()
