@@ -46,6 +46,7 @@ function createBLE () {
 		return intval.status()
 	})
 	ble.on('frame', bFrame)
+	ble.on('dir', bDir)
 }
 
 //Restify functions
@@ -59,7 +60,7 @@ function rDir (req, res, next) {
 			dir = req.query.dir
 		}
 		set = true
-	} else if (req.body && typeof req.body.dir !== 'udnefined') {
+	} else if (req.body && typeof req.body.dir !== 'undefined') {
 		if (typeof req.body.dir === 'string') {
 			dir = (req.body.dir === 'true')
 		} else {
@@ -87,7 +88,7 @@ function rExposure (req, res, next) {
 			exposure = req.query.exposure
 		}
 		set = true
-	} else if (req.body && typeof req.body.exposure !== 'udnefined') {
+	} else if (req.body && typeof req.body.exposure !== 'undefined') {
 		if (typeof req.body.exposure === 'string') {
 			exposure = parseInt(req.body.exposure)
 		} else {
@@ -119,7 +120,7 @@ function rDelay (req, res, next) {
 		}
 		set = true
 	}
-	if (req.body && typeof req.body.delay !== 'udnefined') {
+	if (req.body && typeof req.body.delay !== 'undefined') {
 		if (typeof req.body.delay === 'string') {
 			delay = parseInt(req.body.delay)
 		} else {
@@ -210,7 +211,7 @@ function rFrame (req, res, next) {
 			delay = req.query.delay
 		}
 	}
-	if (req.body && typeof req.body.delay !== 'udnefined') {
+	if (req.body && typeof req.body.delay !== 'undefined') {
 		if (typeof req.body.delay === 'string') {
 			delay = parseInt(req.body.delay)
 		} else {
@@ -286,10 +287,42 @@ function rSequence (req, res, next) {
 //Ble functions
 
 function bFrame (obj, cb) {
-	let dir = intval._state.frame.dir
-	let len = 630
-	console.dir(obj)
+	let dir = true
+	let exposure = 0
+	
+	if (intval._state.frame.dir !== true) {
+		dir = false
+	}
+	if (typeof obj.dir !== 'undefined') {
+		if (typeof obj.dir === 'string') {
+			dir = (obj.dir === 'true')
+		} else {
+			dir = obj.dir
+		}
+	}
+	if (typeof obj.dir !== 'undefined') {
+		exposure
+	}
+	log.info('frame', { method : 'ble', dir : dir, exposure : exposure })
+	/*intval.frame(dir, exposure, (len) => {
+		return cb()
+	})*/
 	setTimeout(cb, 630)
+}
+
+function bDir (obj, cb) {
+	let dir = true
+	let set = false
+	if (obj.dir !== 'undefined') {
+		if (typeof obj.dir === 'string') {
+			dir = (obj.dir === 'true')
+		} else {
+			dir = obj.dir
+		}
+	}
+	intval.setDir(dir)
+	log.info('dir', { method: 'ble', dir : dir })
+	cb()
 }
 
 function index (req, res, next) {
