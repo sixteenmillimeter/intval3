@@ -41,10 +41,14 @@ function createServer () {
 	})
 }
 
-function bleBindings () {
-	
+function createBLE () {
+	ble = new BLE(() => {
+		return intval.status()
+	})
+	ble.on('frame', bFrame)
 }
 
+//Restify functions
 function rDir (req, res, next) {
 	let dir = true
 	let set = false
@@ -279,6 +283,13 @@ function rSequence (req, res, next) {
 	}
 }
 
+//Ble functions
+
+function bFrame (cb) {
+	console.log(str)
+	cb({ dir: true, len : 630 })
+}
+
 function index (req, res, next) {
 	fs.readFile(INDEXPATH, 'utf8', (err, data) => {
 		if (err) {
@@ -290,14 +301,9 @@ function index (req, res, next) {
 }
 
 function init () {
-	createServer()
 	intval.init()
-	ble = new BLE(() => {
-		return intval.status()
-	})
-	ble.on('data', (str) => {
-		console.log(str)
-	})
+	createServer()
+	createBLE()
 }
 
 init()
