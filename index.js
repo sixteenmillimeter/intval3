@@ -286,8 +286,9 @@ function rSequence (req, res, next) {
 //Ble functions
 
 function bFrame (cb) {
-	console.log(str)
-	cb({ dir: true, len : 630 })
+	let dir = intval._state.frame.dir
+	let len = 630
+	cb({ dir: dir, len : len })
 }
 
 function index (req, res, next) {
