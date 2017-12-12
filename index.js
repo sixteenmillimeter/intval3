@@ -285,10 +285,11 @@ function rSequence (req, res, next) {
 
 //Ble functions
 
-function bFrame (cb) {
+function bFrame (obj, cb) {
 	let dir = intval._state.frame.dir
 	let len = 630
-	cb({ dir: dir, len : len })
+	console.dir(obj)
+	setTimeout(cb, 630)
 }
 
 function index (req, res, next) {
