@@ -4,12 +4,15 @@
 	<title>INTVAL</title>
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="format-detection" content="telephone=no">
-	<meta name="viewport" content="width = 320, initial-scale = 1.0, user-scalable = no">
+	<meta name="viewport" content="width = 320, initial-scale = 1.0, user-scalable = no, minimal-ui, viewport-fit=cover">
 	<link rel="stylesheet" href="static/css/codemirror.css" />
 	<link rel="stylesheet" href="static/css/monokai.css" />
 	<link rel="stylesheet" href="static/css/index.css" />
 </head>
 <body>
+<div id="overlay">
+	<div id="spinner"></div>
+</div>
 <div id="app" class="page selected">
 	<h2>INTVAL</h2>
 	<div>
@@ -27,7 +30,7 @@
 	</div>
 	<div>
 		<div class="label">Exposure <span id="str">1/5</span></div>
-		<input type="number" id="exposure" value="630" min="0" oninput="setExposure();" />
+		<input type="number" id="exposure" value="630" min="0" onchange="setExposure();" />
 		<select id="scale" onchange="setExposureScale();">
 			<option value="ms" selected>ms</option>
 			<option value="sec">sec</option>
@@ -37,7 +40,7 @@
 	</div>
 	<div>
 		<div class="label">Delay</div>
-		<input type="number" id="delay" value="0" min="0" step="1" />
+		<input type="number" id="delay" value="0" min="0" step="1" onchange="setDelay();" />
 		<select id="delayScale" onchange="setDelayScale();">
 			<option value="ms" selected>ms</option>
 			<option value="sec">sec</option>
@@ -49,7 +52,7 @@
 		<button id="seq">START SEQUENCE</button>
 	</div>
 	<div>
-		<button id="frame" onclick="frame();">FRAME</button>
+		<button id="frame" onclick="frame();">1 FRAME</button>
 	</div>
 </div>
 <div id="settings" class="page">
@@ -62,16 +65,20 @@
 			<option value="33">2 Stop</option>
 		</select>
 	</div>
-	<h2>BLUETOOTH</h2>
-	<select id="bluetooth">
-		<option>N/A</option>
-	</select>
-	<h2>WIFI</h2>
-	<div>
-		<input type="text" id="ssid" placeholder="Wifi SSID" />
+	<div class="ble">
+		<h2>BLUETOOTH</h2>
+		<select id="bluetooth">
+			<option>N/A</option>
+		</select>
 	</div>
-	<div>
-		<input type="password" id="password" placeholder="Wifi Password" />
+	<div class="ble">
+		<h2>WIFI</h2>
+		<div>
+			<input type="text" id="ssid" placeholder="Wifi SSID" />
+		</div>
+		<div>
+			<input type="password" id="password" placeholder="Wifi Password" />
+		</div>
 	</div>
 </div>
 <div id="mscript" class="page">
@@ -92,6 +99,7 @@
 	</div>
 </footer>
 <script src="cordova.js"></script>
+<script src="static/js/spin.min.js"></script>
 <script src="static/js/codemirror.js"></script>
 <script src="static/js/intval.core.js"></script>
 <script src="static/js/intval.web.js"></script>

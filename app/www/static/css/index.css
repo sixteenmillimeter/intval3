@@ -46,6 +46,12 @@ body{
 .page.selected{
     display: block;
 }
+.ble{
+    display: none;
+}
+.ble.active{
+    display: block;
+}
 h2{
     font-size: 18px;
     text-align: center;
@@ -144,7 +150,8 @@ button{
     padding: 5px 0;
     text-align: center;
 }
-button:focus{
+button:focus,
+button.focus{
     background-color: #20ce45;
     border-color: #20ce45;
     color: #212121;
@@ -162,7 +169,7 @@ button:focus{
     right: 10%;
 }
 .label{
-    text-align: center;
+    /*text-align: center;*/
     color: #666;
     margin-top: 6px;
     margin-bottom: 9px;
@@ -243,4 +250,27 @@ footer > div.selected{
 
 #compile{
     margin-top: 20px;
+}
+
+#seq{
+    margin-top: 40px;
+}
+
+#overlay{
+    position: fixed;
+    z-index: 2001;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+}
+#overlay.active{
+    display: block;
+}
+#spinner{
+    margin-top: 200px;
 }

@@ -12,6 +12,7 @@ const STATE = {
 	delayScale : 'ms',
 	counter : 0
 };
+
 //functions
 window.frame = null;
 window.getState = null;
@@ -93,7 +94,7 @@ var setExposureScale = function () {
 };
 
 var setDelayScale = function () {
-	const scale = document.getElementById('scale').value;
+	const scale = document.getElementById('delayScale').value;
 	const elem = document.getElementById('delay');
 	if (scale === 'ms') {
 		elem.value = STATE.delay;
@@ -138,6 +139,36 @@ var unsetPages = function () {
 	}
 
 };
+
+var setState = function (res) {
+	let exposure;
+	let exposureScale;
+	let delayScale;
+	
+	if (res.frame.dir !== true) {
+		document.getElementById('dir').checked = true;
+		STATE.dir = res.frame.dir;
+		setDirLabel(false);
+	}
+	document.getElementById('counter').value = res.counter;
+	STATE.counter = res.counter;
+	//Exposure
+	if (res.frame.exposure === 0) {
+		res.frame.exposure = BOLEX.expected;
+	}
+	STATE.exposure = res.frame.exposure;
+	exposure = shutter(STATE.exposure);
+	exposureScale = scaleAuto(STATE.exposure);
+
+	document.getElementById('str').value = exposure.str;
+	document.getElementById('scale').value = exposureScale;
+	setExposureScale();
+
+	STATE.delay = res.frame.delay;
+	delayScale = scaleAuto(STATE.delay);
+	document.getElementById('delayScale').value = delayScale;
+	setDelayScale();
+};
 var appPage = function () {
 	unsetPages();
 	document.getElementById('app').classList.add('selected');
@@ -154,6 +185,44 @@ var mscriptPage = function () {
 	document.getElementById('mscriptIcon').classList.add('selected');
 	editor.cm.refresh();
 };
+var spinnerInit = function () {
+	const spinnerOpts = {
+		  lines: 13 // The number of lines to draw
+		, length: 33 // The length of each line
+		, width: 11 // The line thickness
+		, radius: 30 // The radius of the inner circle
+		, scale: 0.5 // Scales overall size of the spinner
+		, corners: 1 // Corner roundness (0..1)
+		, color: '#fff' // #rgb or #rrggbb or array of colors
+		, opacity: 0.25 // Opacity of the lines
+		, rotate: 0 // The rotation offset
+		, direction: 1 // 1: clockwise, -1: counterclockwise
+		, speed: 1 // Rounds per second
+		, trail: 60 // Afterglow percentage
+		, fps: 20 // Frames per second when using setTimeout() as a fallback for CSS
+		, zIndex: 2e9 // The z-index (defaults to 2000000000)
+		, className: 'spinner' // The CSS class to assign to the spinner
+		, top: '50%' // Top position relative to parent
+		, left: '50%' // Left position relative to parent
+		, shadow: true // Whether to render a shadow
+		, hwaccel: true // Whether to use hardware acceleration
+		, position: 'relative' // Element positioning
+	};
+	const target = document.getElementById('spinner');
+	const spinner = new Spinner(spinnerOpts).spin(target);
+};
+var spinnerShow = function () {
+	const elem = document.getElementById('overlay');
+	if (!elem.classList.contains('active')) {
+		elem.classList.add('active');
+	}
+};
+var spinnerHide = function () {
+	const elem = document.getElementById('overlay');
+	if (elem.classList.contains('active')) {
+		elem.classList.remove('active');
+	}
+}
 var isNumeric = function (n) {
 		return !isNaN(parseFloat(n)) && isFinite(n);
 };

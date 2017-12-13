@@ -55,35 +55,11 @@ web.getState = function () {
 		.then(res => {
 			return res.json();
 		})
-		.then(web.getStateSuccess)
+		.then(setState)
 		.catch(err => {
 			console.error('Error getting state');
 			console.error(err);
 		});
-};
-web.getStateSuccess = function (res) {
-	let exposure;
-	let scale;
-	if (res.frame.dir !== true) {
-		document.getElementById('dir').checked = true;
-		STATE.dir = res.frame.dir;
-		setDirLabel(false);
-	}
-	document.getElementById('counter').value = res.counter;
-	STATE.counter = res.counter;
-	//Exposure
-	if (res.frame.exposure === 0) {
-		res.frame.exposure = BOLEX.expected;
-	}
-	STATE.exposure = res.frame.exposure;
-	exposure = shutter(STATE.exposure);
-	scale = scaleAuto(STATE.exposure);
-	document.getElementById('str').value = exposure.str;
-	document.getElementById('scale').value = scale;
-	setExposureScale();
-
-	document.getElementById('delay').value = res.frame.delay;
-	STATE.delay = res.frame.delay;
 };
 web.setExposure = function () {
 	let exposure = document.getElementById('exposure').value;
@@ -165,6 +141,7 @@ web.init = function () {
 	window.frame = web.frame;
 	window.getState = web.getState;
 	window.setDir = web.setDir;
+	window.setDelay = web.setDelay;
 	window.setExposure = web.setExposure;
 	window.setCounter = web.setCounter;
 	console.log('started web')

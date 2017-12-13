@@ -35,7 +35,6 @@ var app = {
     // 'pause', 'resume', etc.
     onDeviceReady: function() {
         mobile.init();
-        getState();
     },
     onDeviceResume : function () {
         getState();
