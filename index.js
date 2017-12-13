@@ -314,10 +314,10 @@ function bFrame (obj, cb) {
 		}
 	}
 	log.info('frame', { method : 'ble', dir : dir, exposure : exposure })
-	/*intval.frame(dir, exposure, (len) => {
+	intval.frame(dir, exposure, (len) => {
 		return cb()
-	})*/
-	setTimeout(cb, exposure === 0 ? 630 : exposure)
+	})
+	//setTimeout(cb, exposure === 0 ? 630 : exposure)
 }
 
 function bDir (obj, cb) {

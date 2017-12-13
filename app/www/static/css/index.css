@@ -37,7 +37,7 @@ html,body,button,h2,label,input{
 
 }
 body{
-    padding-top: 15px;
+    padding-top: 35px;
 }
 .page{
     padding: 5px 10% 0 10%;
@@ -142,7 +142,7 @@ button{
     border-radius: 5px;
     color: #fff;
     font-size: 18px;
-    background: transparent;
+    background: #363636;
     -webkit-appearance: none;
     box-shadow: none;
     outline: none;
@@ -273,4 +273,12 @@ footer > div.selected{
 }
 #spinner{
     margin-top: 200px;
+}
+
+#disconnect,#scan{
+    display: none;
+}
+#disconnect.active,
+#scan.active{
+    display: block;
 }

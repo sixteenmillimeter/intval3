@@ -6,7 +6,7 @@
 			"watch" : false,
 			"env" : {
 				"BLENO_DEVICE_NAME" : "intval3",
-				"DEVICE_ID" : "intval3",
+				"DEVICE_NAME" : "intval3",
 				"SERVICE_ID" : "149582bd-d49d-4b5c-acd1-1ae503d09e7a",
 				"CHAR_ID" : "47bf69fb-f62f-4ef8-9be8-eb727a54fae4",
 				"WIFI_ID" : "3fe7d9cf-7bd2-4ff0-97c5-ebe87288c2cc",

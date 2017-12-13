@@ -19,15 +19,15 @@ mobile.ble.scan = function () {
 	mobile.ble.devices = [];
 	setTimeout(() => {
 		if (!mobile.ble.connected) {
-			ble.stopScan(() => {}, mobile.ble.onError);
 			spinnerHide();
 			alert('No INTVAL devices found.');
+			settingsPage();
 		}
 	}, 5000)
 };
 
 mobile.ble.onDiscover = function (device) {
-	if (device && device.name && device.name === 'intval3') {
+	if (device && device.name && device.name.indexOf('intval3') !== -1) {
 		console.log('BLE - Discovered INTVAL');
 		console.dir(device);
 		mobile.ble.devices.push(device);
@@ -47,19 +47,36 @@ mobile.ble.connect = function (device) {
 };
 
 mobile.ble.onConnect = function (peripheral, device) {
+	const elem = document.getElementById('bluetooth')
+	const option = document.createElement('option')
+	const disconnect = document.getElementById('disconnect');
+	const scan = document.getElementById('scan');
+
 	spinnerHide();
-	ble.stopScan(() => {}, moble.ble.onError);
 	console.log(`BLE - Connected to ${device.id}`);
 	console.log(peripheral);
 	console.dir(device);
+
 	mobile.ble.device = device;
 	mobile.ble.connected = true;
-	
+
+	elem.innerHTML = '';
+	option.text = device.name;
+	option.value = device.id;
+	elem.add(option);
+
+	disconnect.classList.add('active');
+	scan.classList.remove('active');
+
 	getState();
 };
 
 mobile.ble.disconnect = function () {
-	let device
+	const elem = document.getElementById('bluetooth');
+	const option = document.createElement('option');
+	const disconnect = document.getElementById('disconnect');
+	const scan = document.getElementById('scan');
+	let device;
 	if (!mobile.ble.connected) {
 		console.warn('Not connected to any device')
 		return false
@@ -67,6 +84,13 @@ mobile.ble.disconnect = function () {
 	device = mobile.ble.device
 	console.log(`BLE - Disconnecting from ${device.id}`)
 	ble.disconnect(device.id, mobile.ble.onDisconnect, mobile.ble.onDisconnect);
+
+	elem.innerHTML = '';
+	option.text = 'N/A';
+	elem.add(option);
+
+	disconnect.classList.remove('active');
+	scan.classList.add('active');
 };
 
 mobile.ble.onDisconnect = function (res) {

@@ -70,6 +70,8 @@
 		<select id="bluetooth">
 			<option>N/A</option>
 		</select>
+		<button id="disconnect" onclick="mobile.ble.disconnect();">DISCONNECT</button>
+		<button id="scan" class="active" onclick="mobile.ble.scan();">SCAN FOR DEVICE</button>
 	</div>
 	<div class="ble">
 		<h2>WIFI</h2>
@@ -79,6 +81,7 @@
 		<div>
 			<input type="password" id="password" placeholder="Wifi Password" />
 		</div>
+		<button id="wifi" onclick="alert('WIFI');">CONNECT</button>
 	</div>
 </div>
 <div id="mscript" class="page">
