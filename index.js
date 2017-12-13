@@ -49,6 +49,7 @@ function createBLE () {
 	ble.on('dir', bDir)
 	ble.on('exposure', bExposure)
 	ble.on('delay', bDelay)
+	ble.on('counter', bCounter)
 }
 
 //Restify functions
@@ -361,6 +362,20 @@ function bDelay (obj, cb) {
 	}
 	intval.setDelay(delay)
 	log.info('delay', { method: 'ble', delay : delay })
+	return cb()
+}
+
+function bCounter (obj, cb) {
+	let counter = 0
+	if (typeof obj.counter !== 'undefined') {
+		if (typeof obj.counter !== 'string') {
+			counter = parseInt(obj.counter)
+		} else {
+			counter = obj.counter
+		}
+	}
+	intval.setCounter(counter)
+	log.info('counter', { method : 'ble', counter : counter })
 	return cb()
 }
 
