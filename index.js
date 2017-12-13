@@ -47,6 +47,7 @@ function createBLE () {
 	})
 	ble.on('frame', bFrame)
 	ble.on('dir', bDir)
+	ble.on('exposure', bExposure)
 }
 
 //Restify functions
@@ -300,8 +301,12 @@ function bFrame (obj, cb) {
 			dir = obj.dir
 		}
 	}
-	if (typeof obj.dir !== 'undefined') {
-		exposure
+	if (typeof obj.exposure !== 'undefined') {
+		if (typeof obj.exposure === 'string') {
+			exposure = parseInt(obj.exposure)
+		} else {
+			exposure = obj.exposure
+		}
 	}
 	log.info('frame', { method : 'ble', dir : dir, exposure : exposure })
 	/*intval.frame(dir, exposure, (len) => {
@@ -323,6 +328,20 @@ function bDir (obj, cb) {
 	intval.setDir(dir)
 	log.info('dir', { method: 'ble', dir : dir })
 	cb()
+}
+
+function bExposure (obj, cb) {
+	let exposure = 0
+	if (typeof obj.exposure !== 'undefined') {
+		if (typeof obj.exposure === 'string') {
+			exposure = parseInt(obj.exposure)
+		} else {
+			exposure = req.body.exposure
+		}
+	}
+	intval.setExposure(exposure)
+	log.info('exposure', { method: 'ble', exposure : exposure })
+	return cb()
 }
 
 function index (req, res, next) {
