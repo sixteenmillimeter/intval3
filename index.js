@@ -48,6 +48,7 @@ function createBLE () {
 	ble.on('frame', bFrame)
 	ble.on('dir', bDir)
 	ble.on('exposure', bExposure)
+	ble.on('delay', bDelay)
 }
 
 //Restify functions
@@ -312,7 +313,7 @@ function bFrame (obj, cb) {
 	/*intval.frame(dir, exposure, (len) => {
 		return cb()
 	})*/
-	setTimeout(cb, 630)
+	setTimeout(cb, exposure === 0 ? 630 : exposure)
 }
 
 function bDir (obj, cb) {
@@ -341,6 +342,22 @@ function bExposure (obj, cb) {
 	}
 	intval.setExposure(exposure)
 	log.info('exposure', { method: 'ble', exposure : exposure })
+	return cb()
+}
+
+function bDelay (obj, cb) {
+	let delay = 0
+	let set = false
+	if (typeof obj.delay !== 'undefined') {
+		if (typeof obj.delay === 'string') {
+			delay = parseInt(obj.delay)
+		} else {
+			delay = obj.delay
+		}
+		set = true
+	}
+	intval.setDelay(delay)
+	log.info('delay', { method: 'ble', delay : delay })
 	return cb()
 }
 
