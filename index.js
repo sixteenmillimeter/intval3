@@ -337,7 +337,7 @@ function bExposure (obj, cb) {
 		if (typeof obj.exposure === 'string') {
 			exposure = parseInt(obj.exposure)
 		} else {
-			exposure = req.body.exposure
+			exposure = obj.exposure
 		}
 	}
 	intval.setExposure(exposure)
