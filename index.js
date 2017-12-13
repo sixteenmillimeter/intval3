@@ -295,6 +295,9 @@ function bFrame (obj, cb) {
 	if (intval._state.frame.dir !== true) {
 		dir = false
 	}
+	if (intval._state.frame.exposure !== 0) {
+		exposure = intval._state.frame.exposure
+	}
 	if (typeof obj.dir !== 'undefined') {
 		if (typeof obj.dir === 'string') {
 			dir = (obj.dir === 'true')
