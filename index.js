@@ -50,6 +50,8 @@ function createBLE () {
 	ble.on('exposure', bExposure)
 	ble.on('delay', bDelay)
 	ble.on('counter', bCounter)
+	ble.on('sequence', bSequence)
+	ble.on('reset', bReset)
 }
 
 //Restify functions
@@ -246,6 +248,17 @@ function rSequence (req, res, next) {
 	let dir = true
 	let exposure = 0
 	let delay = 0
+
+	if (intval._state.frame.dir !== true) {
+		dir = false
+	}
+	if (intval._state.frame.exposure !== 0) {
+		exposure = intval._state.frame.exposure
+	}
+	if (intval._state.frame.delay !== 0) {
+		delay = intval._state.frame.delay
+	}
+
 	if (req.query && typeof req.query.dir !== 'undefined') {
 		if (typeof req.query.dir === 'string') {
 			dir = (req.query.dir === 'true')
@@ -274,13 +287,24 @@ function rSequence (req, res, next) {
 			exposure = req.body.exposure
 		}
 	}
-	if (sequence.active) {
+	if (sequence._state.active) {
 		return sequence.stop(() => {
 			res.send({ stopped : true })
 			return next()
 		})
 	} else {
-		return sequence.start({}, (seq) => {
+		return sequence.start({
+			loop : [ (next) => {
+						intval.frame(dir, exposure, (len) => {
+							next()
+						}),
+					}, (next) => {
+						setTimeout(() => {
+							next()
+						}, delay)
+					}
+				]
+		}, (seq) => {
 			res.send(seq)
 			return next()
 		})
@@ -377,6 +401,64 @@ function bCounter (obj, cb) {
 	intval.setCounter(counter)
 	log.info('counter', { method : 'ble', counter : counter })
 	return cb()
+}
+
+function bSequence (obj, cb) {
+	let dir = true
+	let exposure = 0
+	let delay = 0
+
+	if (intval._state.frame.dir !== true) {
+		dir = false
+	}
+	if (intval._state.frame.exposure !== 0) {
+		exposure = intval._state.frame.exposure
+	}
+	if (intval._state.frame.delay !== 0) {
+		delay = intval._state.frame.delay
+	}
+
+	if (typeof obj.dir !== 'undefined') {
+		if (typeof obj.dir === 'string') {
+			dir = (obj.dir === 'true')
+		} else {
+			dir = obj.dir
+		}
+	}
+	if (typeof obj.exposure !== 'undefined') {
+		if (typeof obj.exposure === 'string') {
+			exposure = parseInt(obj.exposure)
+		} else {
+			exposure = obj.exposure
+		}
+	}
+	if (sequence._state.active) {
+		return sequence.stop(() => {
+			return cb()
+		})
+	} else {
+		console.time('sequence time')
+		sequence.start({
+			loop : [ (next) => {
+						intval.frame(dir, exposure, (len) => {
+							next()
+						}),
+					}, (next) => {
+						setTimeout(() => {
+							next()
+						}, delay)
+					}
+				]
+		}, (seq) => {
+			console.timeEnd('sequence time')
+		})
+		return cb()
+	}
+}
+
+function bReset (obj, cb) {
+	intval.reset()
+	setTimeout(cb, 10)
 }
 
 function index (req, res, next) {
