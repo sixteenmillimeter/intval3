@@ -162,12 +162,6 @@ var setState = function (res) {
 	exposure = shutter(STATE.exposure);
 	exposureScale = scaleAuto(STATE.exposure);
 
-	if (res.sequence === true) {
-		STATE.sequence = true;
-		mobile.ble.active = true;
-		document.getElementById('seq').classList.add('focus');
-	}
-
 	document.getElementById('str').value = exposure.str;
 	document.getElementById('scale').value = exposureScale;
 	setExposureScale();
@@ -176,6 +170,13 @@ var setState = function (res) {
 	delayScale = scaleAuto(STATE.delay);
 	document.getElementById('delayScale').value = delayScale;
 	setDelayScale();
+
+	if (res.sequence == true) {
+		console.log(res.sequence);
+		STATE.sequence = true;
+		mobile.ble.active = true;
+		document.getElementById('seq').classList.add('focus');
+	}
 };
 var appPage = function () {
 	unsetPages();
