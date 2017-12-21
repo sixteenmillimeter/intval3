@@ -297,13 +297,12 @@ function rSequence (req, res, next) {
 			loop : [ (next) => {
 						intval.frame(dir, exposure, (len) => {
 							next()
-						}),
+						})
 					}, (next) => {
 						setTimeout(() => {
 							next()
 						}, delay)
-					}
-				]
+					}]
 		}, (seq) => {
 			res.send(seq)
 			return next()
@@ -442,13 +441,12 @@ function bSequence (obj, cb) {
 			loop : [ (next) => {
 						intval.frame(dir, exposure, (len) => {
 							next()
-						}),
+						})
 					}, (next) => {
 						setTimeout(() => {
 							next()
 						}, delay)
-					}
-				]
+					}]
 		}, (seq) => {
 			console.timeEnd('sequence time')
 		})
