@@ -324,7 +324,7 @@ function rSequence (req, res, next) {
 		}, (seq) => {
 			console.timeEnd('sequence time')
 		})
-		res.send({})
+		res.send({ started : true })
 		return next()
 	}
 }
