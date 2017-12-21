@@ -485,14 +485,16 @@ function seq () {
 	let dir = intval._state.frame.dir
 	let exposure = intval._state.frame.exposure
 	let delay = intval._state.frame.delay
-	
+
 	if (intval._state.sequence && sequence._state.active) {
+		log.info('sequence', { method : 'release' , stop: true })
 		return sequence.setStop(() => {
 			intval._state.sequence = false
 			return cb()
 		})
 	} else {
 		console.time('sequence time')
+		log.info('sequence', { method : 'release', start : true })
 		intval._state.sequence = true
 		sequence.start({
 			loop : [ (next) => {
