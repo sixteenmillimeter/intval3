@@ -165,5 +165,6 @@ web.init = function () {
 	window.setDelay = web.setDelay;
 	window.setExposure = web.setExposure;
 	window.setCounter = web.setCounter;
+	window.sequence = web.sequence;
 	console.log('started web')
 };

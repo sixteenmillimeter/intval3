@@ -112,6 +112,7 @@ mobile.init = function () {
 	window.setExposure = mobile.setExposure;
 	window.setDelay = mobile.setDelay;
 	window.setCounter = mobile.setCounter;
+	window.sequence = mobile.sequence;
 
 	//show ble-specific fields in settings
 	for (let i of bleInputs) {

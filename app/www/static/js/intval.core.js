@@ -21,6 +21,7 @@ window.setDir = null;
 window.setExposure = null;
 window.setDelay = null;
 window.setCounter = null;
+window.sequence = null;
 
 //ms
 var shutter = function (exposure) {
