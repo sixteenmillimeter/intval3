@@ -287,13 +287,15 @@ function rSequence (req, res, next) {
 			exposure = req.body.exposure
 		}
 	}
-	if (sequence._state.active) {
-		return sequence.stop(() => {
+	if (intval._state.sequence && sequence._state.active) {
+		return sequence.setStop(() => {
+			intval._state.sequence = false
 			res.send({ stopped : true })
 			return next()
 		})
 	} else {
 		console.time('sequence time')
+		intval._state.sequence = true
 		sequence.start({
 			loop : [ (next) => {
 						intval.frame(dir, exposure, (len) => {
@@ -433,12 +435,14 @@ function bSequence (obj, cb) {
 			exposure = obj.exposure
 		}
 	}
-	if (sequence._state.active) {
-		return sequence.stop(() => {
+	if (intval._state.sequence && sequence._state.active) {
+		return sequence.setStop(() => {
+			intval._state.sequence = false
 			return cb()
 		})
 	} else {
 		console.time('sequence time')
+		intval._state.sequence = true
 		sequence.start({
 			loop : [ (next) => {
 						intval.frame(dir, exposure, (len) => {
