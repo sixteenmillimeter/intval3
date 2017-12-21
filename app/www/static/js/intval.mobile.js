@@ -245,6 +245,40 @@ mobile.counterSuccess = function () {
 	mobile.getState();
 };
 
+mobile.sequence = function () {
+	const opts = {
+		type : 'sequence'
+	};
+	if (!mobile.ble.connected) {
+		return alert('Not connected to an INTVAL device.');
+	}
+	ble.write(mobile.ble.device.id,
+			mobile.ble.SERVICE_ID,
+			mobile.ble.CHAR_ID,
+			stringToBytes(JSON.stringify(opts)), //check length?
+			mobile.frameSuccess,
+			mobile.ble.onError);
+	document.getElementById('seq').classList.add('focus');
+	mobile.ble.active = true;
+};
+
+
+mobile.sequenceSuccess = function () {
+	console.log('Sequence state changed');
+	mobile.getState();
+	setTimeout(() => {
+		if (STATE.sequence) {
+			mobile.ble.active = true;
+			if (!document.getElementById('seq').classList.contains('focus')) {
+				document.getElementById('seq').classList.add('focus');
+			}
+		} else {
+			mobile.ble.active = false;
+			document.getElementById('seq').classList.remove('focus');
+		}
+	}, 20);
+}
+
 function bytesToString (buffer) {
 	return String.fromCharCode.apply(null, new Uint8Array(buffer));
 };

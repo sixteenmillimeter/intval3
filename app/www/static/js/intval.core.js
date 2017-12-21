@@ -10,7 +10,8 @@ const STATE = {
 	delay : 0,
 	scale : 'ms',
 	delayScale : 'ms',
-	counter : 0
+	counter : 0,
+	sequence : false
 };
 
 //functions
@@ -159,6 +160,12 @@ var setState = function (res) {
 	STATE.exposure = res.frame.exposure;
 	exposure = shutter(STATE.exposure);
 	exposureScale = scaleAuto(STATE.exposure);
+
+	if (res.sequence === true) {
+		STATE.sequence = true;
+		mobile.ble.active = true;
+		document.getElementById('seq').classList.add('focus');
+	}
 
 	document.getElementById('str').value = exposure.str;
 	document.getElementById('scale').value = exposureScale;

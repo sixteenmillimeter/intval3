@@ -311,7 +311,7 @@ function rSequence (req, res, next) {
 	} else {
 		console.time('sequence time')
 		intval._state.sequence = true
-		sequence.start({
+		let seq_id = sequence.start({
 			loop : [ (next) => {
 						intval.frame(dir, exposure, (len) => {
 							next()
@@ -324,7 +324,13 @@ function rSequence (req, res, next) {
 		}, (seq) => {
 			console.timeEnd('sequence time')
 		})
-		res.send({ started : true })
+
+		if (seq_id === false) {
+			res.send({ started : false })
+		} else {
+			res.send({ started : true , id : seq_id })
+		}
+		
 		return next()
 	}
 }
@@ -453,12 +459,13 @@ function bSequence (obj, cb) {
 	if (intval._state.sequence && sequence._state.active) {
 		return sequence.setStop(() => {
 			intval._state.sequence = false
+			log.info('sequence stop'. { method : 'ble', id : seq_id })
 			return cb()
 		})
 	} else {
 		console.time('sequence time')
 		intval._state.sequence = true
-		sequence.start({
+		let seq_id = sequence.start({
 			loop : [ (next) => {
 						intval.frame(dir, exposure, (len) => {
 							next()
@@ -471,6 +478,9 @@ function bSequence (obj, cb) {
 		}, (seq) => {
 			console.timeEnd('sequence time')
 		})
+		if (seq_id !== false) {
+			log.info('sequence start'. { method : 'ble', id : seq_id })
+		}
 		return cb()
 	}
 }

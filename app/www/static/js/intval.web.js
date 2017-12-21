@@ -134,6 +134,27 @@ web.setCounterSuccess = function (res) {
 	forceCounter(res.counter);
 	console.log(`setCounter to ${res.counter}`);
 };
+web.sequence = function () {
+	const opts = {
+		method : 'POST',
+		headers : web._header,
+		body : JSON.stringify({})
+	}
+	fetch('/sequence', opts)
+		.then(web.useJson)
+		.then(web.sequenceSuccess)
+		.catch(err => {
+			console.error('Error getting /sequence');
+			console.error(err);
+		})
+}
+web.sequenceSuccess = function (res) {
+	if (res.started && res.started != false) {
+		document.getElementById('seq').focus();
+	} else if (res.stopped) {
+		document.getElementById('seq').blur();
+	}
+}
 web.useJson = function (res) {
 	return res.json();
 }
