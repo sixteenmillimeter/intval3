@@ -294,7 +294,7 @@ function rSequence (req, res, next) {
 		})
 	} else {
 		console.time('sequence time')
-		return sequence.start({
+		sequence.start({
 			loop : [ (next) => {
 						intval.frame(dir, exposure, (len) => {
 							next()
