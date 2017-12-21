@@ -304,11 +304,10 @@ function rSequence (req, res, next) {
 		}
 	}
 	if (intval._state.sequence && sequence._state.active) {
-		return sequence.setStop(() => {
-			intval._state.sequence = false
-			res.send({ stopped : true })
-			return next()
-		})
+		sequence.setStop()
+		intval._state.sequence = false
+		res.send({ stopped : true })
+		return next()
 	} else {
 		console.time('sequence time')
 		intval._state.sequence = true
@@ -488,10 +487,9 @@ function seq () {
 
 	if (intval._state.sequence && sequence._state.active) {
 		log.info('sequence', { method : 'release' , stop: true })
-		return sequence.setStop(() => {
-			intval._state.sequence = false
-			return cb()
-		})
+		sequence.setStop()
+		intval._state.sequence = false
+		return cb()
 	} else {
 		console.time('sequence time')
 		log.info('sequence', { method : 'release', start : true })
