@@ -482,6 +482,10 @@ function bReset (obj, cb) {
 }
 
 function seq () {
+	let dir = intval._state.frame.dir
+	let exposure = intval._state.frame.exposure
+	let delay = intval._state.frame.delay
+	
 	if (intval._state.sequence && sequence._state.active) {
 		return sequence.setStop(() => {
 			intval._state.sequence = false
