@@ -270,12 +270,8 @@ mobile.sequenceSuccess = function () {
 	setTimeout(() => {
 		if (STATE.sequence) {
 			mobile.ble.active = true;
-			if (!document.getElementById('seq').classList.contains('focus')) {
-				document.getElementById('seq').classList.add('focus');
-			}
 		} else {
 			mobile.ble.active = false;
-			document.getElementById('seq').classList.remove('focus');
 		}
 	}, 20);
 }
