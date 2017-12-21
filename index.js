@@ -287,6 +287,20 @@ function rSequence (req, res, next) {
 			exposure = req.body.exposure
 		}
 	}
+	if (req.query && typeof req.query.delay !== 'undefined') {
+		if (typeof req.query.delay === 'string') {
+			delay = parseInt(req.query.delay)
+		} else {
+			delay = req.query.delay
+		}
+	}
+	if (req.body && typeof req.body.delay!== 'undefined') {
+		if (typeof req.body.delay === 'string') {
+			delay = parseInt(req.body.delay)
+		} else {
+			delay = req.body.delay
+		}
+	}
 	if (intval._state.sequence && sequence._state.active) {
 		return sequence.setStop(() => {
 			intval._state.sequence = false
@@ -465,6 +479,31 @@ function bReset (obj, cb) {
 	setTimeout(cb, 10)
 }
 
+function seq () {
+	if (intval._state.sequence && sequence._state.active) {
+		return sequence.setStop(() => {
+			intval._state.sequence = false
+			return cb()
+		})
+	} else {
+		console.time('sequence time')
+		intval._state.sequence = true
+		sequence.start({
+			loop : [ (next) => {
+						intval.frame(dir, exposure, (len) => {
+							next()
+						})
+					}, (next) => {
+						setTimeout(() => {
+							next()
+						}, delay)
+					}]
+		}, (seq) => {
+			console.timeEnd('sequence time')
+		})
+	}
+}
+
 function index (req, res, next) {
 	fs.readFile(INDEXPATH, 'utf8', (err, data) => {
 		if (err) {
@@ -477,6 +516,7 @@ function index (req, res, next) {
 
 function init () {
 	intval.init()
+	intval.sequence = seq
 	createServer()
 	createBLE()
 }
