@@ -172,7 +172,6 @@ var setState = function (res) {
 	setDelayScale();
 
 	if (res.sequence == true) {
-		console.log(res.sequence);
 		STATE.sequence = true;
 		mobile.ble.active = true;
 		document.getElementById('seq').classList.add('focus');

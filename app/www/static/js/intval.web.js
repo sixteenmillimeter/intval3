@@ -159,6 +159,8 @@ web.sequenceSuccess = function (res) {
 		STATE.sequence = false;
 		document.getElementById('seq').blur();
 		document.getElementById('seq').classList.remove('focus');
+		//update frontend at end of sequence
+		mobile.getState();
 	}
 }
 web.useJson = function (res) {
