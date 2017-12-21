@@ -293,6 +293,7 @@ function rSequence (req, res, next) {
 			return next()
 		})
 	} else {
+		console.time('sequence time')
 		return sequence.start({
 			loop : [ (next) => {
 						intval.frame(dir, exposure, (len) => {
@@ -304,9 +305,10 @@ function rSequence (req, res, next) {
 						}, delay)
 					}]
 		}, (seq) => {
-			res.send(seq)
-			return next()
+			console.timeEnd('sequence time')
 		})
+		res.send({})
+		return next()
 	}
 }
 
