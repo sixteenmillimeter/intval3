@@ -28,6 +28,8 @@ function createServer () {
 	app.post('/dir', rDir)
 	app.get( '/exposure', rExposure)
 	app.post('/exposure', rExposure)
+	app.get( '/delay', rDelay)
+	app.post('/delay', rDelay)
 	app.get( '/counter', rCounter)
 	app.post('/counter', rCounter)
 	app.get( '/frame', rFrame)
