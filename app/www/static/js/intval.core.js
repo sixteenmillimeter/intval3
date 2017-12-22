@@ -183,12 +183,12 @@ var seqState = function (state) {
 	if (state) {
 		if (!elem.classList.contains('focus')) {
 			elem.classList.add('focus');
-			elem.innerText = 'STOP SEQUENCE';
+			elem.innerHTML = 'STOP SEQUENCE';
 		}
 	} else {
 		if (elem.classList.contains('focus')) {
 			elem.classList.remove('focus');
-			elem.innerText = 'START SEQUENCE';
+			elem.innerHTML = 'START SEQUENCE';
 		}
 	}
 };
