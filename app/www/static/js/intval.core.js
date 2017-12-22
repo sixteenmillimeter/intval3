@@ -174,9 +174,25 @@ var setState = function (res) {
 	if (res.sequence == true) {
 		STATE.sequence = true;
 		mobile.ble.active = true;
-		document.getElementById('seq').classList.add('focus');
+		seqState(true);
 	}
 };
+
+var seqState = function (state) {
+	const elem = document.getElementById('seq')
+	if (state) {
+		if (!elem.classList.contains('focus')) {
+			elem.classList.add('focus');
+			elem.innerText = 'STOP SEQUENCE';
+		}
+	} else {
+		if (elem.classList.contains('focus')) {
+			elem.classList.remove('focus');
+			elem.innerText = 'START SEQUENCE';
+		}
+	}
+};
+
 var appPage = function () {
 	unsetPages();
 	document.getElementById('app').classList.add('selected');

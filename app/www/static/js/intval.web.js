@@ -152,14 +152,11 @@ web.sequenceSuccess = function (res) {
 	if (res.started && res.started != false) {
 		STATE.sequence = true;
 		document.getElementById('seq').focus();
-		if (!document.getElementById('seq').classList.contains('focus')) {
-			document.getElementById('seq').classList.add('focus');
-		}
+		seqState(true);
 	} else if (res.stopped) {
 		STATE.sequence = false;
 		document.getElementById('seq').blur();
-		document.getElementById('seq').classList.remove('focus');
-		//update frontend at end of sequence
+		seqState(false);
 		mobile.getState();
 	}
 }
