@@ -173,7 +173,7 @@ var setState = function (res) {
 
 	if (res.sequence == true) {
 		STATE.sequence = true;
-		mobile.ble.active = true;
+		if (mobile.ble) mobile.ble.active = true;
 		seqState(true);
 	}
 };
