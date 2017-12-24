@@ -89,7 +89,7 @@ web.setExposureSuccess = function (res) {
 	}
 	STATE.exposure = res.exposure;
 	exposure = shutter(STATE.exposure);
-	document.getElementById('str').value = exposure.str;
+	document.getElementById('str').innerHTML = exposure.str;
 	console.log(`setExposure to ${res.exposure}`);
 };
 web.setDelay = function () {

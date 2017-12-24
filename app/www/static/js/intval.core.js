@@ -113,12 +113,15 @@ var setDelayScale = function () {
 var setDirLabel = function (dir) {
 	const bwdLabel = document.getElementById('bwdLabel');
 	const fwdLabel = document.getElementById('fwdLabel');
+	const but = document.getElementById('frame');
 	if (dir) {
-		bwdLabel.classList.remove('selected')
-		fwdLabel.classList.add('selected')
+		bwdLabel.classList.remove('selected');
+		fwdLabel.classList.add('selected');
+		frame.innerHTML = '+1 FRAME';
 	} else {
-		fwdLabel.classList.remove('selected')
-		bwdLabel.classList.add('selected')
+		fwdLabel.classList.remove('selected');
+		bwdLabel.classList.add('selected');
+		frame.innerHTML = '-1 FRAME';
 	}
 };
 var incCounter = function (val) {
@@ -162,7 +165,7 @@ var setState = function (res) {
 	exposure = shutter(STATE.exposure);
 	exposureScale = scaleAuto(STATE.exposure);
 
-	document.getElementById('str').value = exposure.str;
+	document.getElementById('str').innerHTML = exposure.str;
 	document.getElementById('scale').value = exposureScale;
 	setExposureScale();
 
