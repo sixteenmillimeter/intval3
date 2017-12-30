@@ -117,11 +117,11 @@ var setDirLabel = function (dir) {
 	if (dir) {
 		bwdLabel.classList.remove('selected');
 		fwdLabel.classList.add('selected');
-		frame.innerHTML = '+1 FRAME';
+		but.innerHTML = '+1 FRAME';
 	} else {
 		fwdLabel.classList.remove('selected');
 		bwdLabel.classList.add('selected');
-		frame.innerHTML = '-1 FRAME';
+		but.innerHTML = '-1 FRAME';
 	}
 };
 var incCounter = function (val) {
