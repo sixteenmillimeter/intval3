@@ -154,6 +154,9 @@ var setState = function (res) {
 		document.getElementById('dir').checked = true;
 		STATE.dir = res.frame.dir;
 		setDirLabel(false);
+	} else {
+		STATE.dir = res.frame.dir;
+		setDirLabel(true);
 	}
 	document.getElementById('counter').value = res.counter;
 	STATE.counter = res.counter;

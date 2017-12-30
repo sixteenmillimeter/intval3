@@ -181,6 +181,9 @@ mobile.setDir = function () {
 mobile.dirSuccess = function () {
 	console.log('Set direction');
 	mobile.getState();
+	setTimeout(() => {
+		setDirLabel(STATE.dir);
+	}, 50);
 };
 mobile.setExposure = function () {
 	let exposure = document.getElementById('exposure').value;
