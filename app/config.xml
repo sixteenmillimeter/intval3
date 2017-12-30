@@ -22,10 +22,6 @@
         <icon density="xhdpi" src="res/icon/android/xhdpi.png" />
         <icon density="xxhdpi" src="res/icon/android/xxhdpi.png" />
         <icon density="xxxhdpi" src="res/icon/android/xxxhdpi.png" />
-        <splash density="port-ldpi" height="426" src="res/screen/android/splash-portrait-ldpi.png" width="320" />
-        <splash density="port-mdpi" height="470" src="res/screen/android/splash-portrait-mdpi.png" width="320" />
-        <splash density="port-hdpi" height="640" src="res/screen/android/splash-portrait-hdpi.png" width="480" />
-        <splash density="port-xhdpi" height="960" src="res/screen/android/splash-portrait-xhdpi.png" width="720" />
     </platform>
     <platform name="ios">
         <allow-intent href="itms:*" />
@@ -33,9 +29,7 @@
         <icon height="180" src="res/icon/ios/icon-60@3x.png" width="180" />
         <icon height="120" src="res/icon/ios/icon-60@2x.png" width="120" />
         <icon height="60" src="res/icon/ios/icon-60.png" width="60" />
-        <splash height="480" src="res/screen/ios/Default~iphone.png" width="320" />
-        <splash height="960" src="res/screen/ios/Default@2x~iphone.png" width="640" />
-        <splash height="1136" src="res/screen/ios/Default-568h@2x~iphone.png" width="640" />
+        <splash src="res/screen/ios/Default@2x~universal~anyany.png" />
     </platform>
     <preference name="DisallowOverscroll" value="true" />
     <preference name="StatusBarBackgroundColor" value="#212121" />
