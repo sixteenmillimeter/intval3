@@ -24,3 +24,8 @@ convert "$base" -resize '72x72'     -unsharp 1x4 "res/icon/android/Icon-hdpi.png
 convert "$base" -resize '96x96'     -unsharp 1x4 "res/icon/android/Icon-xhdpi.png"
 convert "$base" -resize '144x144'   -unsharp 1x4 "res/icon/android/Icon-xxhdpi.png"
 convert "$base" -resize '192x192'   -unsharp 1x4 "res/icon/android/Icon-xxxhdpi.png"
+
+cd res/icon/ios/
+find -type f -name "*.png" -exec optipng -o7 {} \;
+cd ../android/
+find -type f -name "*.png" -exec optipng -o7 {} \;
