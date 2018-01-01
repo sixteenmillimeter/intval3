@@ -459,7 +459,7 @@ function bSequence (obj, cb) {
 	if (intval._state.sequence && sequence._state.active) {
 		sequence.setStop()
 		intval._state.sequence = false
-		log.info('sequence stop', { method : 'ble', id : seq_id })
+		log.info('sequence stop', { method : 'ble' })
 		return cb()
 	} else {
 		console.time('sequence time')
