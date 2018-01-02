@@ -13,15 +13,16 @@ The [INTVAL2](https://github.com/sixteenmillimeter/intval2) project should be us
 * Firmware for the Raspberry Pi Zero W running on [Node.js](https://nodejs.org)
 * Mobile/Web/API for controlling device, using [Cordova](https://cordova.apache.org/) + [Bleno](https://github.com/sandeepmistry/bleno), and [Restify](http://restify.com/)
 * Hardware files, parts models for 3D printing, laser cutting and CNC
-* PCB design for a Raspberry Pi HAT
+* PCB design for a Raspberry Pi Zero W Bonnet
 * [Parts list](#parts-list)
 
 <a name="parts-list"></a>
 
 ## PARTS
 
-1. Raspberry Pi Zero W - [[Amazon](http://amzn.to/2BWkKAy)] [[Adafruit](https://www.adafruit.com/product/3400)]
-2. L298N Breakout Board
-[[Amazon](http://amzn.to/2DwBrmz)]
-3. 120RPM 12VDC Motor
-[[Amazon](http://amzn.to/2CbRw4R)]
+1. Raspberry Pi Zero W - [[Amazon](http://amzn.to/2BWkKAy)] [[Adafruit](https://www.adafruit.com/product/3400)] [[Sparkfun](https://www.sparkfun.com/products/14277)]
+2. L298N Breakout Board - [[Amazon](http://amzn.to/2DwBrmz)]
+3. 120RPM 12VDC Motor - [[Amazon](http://amzn.to/2CbRw4R)]
+4. Microswitch w/ Roller - [[Amazon](http://amzn.to/2CdG4FW)] [[Adafruit](https://www.adafruit.com/product/819)]
+5. L7805 5V Regulator - [[Amazon](http://amzn.to/2CeFNlZ)] [[Adafruit](https://www.adafruit.com/product/2164)] [Sparkfun](https://www.sparkfun.com/products/107)]
+6. (Optional) Proto Bonnet - [[Amazon](http://amzn.to/2ChnSLm)] [Adafruit](https://www.adafruit.com/product/3203)
