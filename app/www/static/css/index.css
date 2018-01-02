@@ -294,3 +294,13 @@ footer > div.selected{
 #scan.active{
     display: block;
 }
+
+#available.active{
+    border-color: #20ce45;;
+}
+#password,#wifi{
+    display: none;
+}
+#password.active,#wifi.active{
+    display: block;
+}

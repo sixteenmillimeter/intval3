@@ -181,6 +181,8 @@ var setState = function (res) {
 		STATE.sequence = true;
 		if (mobile.ble) mobile.ble.active = true;
 		seqState(true);
+	} else {
+		seqState(false);
 	}
 };
 

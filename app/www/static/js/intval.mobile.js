@@ -13,6 +13,11 @@ mobile.ble = {
 	active : false
 };
 
+mobile.wifi = {
+	current : 'null',
+	available : []
+};
+
 mobile.ble.scan = function () {
 	spinnerShow();
 	ble.scan([], 5, mobile.ble.onDiscover, mobile.ble.onError);
@@ -69,6 +74,7 @@ mobile.ble.onConnect = function (peripheral, device) {
 	scan.classList.remove('active');
 
 	getState();
+	mobile.getWifi();
 };
 
 mobile.ble.disconnect = function () {
@@ -266,18 +272,125 @@ mobile.sequence = function () {
 	mobile.ble.active = true;
 };
 
-
 mobile.sequenceSuccess = function () {
 	console.log('Sequence state changed');
 	mobile.getState();
 	setTimeout(() => {
 		if (STATE.sequence) {
 			mobile.ble.active = true;
+			seqState(true);
 		} else {
 			mobile.ble.active = false;
+			seqState(false);
 		}
 	}, 20);
-}
+};
+
+//retreive object with list of available Wifi APs,
+//and state of current connection, if available 
+mobile.getWifi = function () {
+	spinnerShow();
+	ble.read(mobile.ble.device.id,
+			mobile.ble.SERVICE_ID,
+			mobile.ble.WIFI_ID,
+			mobile.getWifiSuccess,
+			mobile.ble.onError);
+};
+
+mobile.getWifiSuccess = function (data) {
+	const elem = document.getElementById('available');
+	const wifi = document.getElementById('wifi');
+	const password = document.getElementById('password');
+	let option = document.createElement('option');
+	let str = bytesToString(data);
+	let res = JSON.parse(str);
+
+	spinnerHide();
+	elem.innerHTML = ''
+	if (!res.available || res.available.length === 0) {
+		if (elem.classList.contains('active')) {
+			elem.classList.remove('active');
+		}
+		option.text = 'N/A'
+		elem.add(option);
+		elem.value = '';
+	} else {
+		for (let ap of res.available) {
+			option = document.createElement('option');
+			option.text = ap;
+			option.value = ap;
+			elem.add(option);
+		}
+		if (res.current && res.available.indexOf(res.current) !== -1) {
+			elem.value = res.current
+			if (!elem.classList.contains('active')) {
+				elem.classList.add('active');
+			}
+			if (wifi.classList.contains('active')) {
+				wifi.classList.remove('active');
+			}
+			if (password.classList.contains('active')) {
+				password.classList.remove('active');
+			}
+		} else {
+			if (!wifi.classList.contains('active')) {
+				wifi.classList.add('active');
+			}
+			if (!password.classList.contains('active')) {
+				password.classList.add('active');
+			}
+		}
+	}
+	mobile.wifi.current = res.current;
+	mobile.wifi.available = res.available;
+};
+
+mobile.editWifi = function () {
+	const available = document.getElementById('available');
+	const wifi = document.getElementById('wifi');
+	const password = document.getElementById('password');
+	if (!wifi.classList.contains('active')) {
+		wifi.classList.add('active');
+	}
+	if (!password.classList.contains('active')) {
+		password.classList.add('active');
+	}
+	password.focus();
+	if (available.value !== mobile.wifi.current && available.classList.contains('active')) {
+		available.classList.remove('active');
+	}
+};
+
+mobile.setWifi = function () {
+	const ssid = document.getElementById('available').value;
+	const pwd = document.getElementById('password').value;
+	const opts = {
+		ssid : ssid,
+		pwd : pwd
+	}
+	spinnerShow();
+	if (ssid === '' || ssid === null || ssid === undefined) {
+		return alert('Cannot set wireless credentials with a blank SSID');
+	}
+	if (pwd === '' || pwd === null || pwd === undefined) {
+		return alert('Cannot set wireless credentials with a blank passphrase');
+	}
+	if (pwd.length < 8 || pwd.length > 63) {
+		return alert('Passphrase must be 8..63 characters');
+	}
+	ble.write(mobile.ble.device.id,
+		mobile.ble.SERVICE_ID,
+		mobile.ble.WIFI_ID,
+		stringToBytes(JSON.stringify(opts)),
+		mobile.setWifiSuccess,
+		mobile.ble.onError);
+};
+
+mobile.setWifiSuccess = function () {
+	spinnerHide();
+	console.log('Set new wifi credentials');
+	setTimeout(mobile.getWifi, 100);
+};
 
 function bytesToString (buffer) {
 	return String.fromCharCode.apply(null, new Uint8Array(buffer));

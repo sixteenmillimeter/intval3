@@ -76,12 +76,15 @@
 	<div class="ble">
 		<h2>WIFI</h2>
 		<div>
-			<input type="text" id="ssid" placeholder="Wifi SSID" />
+			<select id="available" class="" onchange="mobile.editWifi();">
+				<option>N/A</option>
+			</select>
 		</div>
 		<div>
-			<input type="password" id="password" placeholder="Wifi Password" />
+			<input type="password" id="password" class="" placeholder="Wifi Password" />
 		</div>
-		<button id="wifi" onclick="alert('WIFI');">CONNECT</button>
+		<button id="wifi" class="" onclick="mobile.setWifi();">CONNECT</button>
+		<button id="wifiRefresh" class="" onclick="mobile.getWifi();">REFRESH WIFI</button>
 	</div>
 </div>
 <div id="mscript" class="page">
