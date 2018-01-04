@@ -112,6 +112,7 @@ mobile.ble.onError = function (err) {
 
 mobile.init = function () {
 	const bleInputs = document.querySelectorAll('.ble')
+	document.querySelector('body').classList.add('mobile')
 
 	window.frame = mobile.frame;
 	window.getState = mobile.getState;

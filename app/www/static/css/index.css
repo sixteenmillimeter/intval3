@@ -36,7 +36,7 @@ html,body,button,h2,label,input{
     font-family: 'Arial Neue', Helvetical, Arial, sans-serif;
 
 }
-body{
+body.mobile{
     padding-top: 35px;
 }
 .page{
