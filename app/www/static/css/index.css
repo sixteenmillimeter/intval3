@@ -296,11 +296,17 @@ footer > div.selected{
 }
 
 #available.active{
-    border-color: #20ce45;;
+    border-color: #20ce45;
 }
-#password,#wifi{
+#ip{
+    color: #666;
+}
+#ip span{
+    color: #20ce45;
+}
+#password,#wifi,#ip{
     display: none;
 }
-#password.active,#wifi.active{
+#password.active,#ip.active,#wifi.active{
     display: block;
 }

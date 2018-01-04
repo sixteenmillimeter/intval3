@@ -15,7 +15,8 @@ mobile.ble = {
 
 mobile.wifi = {
 	current : 'null',
-	available : []
+	available : [],
+	ip : null
 };
 
 mobile.ble.scan = function () {
@@ -301,6 +302,7 @@ mobile.getWifiSuccess = function (data) {
 	const elem = document.getElementById('available');
 	const wifi = document.getElementById('wifi');
 	const password = document.getElementById('password');
+	const ip = document.getElementById('ip');
 	let option = document.createElement('option');
 	let str = bytesToString(data);
 	let res = JSON.parse(str);
@@ -341,8 +343,20 @@ mobile.getWifiSuccess = function (data) {
 			}
 		}
 	}
+	if (typeof res.ip !== 'undefined' && res.ip != null ) {
+		ip.innerHTML = `Local IP: <span onclick="window.open('http://${res.ip}', '_system', 'location=yes');">${res.ip}</span>`
+		if (!ip.classList.contains('active')) {
+			ip.classList.add('active');
+		}
+	} else {
+		ip.innerHTML = 'Local IP: null'
+		if (ip.classList.contains('active')) {
+			ip.classList.remove('active');
+		}
+	}
 	mobile.wifi.current = res.current;
 	mobile.wifi.available = res.available;
+	mobile.wifi.ip = res.ip;
 };
 
 mobile.editWifi = function () {
