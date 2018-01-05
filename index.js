@@ -15,7 +15,7 @@ const INDEXPATH = './app/www/index.html'
 
 let app = restify.createServer({
 	name: APPNAME,
-	version: '0.0.1'
+	version: PACKAGE.version
 })
 
 let ble
