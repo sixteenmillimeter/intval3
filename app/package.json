@@ -13,6 +13,7 @@
     "cordova-android": "^6.4.0",
     "cordova-ios": "^4.5.4",
     "cordova-plugin-ble-central": "^1.1.4",
+    "cordova-plugin-camera-with-exif": "^1.2.2",
     "cordova-plugin-compat": "^1.2.0",
     "cordova-plugin-device": "^1.1.7",
     "cordova-plugin-dialogs": "^1.3.4",
@@ -29,7 +30,8 @@
       "cordova-plugin-ble-central": {
         "BLUETOOTH_USAGE_DESCRIPTION": "INTVAL intervalometer controls"
       },
-      "cordova-plugin-splashscreen": {}
+      "cordova-plugin-splashscreen": {},
+      "cordova-plugin-camera-with-exif": {}
     },
     "platforms": [
       "android",
