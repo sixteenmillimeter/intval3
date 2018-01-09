@@ -217,6 +217,11 @@ var mscriptPage = function () {
 	document.getElementById('mscriptIcon').classList.add('selected');
 	editor.cm.refresh();
 };
+var cameraPage = function () {
+	unsetPages();
+	document.getElementById('camera').classList.add('selected');
+	document.getElementById('cameraIcon').classList.add('selected');
+};
 var spinnerInit = function () {
 	const spinnerOpts = {
 		  lines: 13 // The number of lines to draw

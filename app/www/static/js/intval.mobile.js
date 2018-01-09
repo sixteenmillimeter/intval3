@@ -128,6 +128,7 @@ mobile.init = function () {
 	}
 	spinnerInit();
 	mobile.ble.scan();
+	mobile.cameraValues()
 
 };
 
@@ -407,6 +408,76 @@ mobile.setWifiSuccess = function () {
 	console.log('Set new wifi credentials');
 	setTimeout(mobile.getWifi, 100);
 };
+
+mobile.getCamera = function () {
+	var opts = {
+		quality: 30,
+		sourceType: Camera.PictureSourceType.CAMERA,
+    	destinationType: Camera.DestinationType.FILE_URI
+	};
+	navigator.camera.getPicture(mobile.cameraSuccess, mobile.cameraError, opts);
+};
+mobile.cameraSuccess = function (result) {
+	var thisResult = JSON.parse(result);
+	var metadata = JSON.parse(thisResult.json_metadata);
+	
+	mobile.cameraExposure(fstop, metadata);
+}
+mobile.cameraError = function (err) {
+	console.error(err);
+	alert(err);
+};
+
+mobile.cameraExposure = function (exif) {
+	var fstop = document.querySelector('.fstop').value || 5.6;
+	var iso = document.querySelector('.iso').value || 100;
+	/*
+	ApertureValue: 1.6959938131099002
+	BrightnessValue: -0.3966568568788107
+	ColorSpace: 65535
+	DateTimeDigitized: "2018:01:08 23:06:13"
+	DateTimeOriginal: "2018:01:08 23:06:13"
+	ExposureBiasValue: 0
+	ExposureMode: 0
+	ExposureProgram: 2
+	ExposureTime: 0.2
+	FNumber: 1.8
+	Flash: 24
+	FocalLenIn35mmFilm: 28
+	FocalLength: 3.99
+	ISOSpeedRatings: [100] (1)
+	LensMake: "Apple"
+	LensModel: "iPhone 8 back camera 3.99mm f/1.8"
+	LensSpecification: [3.99, 3.99, 1.8, 1.8] (4)
+	MeteringMode: 5
+	PixelXDimension: 4032
+	PixelYDimension: 3024
+	SceneType: 1
+	SensingMethod: 2
+	ShutterSpeedValue: 2.38401125849867
+	SubjectArea: [2015, 1511, 2217, 1330] (4)
+	SubsecTimeDigitized: "567"
+	SubsecTimeOriginal: "567"
+	WhiteBalance: 0
+	*/
+	exif.AperatureValue || exif.FNumber
+	exif.ExposureTime
+	exif.ISOSpeedRatings
+};
+mobile.cameraValues = function () {
+	document.querySelectorAll('.iso').forEach(input => {
+		input.onchange = function () {
+			var val = this.value;
+			document.querySelectorAll('.iso').forEach(e => {
+				e.value = val;
+			})
+		}
+	})
+}
+
+/** 
+ *  Mobile helper functions
+ */
 
 function bytesToString (buffer) {
 	return String.fromCharCode.apply(null, new Uint8Array(buffer));
