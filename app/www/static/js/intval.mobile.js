@@ -24,8 +24,8 @@ mobile.ble.scan = function () {
 	ble.scan([], 5, mobile.ble.onDiscover, mobile.ble.onError);
 	mobile.ble.devices = [];
 	setTimeout(() => {
+		spinnerHide();
 		if (!mobile.ble.connected) {
-			spinnerHide();
 			alert('No INTVAL devices found.');
 			settingsPage();
 		}
@@ -128,6 +128,7 @@ mobile.init = function () {
 	}
 	spinnerInit();
 	mobile.ble.scan();
+
 };
 
 mobile.getState = function () {
