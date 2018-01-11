@@ -3,6 +3,7 @@
 const restify = require('restify')
 const log = require('./lib/log')('main')
 const fs = require('fs')
+const { exec } = require('child_process')
 
 const BLE = require('./lib/ble')
 const intval = require('./lib/intval')
@@ -517,6 +518,10 @@ function seq () {
 			console.timeEnd('sequence time')
 		})
 	}
+}
+
+function update (req, res, next) {
+	exec('sh ./scripts/update.sh')
 }
 
 function index (req, res, next) {
