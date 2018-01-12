@@ -521,7 +521,9 @@ function seq () {
 }
 
 function update (req, res, next) {
-	exec('sh ./scripts/update.sh')
+	exec('sh ./scripts/update.sh', (err, stdio, stderr) => {
+		process.exit()
+	})
 }
 
 function index (req, res, next) {
