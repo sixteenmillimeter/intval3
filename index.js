@@ -363,9 +363,16 @@ function bFrame (obj, cb) {
 		}
 	}
 	log.info('frame', { method : 'ble', dir : dir, exposure : exposure })
-	intval.frame(dir, exposure, (len) => {
+
+	if (exposure < 5000) {
+		intval.frame(dir, exposure, (len) => {
+			return cb()
+		})
+	} else {
+		intval.frame(dir, exposure, (len) => {})
 		return cb()
-	})
+	}
+
 	//setTimeout(cb, exposure === 0 ? 630 : exposure)
 }
 
@@ -483,6 +490,10 @@ function bSequence (obj, cb) {
 		}
 		return cb()
 	}
+}
+
+function bSequenceStop (obj, cb) {
+
 }
 
 function bReset (obj, cb) {

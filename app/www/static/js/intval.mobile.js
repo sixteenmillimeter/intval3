@@ -171,9 +171,17 @@ mobile.frame = function () {
 
 mobile.frameSuccess = function () {
 	console.log('Frame finished, getting state.');
-	mobile.ble.active = false;
-	document.getElementById('frame').classList.remove('focus');
-	mobile.getState();
+	if (STATE.exposure < 5000) {
+		mobile.ble.active = false;
+		document.getElementById('frame').classList.remove('focus');
+		mobile.getState();
+	} else {
+		setTimeout(() => {
+			mobile.ble.active = false;
+			document.getElementById('frame').classList.remove('focus');
+			mobile.getState();
+		}, STATE.exposure + 500)
+	}
 }
 mobile.setDir = function () {
 	const opts = {
