@@ -170,13 +170,14 @@ mobile.frame = function () {
 
 
 mobile.frameSuccess = function () {
-	console.log('Frame finished, getting state.');
 	if (STATE.exposure < 5000) {
+		console.log('Frame finished, getting state.');
 		mobile.ble.active = false;
 		document.getElementById('frame').classList.remove('focus');
 		mobile.getState();
 	} else {
 		setTimeout(() => {
+			console.log('Frame finished, getting state.');
 			mobile.ble.active = false;
 			document.getElementById('frame').classList.remove('focus');
 			mobile.getState();
