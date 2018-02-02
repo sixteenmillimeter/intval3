@@ -111,8 +111,8 @@ mobile.ble.onError = function (err) {
 };
 
 mobile.init = function () {
-	const bleInputs = document.querySelectorAll('.ble')
-	document.querySelector('body').classList.add('mobile')
+	const bleInputs = document.querySelectorAll('.ble');
+	document.querySelector('body').classList.add('mobile');
 
 	window.frame = mobile.frame;
 	window.getState = mobile.getState;
@@ -419,7 +419,7 @@ mobile.setWifiSuccess = function () {
 };
 
 mobile.getCamera = function () {
-	var opts = {
+	const opts = {
 		quality: 30,
 		sourceType: Camera.PictureSourceType.CAMERA,
     	destinationType: Camera.DestinationType.FILE_URI
@@ -427,8 +427,8 @@ mobile.getCamera = function () {
 	navigator.camera.getPicture(mobile.cameraSuccess, mobile.cameraError, opts);
 };
 mobile.cameraSuccess = function (result) {
-	var thisResult = JSON.parse(result);
-	var metadata = JSON.parse(thisResult.json_metadata);
+	const thisResult = JSON.parse(result);
+	const metadata = JSON.parse(thisResult.json_metadata);
 	
 	mobile.cameraExposure(fstop, metadata);
 }
@@ -438,8 +438,14 @@ mobile.cameraError = function (err) {
 };
 
 mobile.cameraExposure = function (exif) {
-	var fstop = document.querySelector('.fstop').value || 5.6;
-	var iso = document.querySelector('.iso').value || 100;
+	const fstop = BOLEX.fstop || 5.6;
+	const iso = 	BOLEX.iso 	|| 100;
+
+	const cFstop = exif.AperatureValue || exif.FNumber;
+	const cExposure = exif.ShutterSpeedValue ? (1 / exif.ShutterSpeedValue) * 1000 : exif.ExposureTime * 1000;
+	const cISO = exif.ISOSpeedRatings[0];
+
+	alert(`${fstop} ${iso} ${cFstop} ${cISO} ${cExposure}`);
 	/*
 	ApertureValue: 1.6959938131099002
 	BrightnessValue: -0.3966568568788107
@@ -469,9 +475,6 @@ mobile.cameraExposure = function (exif) {
 	SubsecTimeOriginal: "567"
 	WhiteBalance: 0
 	*/
-	exif.AperatureValue || exif.FNumber
-	exif.ExposureTime
-	exif.ISOSpeedRatings
 };
 mobile.cameraValues = function () {
 	document.querySelectorAll('.iso').forEach(input => {
