@@ -245,7 +245,8 @@ footer{
 }
 
 footer .icon {
-    width: 33.33%;
+    /*width: 33.33%;*/
+    width: 50%;
     height: 50px;
     float: left;
     box-sizing: border-box;
@@ -253,7 +254,8 @@ footer .icon {
 }
 
 body.mobile footer .icon{
-    width: 25%;
+    /*width: 25%;*/
+    width: 33.33%;
 }
 
 footer .icon:last-child{
@@ -329,7 +331,9 @@ footer > div.selected{
 #password,#wifi,#ip{
     display: none;
 }
-#password.active,#ip.active,#wifi.active{
+#password.active,
+#ip.active,
+#wifi.active{
     display: block;
 }
 
