@@ -23,6 +23,7 @@ var app = {
         document.addEventListener('resume', this.onDeviceResume.bind(this), false);
         document.addEventListener('DOMContentLoaded', event => {
             if (typeof cordova === 'undefined') {
+                init();
                 web.init();
                 getState();
             }
@@ -34,6 +35,7 @@ var app = {
     // Bind any cordova events here. Common events are:
     // 'pause', 'resume', etc.
     onDeviceReady: function() {
+        init();
         mobile.init();
     },
     onDeviceResume : function () {

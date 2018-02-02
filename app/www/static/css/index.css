@@ -36,6 +36,13 @@ html,body,button,h2,label,input{
     font-family: 'Arial Neue', Helvetical, Arial, sans-serif;
 
 }
+
+.clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
 body.mobile{
     padding-top: 35px;
 }
@@ -336,7 +343,6 @@ footer > div.selected{
 #wifi.active{
     display: block;
 }
-
 .indicator {
   color: red;
   width: 0; 
@@ -345,4 +351,15 @@ footer > div.selected{
   border-right: 5px solid transparent;
   
   border-bottom: 5px solid black;
+}
+.setting{
+    width: 50%;
+    float: left;
+}
+.setting input,
+.setting select{
+    width: 90%;
+}
+#camera{
+    margin-top: 20px;
 }

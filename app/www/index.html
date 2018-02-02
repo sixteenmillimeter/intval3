@@ -9,7 +9,7 @@
 	<link rel="stylesheet" href="static/css/monokai.css" />-->
 	<link rel="stylesheet" href="static/css/index.css" />
 </head>
-<body>
+<body class="mobile">
 <div id="overlay">
 	<div id="spinner"></div>
 </div>
@@ -57,17 +57,23 @@
 </div>
 <div id="settings" class="page">
 	<h2>SETTINGS</h2>
-	<div class="label">ISO</div>
-	<input type="number" class="iso" placeholder="100" value="100">
-	<div class="label">F-stop</div>
-	<input type="number" class="fstop" placeholder="5.6" value="5.6">
-	<div>
-		<div class="label">Rex-o-fader</div>
-		<select id="angle">
-			<option value="133" selected>0 (Normal)</option>
-			<option value="66">1 Stop</option>
-			<option value="33">2 Stop</option>
-		</select>
+	<div class="clearfix">
+		<div class="setting">
+			<div class="label">ISO</div>
+			<input type="number" class="iso" placeholder="100" value="100">
+		</div>
+		<div class="setting">
+			<div class="label">F-stop</div>
+			<input type="number" class="fstop" placeholder="5.6" value="5.6">
+		</div>
+		<div class="setting">
+			<div class="label">Rex-o-fader</div>
+			<select class="angle">
+				<option value="133" selected>0 (Normal)</option>
+				<option value="66">1 Stop</option>
+				<option value="33">2 Stop</option>
+			</select>
+		</div>
 	</div>
 	<div class="ble">
 		<h2>BLUETOOTH</h2>
@@ -102,11 +108,25 @@
 </div>-->
 <div id="camera" class="page">
 	<h2>CAMERA EXPOSURE</h2>
-	<div class="label">ISO</div>
-	<input type="number" class="iso" placeholder="100" value="100">
-	<div class="label">F-stop</div>
-	<input type="number" class="fstop" placeholder="5.6" value="5.6">
-	<button onclick="mobile.getCamera();"><i class="cameraIcon"></i></button>
+	<div class="clearfix">
+		<div class="setting">
+			<div class="label">ISO</div>
+			<input type="number" class="iso" placeholder="100" value="100">
+		</div>
+		<div class="setting">
+			<div class="label">F-stop</div>
+			<input type="number" class="fstop" placeholder="5.6" value="5.6">
+		</div>
+		<div class="setting">
+			<div class="label">Rex-o-fader</div>
+			<select class="angle">
+				<option value="133" selected>0 (Normal)</option>
+				<option value="66">1 Stop</option>
+				<option value="33">2 Stop</option>
+			</select>
+		</div>
+	</div>
+	<button id="camera" onclick="mobile.getCamera();"><i class="cameraIcon"></i></button>
 </div>
 <footer>
 	<div id="settingsIcon" onclick="settingsPage();" class="icon">

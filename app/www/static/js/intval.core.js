@@ -2,6 +2,8 @@
 const BOLEX = {
 	angle : 133,
 	prism : 0.8,
+	iso : 100,
+	fstop : 5.6,
 	expected : 630
 };
 const STATE = {
@@ -201,6 +203,23 @@ var seqState = function (state) {
 	}
 };
 
+var syncInputs = function (selector, cb) {
+	const elems = document.querySelectorAll(selector);
+	[].forEach.call(elems, function (input) {
+		input.oninput = function () {
+			setInputs(selector, this.value)
+			cb(this.value)
+		}
+	});
+};
+
+var setInputs = function (selector, value) {
+	const elems = document.querySelectorAll(selector);
+	[].forEach.call(elems, function (input) {
+		input.value = value;
+	});
+};
+
 var appPage = function () {
 	unsetPages();
 	document.getElementById('app').classList.add('selected');
@@ -262,4 +281,16 @@ var spinnerHide = function () {
 }
 var isNumeric = function (n) {
 		return !isNaN(parseFloat(n)) && isFinite(n);
+};
+
+var init = function () {
+	syncInputs('.angle', (val) => {
+		BOLEX.angle = parseInt(val);
+	});
+	syncInputs('.iso', (val) => {
+		BOLEX.iso = parseInt(val);
+	});
+	syncInputs('.fstop', (val) => {
+		BOLEX.fstop = parseFloat(val);
+	});
 };
