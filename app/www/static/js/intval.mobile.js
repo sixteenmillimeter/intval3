@@ -1,3 +1,7 @@
+/* jshint esversion:6, strict:true, browser:true*/
+/* global console, alert */
+
+
 'use strict';
 var mobile = {};
 
@@ -29,7 +33,7 @@ mobile.ble.scan = function () {
 			alert('No INTVAL devices found.');
 			settingsPage();
 		}
-	}, 5000)
+	}, 5000);
 };
 
 mobile.ble.onDiscover = function (device) {
@@ -43,18 +47,18 @@ mobile.ble.onDiscover = function (device) {
 	} else {
 		//console.log(`BLE - Discovered Other ${device.id}`);
 	}
-}
+};
 
 mobile.ble.connect = function (device) {
-	console.log(`BLE - Connecting to ${device.id}`)
+	console.log(`BLE - Connecting to ${device.id}`);
 	ble.connect(device.id, (peripheral) => {
 		mobile.ble.onConnect(peripheral, device);
 	}, mobile.ble.onError);
 };
 
 mobile.ble.onConnect = function (peripheral, device) {
-	const elem = document.getElementById('bluetooth')
-	const option = document.createElement('option')
+	const elem = document.getElementById('bluetooth');
+	const option = document.createElement('option');
 	const disconnect = document.getElementById('disconnect');
 	const scan = document.getElementById('scan');
 
@@ -85,11 +89,11 @@ mobile.ble.disconnect = function () {
 	const scan = document.getElementById('scan');
 	let device;
 	if (!mobile.ble.connected) {
-		console.warn('Not connected to any device')
-		return false
+		console.warn('Not connected to any device');
+		return false;
 	}
-	device = mobile.ble.device
-	console.log(`BLE - Disconnecting from ${device.id}`)
+	device = mobile.ble.device;
+	console.log(`BLE - Disconnecting from ${device.id}`);
 	ble.disconnect(device.id, mobile.ble.onDisconnect, mobile.ble.onDisconnect);
 
 	elem.innerHTML = '';
@@ -112,6 +116,9 @@ mobile.ble.onError = function (err) {
 
 mobile.init = function () {
 	const bleInputs = document.querySelectorAll('.ble');
+	const bolIso = document.querySelector('.iso');
+	const bolF = document.querySelector('.fstop');
+
 	document.querySelector('body').classList.add('mobile');
 
 	window.frame = mobile.frame;
@@ -128,13 +135,13 @@ mobile.init = function () {
 	}
 	spinnerInit();
 	mobile.ble.scan();
-	mobile.cameraValues()
+	mobile.cameraValues();
 
 };
 
 mobile.getState = function () {
 	if (!mobile.ble.connected) {
-		//
+		//returning here will prevent error alert
 	}
 	ble.read(mobile.ble.device.id,
 			mobile.ble.SERVICE_ID,
@@ -145,7 +152,7 @@ mobile.getState = function () {
 mobile.stateSuccess = function (data) {
 	let str = bytesToString(data);
 	let res = JSON.parse(str);
-	setState(res)
+	setState(res);
 };
 
 mobile.frame = function () {
@@ -229,7 +236,7 @@ mobile.exposureSuccess = function () {
 
 mobile.setDelay = function () {
 	const delay = document.getElementById('delay').value;
-	const scaledDelay = scaleTime(delay, STATE.delayScale)
+	const scaledDelay = scaleTime(delay, STATE.delayScale);
 	let opts = {
 		type : 'delay',
 		delay : scaledDelay
@@ -243,7 +250,7 @@ mobile.setDelay = function () {
 }
 
 mobile.delaySuccess = function () {
-	console.log('Set delay')
+	console.log('Set delay');
 	mobile.getState();
 };
 
@@ -417,6 +424,7 @@ mobile.setWifiSuccess = function () {
 	console.log('Set new wifi credentials');
 	setTimeout(mobile.getWifi, 100);
 };
+mobile.exif = {}
 
 mobile.getCamera = function () {
 	const opts = {
@@ -430,62 +438,171 @@ mobile.cameraSuccess = function (result) {
 	const thisResult = JSON.parse(result);
 	const metadata = JSON.parse(thisResult.json_metadata);
 	
-	mobile.cameraExposure(fstop, metadata);
-}
+	mobile.cameraExposure(metadata.Exif);
+};
 mobile.cameraError = function (err) {
 	console.error(err);
 	alert(err);
 };
 
 mobile.cameraExposure = function (exif) {
-	const fstop = BOLEX.fstop || 5.6;
+	const cam_exp = document.getElementById('cam_exp');
+	const cam_f = document.getElementById('cam_f');
+	const cam_iso = document.getElementById('cam_iso');
+	const bol_exp = document.getElementById('bol_exp');
+	const bol_f = document.getElementById('bol_f');
+	const bol_iso = document.getElementById('bol_iso');
+	const bol_f_diff = document.getElementById('bol_f_diff');
+	const bol_iso_diff = document.getElementById('bol_iso_diff');
+	const bol_exp_diff = document.getElementById('bol_exp_diff');
+
+	const fstop = 	BOLEX.fstop || 5.6;
 	const iso = 	BOLEX.iso 	|| 100;
+	const prism = 	BOLEX.prism	|| 0.8;
 
-	const cFstop = exif.AperatureValue || exif.FNumber;
-	const cExposure = exif.ShutterSpeedValue ? (1 / exif.ShutterSpeedValue) * 1000 : exif.ExposureTime * 1000;
-	const cISO = exif.ISOSpeedRatings[0];
+	const cFstop = exif.ApertureValue || exif.FNumber;
+	const cExposure = exif.ExposureTime * 1000;
+	const cIso = exif.ISOSpeedRatings[0];
 
-	alert(`${fstop} ${iso} ${cFstop} ${cISO} ${cExposure}`);
+	//convert fstop to "fnumber", an absolute scale where stops are scaled to 1.0
+	const f = mobile.fnumber(cFstop);
+	const target = mobile.fnumber(fstop); //bolex
+
+	let exposure = cExposure;
+	let isoStops = 0;
+	let fStops = 0;
+	let scale_elem;
+	let exposure_elem;
+	let proceed;
+	let e1;
+	let e2;
+
+	mobile.exif = exif;
+	console.dir(exif);
+
+	console.log(`fstop : ${fstop}`);
+	console.log(`iso : ${iso}`);
+	bol_f.value = fstop;
+	bol_iso.value = iso;
+
+	console.log(`cExposure : ${cExposure}`);
+	console.log(`cFstop : ${cFstop}`);
+	console.log(`cIso : ${cIso}`);
+	cam_exp.value = cExposure;
+	cam_f.value = cFstop;
+	cam_iso.value = cIso;
+
+	console.log(`f : ${f}`);
+	console.log(`target : ${target}`);
+
+	//Determine if fstop of phone camera "f"
+	if (target !== f) {
+		fStops = f - target;
+		exposure = exposure / Math.pow(2, fStops);
+	}
+	bol_f_diff.innerHTML = Math.round(parseFloat(-fStops) * 10) / 10;
+	console.log(`fstops : ${fStops}`);
+	console.log(`exposure => ${exposure}`);
+	
+	if (cIso != iso) {
+		isoStops = (Math.log(cIso) / Math.log(2)) - (Math.log(iso) / Math.log(2));
+	}
+	bol_iso_diff.innerHTML = Math.round(parseFloat(isoStops) * 10) / 10;
+	console.log(`isoStops : ${isoStops}`)
+
+	//Double or halve exposure based on the differences in ISO stops
+	exposure = exposure * Math.pow(2, isoStops);
+	console.log(`exposure => ${exposure}`);
+
+	console.log(`prism : ${prism}`);
+	//Compensate for Bolex prism
+	exposure = exposure * Math.pow(2, prism);
+	console.log(`exposure => ${prism}`);
+
+	exposure = Math.round(exposure) //round to nearest millisecond
+	bol_exp.value = exposure;
+	bol_exp_diff.value = 0;
+
+	if (exposure > 500) {
+		proceed = confirm(`Set camera exposure to ${exposure}ms to match photo.`);
+	}
+
+	if (proceed && exposure > 500) {
+		e1 = new Event('change');
+		e2 = new Event('change');
+
+		scale_elem = document.getElementById('scale');
+		exposure_elem = document.getElementById('exposure');
+
+		scale_elem.value = 'ms';
+		scale_elem.dispatchEvent(e1);
+
+		exposure_elem.value = exposure;
+		exposure_elem.dispatchEvent(e2);
+	}
+
 	/*
-	ApertureValue: 1.6959938131099002
-	BrightnessValue: -0.3966568568788107
-	ColorSpace: 65535
-	DateTimeDigitized: "2018:01:08 23:06:13"
-	DateTimeOriginal: "2018:01:08 23:06:13"
-	ExposureBiasValue: 0
-	ExposureMode: 0
-	ExposureProgram: 2
-	ExposureTime: 0.2
-	FNumber: 1.8
-	Flash: 24
-	FocalLenIn35mmFilm: 28
-	FocalLength: 3.99
-	ISOSpeedRatings: [100] (1)
-	LensMake: "Apple"
-	LensModel: "iPhone 8 back camera 3.99mm f/1.8"
-	LensSpecification: [3.99, 3.99, 1.8, 1.8] (4)
-	MeteringMode: 5
-	PixelXDimension: 4032
-	PixelYDimension: 3024
-	SceneType: 1
-	SensingMethod: 2
-	ShutterSpeedValue: 2.38401125849867
-	SubjectArea: [2015, 1511, 2217, 1330] (4)
-	SubsecTimeDigitized: "567"
-	SubsecTimeOriginal: "567"
-	WhiteBalance: 0
+{
+	"Exif": {
+		"DateTimeOriginal": "2018:02:02 16:59:13",
+		"ExposureBiasValue": 0,
+		"SensingMethod": 2,
+		"BrightnessValue": -0.9969016228800144,
+		"LensMake": "Apple",
+		"FNumber": 1.8,
+		"FocalLength": 3.99,
+		"ShutterSpeedValue": 2.049355412374274,
+		"SceneType": 1,
+		"ApertureValue": 1.6959938131099002,
+		"SubjectArea": [
+			2015,
+			1511,
+			2217,
+			1330
+		],
+		"ColorSpace": 65535,
+		"LensSpecification": [
+			3.99,
+			3.99,
+			1.8,
+			1.8
+		],
+		"PixelYDimension": 3024,
+		"WhiteBalance": 0,
+		"DateTimeDigitized": "2018:02:02 16:59:13",
+		"ExposureMode": 0,
+		"ISOSpeedRatings": [
+			100
+		],
+		"PixelXDimension": 4032,
+		"LensModel": "iPhone 8 back camera 3.99mm f/1.8",
+		"ExposureTime": 0.25,
+		"Flash": 24,
+		"SubsecTimeDigitized": "209",
+		"SubsecTimeOriginal": "209",
+		"ExposureProgram": 2,
+		"FocalLenIn35mmFilm": 28,
+		"MeteringMode": 5
+	}
+}
 	*/
 };
-mobile.cameraValues = function () {
-	document.querySelectorAll('.iso').forEach(input => {
-		input.onchange = function () {
-			var val = this.value;
-			document.querySelectorAll('.iso').forEach(e => {
-				e.value = val;
-			})
-		}
-	})
-}
+
+mobile.refreshExposure = function () {
+	if (typeof mobile.exif.ExposureTime !== 'undefined') {
+		mobile.cameraExposure(mobile.exif);
+	}
+};
+
+mobile.fnumber = function (fstop) {
+	return Math.log(fstop) / Math.log(Math.sqrt(2));
+};
+
+mobile.EV = function (fstop, shutter) {
+	const sec = shutter / 1000; //shutter in ms => seconds
+	const square = Math.pow(fstop, 2);
+	return Math.log(square / sec);
+};
 
 /** 
  *  Mobile helper functions
@@ -493,11 +610,12 @@ mobile.cameraValues = function () {
 
 function bytesToString (buffer) {
 	return String.fromCharCode.apply(null, new Uint8Array(buffer));
-};
+}
+
 function stringToBytes(string) {
 	var array = new Uint8Array(string.length);
 	for (var i = 0, l = string.length; i < l; i++) {
 		array[i] = string.charCodeAt(i);
 	}
 	return array.buffer;
-};
+}
