@@ -56,25 +56,6 @@
 	</div>
 </div>
 <div id="settings" class="page">
-	<h2>SETTINGS</h2>
-	<div class="clearfix">
-		<div class="setting">
-			<div class="label">ISO</div>
-			<input type="number" class="iso" placeholder="100" value="100">
-		</div>
-		<div class="setting">
-			<div class="label">F-stop</div>
-			<input type="number" class="fstop" placeholder="5.6" value="5.6">
-		</div>
-		<div class="setting">
-			<div class="label">Rex-o-fader</div>
-			<select class="angle">
-				<option value="133" selected>0 (Normal)</option>
-				<option value="66">1 Stop</option>
-				<option value="33">2 Stop</option>
-			</select>
-		</div>
-	</div>
 	<div class="ble">
 		<h2>BLUETOOTH</h2>
 		<select id="bluetooth">
@@ -107,15 +88,15 @@
 	<button id="mscript_seq">START SEQUENCE</button>
 </div>-->
 <div id="camera" class="page">
-	<h2>CAMERA EXPOSURE</h2>
+	<h2>CAMERA</h2>
 	<div class="clearfix">
 		<div class="setting">
 			<div class="label">ISO</div>
-			<input type="number" class="iso" placeholder="100" value="100">
+			<input type="number" class="iso" placeholder="100" value="100" onchange="mobile.refreshExposure();">
 		</div>
 		<div class="setting">
 			<div class="label">F-stop</div>
-			<input type="number" class="fstop" placeholder="5.6" value="5.6">
+			<input type="number" class="fstop" placeholder="5.6" value="5.6" onchange="mobile.refreshExposure();" />
 		</div>
 		<div class="setting">
 			<div class="label">Rex-o-fader</div>
@@ -126,7 +107,47 @@
 			</select>
 		</div>
 	</div>
-	<button id="camera" onclick="mobile.getCamera();"><i class="cameraIcon"></i></button>
+	<button id="cameraBtn" onclick="mobile.getCamera();">
+		<i class="cameraIcon"></i>
+	</button>
+	<div class="clearfix">
+		<div id="camera_exposure">
+			<h3>PHONE</h3>
+			<div>
+				<label for="cam_exp">EXP</label>
+				<input readonly id="cam_exp" type="text" />
+			</div>
+			<div>
+				<label for="cam_f">F</label>
+				<input readonly id="cam_f" type="text" />
+			</div>
+			<div>
+				<label for="cam_iso">ISO</label>
+				<input readonly id="cam_iso" type="text" />
+			</div>
+			<div>
+				<label>COMP</label>
+			</div>
+		</div>
+		<div id="bolex_exposure">
+			<h3>BOLEX</h3>
+			<div>
+				<label id="bol_exp_diff"></label>
+				<input readonly id="bol_exp" type="text" />
+			</div>
+			<div>
+				<label id="bol_f_diff"></label>
+				<input readonly id="bol_f" type="text" />
+			</div>
+			<div>
+				<label id="bol_iso_diff"></label>
+				<input readonly id="bol_iso" type="text" />
+			</div>
+			<div>
+				<label>0.8</label>
+			</div>
+		</div>
+	</div>
 </div>
 <footer>
 	<div id="settingsIcon" onclick="settingsPage();" class="icon">
