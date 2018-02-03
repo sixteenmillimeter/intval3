@@ -44,7 +44,7 @@ html,body,button,h2,label,input{
 }
 
 body.mobile{
-    padding-top: 35px;
+    padding-top: 5px;
 }
 .page{
     padding: 5px 10% 0 10%;
@@ -192,6 +192,16 @@ button.focus{
     margin-top: 6px;
     margin-bottom: 9px;
 }
+
+/* MAIN */
+#app{
+
+}
+
+#app > h2{
+    font-weight: bold;
+}
+
 #exposure,
 #delay{
     width: 70%;
@@ -360,6 +370,34 @@ footer > div.selected{
 .setting select{
     width: 90%;
 }
-#camera{
+.setting .label{
+    margin-bottom: 3px;
+}
+#cameraBtn{
     margin-top: 20px;
+}
+#camera_exposure,
+#bolex_exposure{
+    width: 50%;
+    float: left;
+}
+#camera_exposure input,
+#bolex_exposure input{
+    margin: 12px auto;
+    width: 69%;
+    display: block;
+}
+#camera_exposure h3,
+#bolex_exposure h3{
+    text-align: center;
+    font-weight: normal;
+}
+#camera_exposure div label,
+#bolex_exposure div label{
+    color: #666;
+    position: absolute;
+    margin-top: 8px;
+    text-align: center;
+    width: 100%;
+    margin-left: -50%;
 }
