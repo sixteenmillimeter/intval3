@@ -203,23 +203,6 @@ var seqState = function (state) {
 	}
 };
 
-var syncInputs = function (selector, cb) {
-	const elems = document.querySelectorAll(selector);
-	[].forEach.call(elems, function (input) {
-		input.oninput = function () {
-			setInputs(selector, this.value)
-			cb(this.value)
-		}
-	});
-};
-
-var setInputs = function (selector, value) {
-	const elems = document.querySelectorAll(selector);
-	[].forEach.call(elems, function (input) {
-		input.value = value;
-	});
-};
-
 var appPage = function () {
 	unsetPages();
 	document.getElementById('app').classList.add('selected');
@@ -278,19 +261,20 @@ var spinnerHide = function () {
 	if (elem.classList.contains('active')) {
 		elem.classList.remove('active');
 	}
-}
+};
 var isNumeric = function (n) {
 		return !isNaN(parseFloat(n)) && isFinite(n);
 };
 
+
 var init = function () {
-	syncInputs('.angle', (val) => {
-		BOLEX.angle = parseInt(val);
-	});
-	syncInputs('.iso', (val) => {
-		BOLEX.iso = parseInt(val);
-	});
-	syncInputs('.fstop', (val) => {
-		BOLEX.fstop = parseFloat(val);
-	});
+	document.querySelector('.angle').oninput = function () {
+		BOLEX.angle = parseInt(this.value);
+	};
+	document.querySelector('.iso').oninput = function () {
+		BOLEX.iso = parseInt(this.value);
+	};
+	document.querySelector('.fstop').oninput = function () {
+		BOLEX.fstop = parseFloat(this.value);
+	};
 };
