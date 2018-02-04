@@ -465,63 +465,55 @@ mobile.cameraExposure = function (exif) {
 	const cIso = exif.ISOSpeedRatings[0];
 
 	//convert fstop to "fnumber", an absolute scale where stops are scaled to 1.0
-	const f = mobile.fnumber(cFstop);
-	const target = mobile.fnumber(fstop); //bolex
+	const f = fnumber(cFstop);
+	const target = fnumber(fstop); //bolex
 
 	let exposure = cExposure;
 	let isoStops = 0;
 	let fStops = 0;
+	let expDiff;
+
 	let scale_elem;
 	let exposure_elem;
+
 	let proceed;
 	let e1;
 	let e2;
 
 	mobile.exif = exif;
-	console.dir(exif);
-
-	console.log(`fstop : ${fstop}`);
-	console.log(`iso : ${iso}`);
-	bol_f.value = fstop;
-	bol_iso.value = iso;
-
-	console.log(`cExposure : ${cExposure}`);
-	console.log(`cFstop : ${cFstop}`);
-	console.log(`cIso : ${cIso}`);
-	cam_exp.value = cExposure;
-	cam_f.value = cFstop;
-	cam_iso.value = cIso;
-
-	console.log(`f : ${f}`);
-	console.log(`target : ${target}`);
 
 	//Determine if fstop of phone camera "f"
 	if (target !== f) {
 		fStops = f - target;
 		exposure = exposure / Math.pow(2, fStops);
 	}
-	bol_f_diff.innerHTML = Math.round(parseFloat(-fStops) * 10) / 10;
-	console.log(`fstops : ${fStops}`);
-	console.log(`exposure => ${exposure}`);
 	
 	if (cIso != iso) {
 		isoStops = (Math.log(cIso) / Math.log(2)) - (Math.log(iso) / Math.log(2));
 	}
-	bol_iso_diff.innerHTML = Math.round(parseFloat(isoStops) * 10) / 10;
-	console.log(`isoStops : ${isoStops}`)
 
 	//Double or halve exposure based on the differences in ISO stops
 	exposure = exposure * Math.pow(2, isoStops);
-	console.log(`exposure => ${exposure}`);
 
-	console.log(`prism : ${prism}`);
 	//Compensate for Bolex prism
 	exposure = exposure * Math.pow(2, prism);
-	console.log(`exposure => ${prism}`);
 
 	exposure = Math.round(exposure) //round to nearest millisecond
+	
+	bol_f.value = fstop;
+	bol_iso.value = iso;
 	bol_exp.value = exposure;
-	bol_exp_diff.value = 0;
+
+	//Total difference in exposure from phone camera to Bolex
+	expDiff = (Math.log(exposure) / Math.log(2)) - (Math.log(cExposure) / Math.log(2));
+
+	bol_exp_diff.innerHTML = floatDisplay(expDiff);
+	bol_iso_diff.innerHTML = floatDisplay(isoStops);
+	bol_f_diff.innerHTML = floatDisplay(-fStops);
+
+	cam_exp.value = cExposure;
+	cam_f.value = cFstop;
+	cam_iso.value = cIso;
 
 	if (exposure > 500) {
 		proceed = confirm(`Set camera exposure to ${exposure}ms to match photo.`);
@@ -594,10 +586,6 @@ mobile.refreshExposure = function () {
 	}
 };
 
-mobile.fnumber = function (fstop) {
-	return Math.log(fstop) / Math.log(Math.sqrt(2));
-};
-
 mobile.EV = function (fstop, shutter) {
 	const sec = shutter / 1000; //shutter in ms => seconds
 	const square = Math.pow(fstop, 2);
@@ -619,3 +607,28 @@ function stringToBytes(string) {
 	}
 	return array.buffer;
 }
+
+function fnumber (fstop) {
+	return Math.log(fstop) / Math.log(Math.sqrt(2));
+}
+
+function floatDisplay (value) {
+	let str = value + '';
+	const period = str.indexOf('.');
+	if (period === -1) {
+		str = str + '.0';
+	} else {
+		str = roundTenth(value) + '';
+	}
+	if (value < 0) {
+		str = `<span class="neg">${(str + '')}</span>`;
+	} else if (value > 0) {
+		str = `<span class="pos">+${(str + '')}</span>`;
+	}
+	return str;
+}
+
+function roundTenth (value) {
+	return Math.round((value * 10) / 10)
+}
+
