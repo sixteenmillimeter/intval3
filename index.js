@@ -54,6 +54,7 @@ function createBLE () {
 	ble.on('delay', bDelay)
 	ble.on('counter', bCounter)
 	ble.on('sequence', bSequence)
+	ble.on('stop', bSequenceStop)
 	ble.on('reset', bReset)
 }
 
@@ -465,6 +466,7 @@ function bSequence (obj, cb) {
 		}
 	}
 	if (intval._state.sequence && sequence._state.active) {
+		//should not occur with single client
 		sequence.setStop()
 		intval._state.sequence = false
 		log.info('sequence stop', { method : 'ble' })
@@ -493,7 +495,13 @@ function bSequence (obj, cb) {
 }
 
 function bSequenceStop (obj, cb) {
-
+	//
+	if (intval._state.sequence && sequence._state.active) {
+		sequence.setStop()
+		intval._state.sequence = false
+		log.info('sequence stop', { method : 'ble' })
+		return cb()
+	}
 }
 
 function bReset (obj, cb) {
