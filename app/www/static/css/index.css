@@ -386,6 +386,7 @@ footer > div.selected{
     margin: 12px auto;
     width: 69%;
     display: block;
+    border-color: #666;
 }
 #camera_exposure h3,
 #bolex_exposure h3{
@@ -400,4 +401,10 @@ footer > div.selected{
     text-align: center;
     width: 100%;
     margin-left: -50%;
+}
+span.neg{
+    color: #f32121;;
+}
+span.pos{
+    color: #20ce45;
 }
