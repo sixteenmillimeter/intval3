@@ -254,6 +254,7 @@ button i {
 }
 
 footer{
+    display: none;
     width: 100%;
     height: 50px;
     position: fixed;
@@ -407,4 +408,7 @@ span.neg{
 }
 span.pos{
     color: #20ce45;
+}
+body.mobile footer{
+    display: block;
 }
