@@ -37,6 +37,7 @@ function createServer () {
 	app.post('/frame', rFrame)
 	app.get( '/sequence', rSequence)
 	app.post('/sequence', rSequence)
+
 	app.post('/reset', rReset)
 	app.get( '/status', rStatus)
 	app.listen(PORT, () => {
@@ -54,7 +55,6 @@ function createBLE () {
 	ble.on('delay', bDelay)
 	ble.on('counter', bCounter)
 	ble.on('sequence', bSequence)
-	ble.on('stop', bSequenceStop)
 	ble.on('reset', bReset)
 }
 

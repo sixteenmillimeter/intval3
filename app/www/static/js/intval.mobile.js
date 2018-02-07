@@ -279,16 +279,19 @@ mobile.sequence = function () {
 	const opts = {
 		type : 'sequence'
 	};
+	const elem = document.getElementById('seq');
 	if (!mobile.ble.connected) {
-		return alert('Not connected to an INTVAL device.');
+		return alert('Not connected to an INTVAL3 device.');
 	}
 	ble.write(mobile.ble.device.id,
 			mobile.ble.SERVICE_ID,
 			mobile.ble.CHAR_ID,
 			stringToBytes(JSON.stringify(opts)), //check length?
-			mobile.frameSuccess,
+			mobile.sequenceSuccess,
 			mobile.ble.onError);
-	document.getElementById('seq').classList.add('focus');
+	if (!elem.classList.contains('focus')) {
+		elem.classList.add('focus');
+	}
 	mobile.ble.active = true;
 };
 
@@ -305,6 +308,7 @@ mobile.sequenceSuccess = function () {
 		}
 	}, 20);
 };
+
 
 //retreive object with list of available Wifi APs,
 //and state of current connection, if available 
