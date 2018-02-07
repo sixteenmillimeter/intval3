@@ -10,11 +10,38 @@ The [INTVAL2](https://github.com/sixteenmillimeter/intval2) project should be us
 
 ### Components
 
-* Firmware for the Raspberry Pi Zero W running on [Node.js](https://nodejs.org)
-* Mobile/Web/API for controlling device, using [Cordova](https://cordova.apache.org/) + [Bleno](https://github.com/sandeepmistry/bleno), and [Restify](http://restify.com/)
+* [Firmware](#firmware) for the Raspberry Pi Zero W running [Node.js](https://nodejs.org) on Raspian
+* [Mobile app](#mobile) for controlling device using [Cordova](https://cordova.apache.org/) + [Bleno](https://github.com/sandeepmistry/bleno)
+* [Web app](#web) for controlling device using [Restify](http://restify.com/)
 * Hardware files, parts models for 3D printing, laser cutting and CNC
 * PCB design for a Raspberry Pi Zero W Bonnet
 * [Parts list](#parts-list)
+
+<a name="firmware"></a>
+
+## Firmware
+
+The firmware of the INTVAL3 is a node.js application running on the Raspian OS intended for installation on the Raspberry Pi Zero W. 
+
+<a name="mobile"></a>
+
+## Mobile App
+
+The INTVAL3 mobile app controls the intervalometer over Bluetooth. It can be used to configure the settings on the intervalometer such as exposure length, delay between frames and the direction of the film. The app can also be used to trigger individual frames, as well as start and stop sequences. As an experimental feature, film exposure settings can be determined with the camera on a mobile device.
+
+<a name="web"></a>
+
+## Web App
+
+As a function of the firmware, there is an embedded web application that is hosted on the INTVAL3. When connected to a wifi network (via the mobile app) users are able to control the intervalometer from a browser. Users are also able to trigger functions and change settings on the intervalometer firmware from the command line by using cURL or wget, so actions can be scripted and automated from an external machine.
+
+<a name="hardware"></a>
+
+## Hardware
+
+All of the non-electronic hardware is generated from OpenSCAD scripts and built into either STL files for 3D printing or DXF files for laser cutting or CNCing.
+
+Electronics designs are available in the form of a Fritzing file, a wiring diagram and a mask image that can be used to fabricate a board from a blank PCB. One of the easiest ways to 
 
 <a name="parts-list"></a>
 
