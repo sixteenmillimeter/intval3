@@ -247,15 +247,6 @@ function rStatus (req, res, next) {
 	return next()
 }
 
-function rReset (req, res, next) {
-	log.info'/reset', {time : +new Date()})
-	intval.reset()
-	setTimeout(() => {
-		res.send(intval._state)
-		return next()
-	}, 10)
-}
-
 function rSequence (req, res, next) {
 	let dir = true
 	let exposure = 0
@@ -343,6 +334,15 @@ function rSequence (req, res, next) {
 		
 		return next()
 	}
+}
+
+function rReset (req, res, next) {
+	log.info(`/reset`, {time : +new Date()})
+	intval.reset()
+	setTimeout(() => {
+		res.send(intval._state)
+		return next()
+	}, 10)
 }
 
 function rUpdate (req, res, next) {
@@ -539,6 +539,7 @@ function bSequenceStop (obj, cb) {
 }
 
 function bReset (obj, cb) {
+	log.info(`reset`, { time : +new Date() })
 	intval.reset()
 	setTimeout(cb, 10)
 }
