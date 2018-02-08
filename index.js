@@ -346,13 +346,15 @@ function rSequence (req, res, next) {
 
 function rUpdate (req, res, next) {
 	exec('sh ./scripts/update.sh', (err, stdio, stderr) => {
-		res.send({ success : true })
+		res.send({ success : true, action : 'update' })
+		res.end()
 		process.exit(0)
 	})
 }
 
 function rRestart (req, res, next) {
-	res.send({ success : true })
+	res.send({ success : true, action : 'restart' })
+	res.end()
 	process.exit(0)
 }
 
