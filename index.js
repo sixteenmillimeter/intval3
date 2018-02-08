@@ -348,14 +348,20 @@ function rUpdate (req, res, next) {
 	exec('sh ./scripts/update.sh', (err, stdio, stderr) => {
 		res.send({ success : true, action : 'update' })
 		res.end()
-		process.exit(0)
+		next()
+		setTimeout(() => {
+			process.exit(0)
+		}, 100)
 	})
 }
 
 function rRestart (req, res, next) {
 	res.send({ success : true, action : 'restart' })
 	res.end()
-	process.exit(0)
+	next()
+	setTimeout(() => {
+		process.exit(0)
+	}, 100)
 }
 
 //Ble functions
