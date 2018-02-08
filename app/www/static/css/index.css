@@ -412,3 +412,7 @@ span.pos{
 body.mobile footer{
     display: block;
 }
+
+#reset{
+    margin-top: 60px;
+}

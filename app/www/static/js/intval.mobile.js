@@ -289,9 +289,11 @@ mobile.sequence = function () {
 			stringToBytes(JSON.stringify(opts)), //check length?
 			mobile.sequenceSuccess,
 			mobile.ble.onError);
+
 	if (!elem.classList.contains('focus')) {
 		elem.classList.add('focus');
 	}
+
 	mobile.ble.active = true;
 };
 
@@ -594,6 +596,25 @@ mobile.EV = function (fstop, shutter) {
 	const sec = shutter / 1000; //shutter in ms => seconds
 	const square = Math.pow(fstop, 2);
 	return Math.log(square / sec);
+};
+
+mobile.reset = function () {
+	const reset = confirm(`Reset INTVAL3 to default settings?`);
+	if (!reset) return false;
+	let opts = {
+		type : 'reset'
+	};
+	ble.write(mobile.ble.device.id,
+		mobile.ble.SERVICE_ID,
+		mobile.ble.CHAR_ID,
+		stringToBytes(JSON.stringify(opts)),
+		mobile.resetSuccess,
+		mobile.ble.onError);
+};
+
+mobile.resetSuccess = function () {
+	console.log('Reset to default settings');
+	mobile.getState();
 };
 
 /** 
