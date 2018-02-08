@@ -248,6 +248,7 @@ function rStatus (req, res, next) {
 }
 
 function rReset (req, res, next) {
+	log.info'/reset', {time : +new Date()})
 	intval.reset()
 	setTimeout(() => {
 		res.send(intval._state)
@@ -345,7 +346,7 @@ function rSequence (req, res, next) {
 }
 
 function rUpdate (req, res, next) {
-	log.info(`update`, { time : +new Date() })
+	log.info(`/update`, { time : +new Date() })
 	exec('sh ./scripts/update.sh', (err, stdio, stderr) => {
 		if (err) {
 			log.error(err)
@@ -361,7 +362,7 @@ function rUpdate (req, res, next) {
 }
 
 function rRestart (req, res, next) {
-	log.info(`restart`, { time : +new Date() })
+	log.info(`/restart`, { time : +new Date() })
 	res.send({ success : true, action : 'restart' })
 	res.end()
 	next()
