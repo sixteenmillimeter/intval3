@@ -599,7 +599,7 @@ mobile.EV = function (fstop, shutter) {
 };
 
 mobile.reset = function () {
-	const reset = confirm(`Reset INTVAL3 to default settings?`);
+	const reset = confirm(`Reset INTVAL3 to default settings and clear counter?`);
 	if (!reset) return false;
 	let opts = {
 		type : 'reset'
@@ -615,6 +615,10 @@ mobile.reset = function () {
 mobile.resetSuccess = function () {
 	console.log('Reset to default settings');
 	mobile.getState();
+};
+
+mobile.update = function () {
+
 };
 
 /** 
