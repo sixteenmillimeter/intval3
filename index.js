@@ -40,8 +40,8 @@ function createServer () {
 
 	app.get( '/status', rStatus)
 	app.post('/reset', rReset)
-	app.get('/update', rUpdate)
-	app.get('/restart', rRestart)
+	app.post('/update', rUpdate)
+	app.post('/restart', rRestart)
 	
 
 	app.listen(PORT, () => {
@@ -351,7 +351,7 @@ function rUpdate (req, res, next) {
 		if (err) {
 			log.error(err)
 		}
-		log.info(`update`, { git : stdio })
+		log.info(`/update`, { git : stdio })
 		res.send({ success : true, action : 'update', output : stdio })
 		res.end()
 		next()
