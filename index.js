@@ -345,8 +345,13 @@ function rSequence (req, res, next) {
 }
 
 function rUpdate (req, res, next) {
+	log.info(`update`, { time : +new Date() })
 	exec('sh ./scripts/update.sh', (err, stdio, stderr) => {
-		res.send({ success : true, action : 'update' })
+		if (err) {
+			log.error(err)
+		}
+		log.info(`update`, { git : stdio })
+		res.send({ success : true, action : 'update', output : stdio })
 		res.end()
 		next()
 		setTimeout(() => {
@@ -356,6 +361,7 @@ function rUpdate (req, res, next) {
 }
 
 function rRestart (req, res, next) {
+	log.info(`restart`, { time : +new Date() })
 	res.send({ success : true, action : 'restart' })
 	res.end()
 	next()
