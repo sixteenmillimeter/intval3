@@ -618,8 +618,24 @@ mobile.resetSuccess = function () {
 };
 
 mobile.update = function () {
-
+	const reset = confirm(`Check for updates? You will be disconnected from the INTVAL3 during this process.`);
+	if (!reset) return false;
+	let opts = {
+		type : 'reset'
+	};
+	ble.write(mobile.ble.device.id,
+		mobile.ble.SERVICE_ID,
+		mobile.ble.CHAR_ID,
+		stringToBytes(JSON.stringify(opts)),
+		mobile.updateSuccess,
+		mobile.ble.onError);
 };
+
+mobile.updateSuccess = function () {
+	alert()
+};
+
+mobile.restart = function () {}
 
 /** 
  *  Mobile helper functions

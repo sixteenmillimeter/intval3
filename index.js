@@ -38,8 +38,12 @@ function createServer () {
 	app.get( '/sequence', rSequence)
 	app.post('/sequence', rSequence)
 
-	app.post('/reset', rReset)
 	app.get( '/status', rStatus)
+	app.post('/reset', rReset)
+	app.get('/update', rUpdate)
+	app.get('/restart', rRestart)
+	
+
 	app.listen(PORT, () => {
 		log.info('server', { name : APPNAME, port : PORT })
 	})
@@ -55,7 +59,10 @@ function createBLE () {
 	ble.on('delay', bDelay)
 	ble.on('counter', bCounter)
 	ble.on('sequence', bSequence)
+
 	ble.on('reset', bReset)
+	ble.on('update', bUpdate)
+	ble.on('restart', bRestart)
 }
 
 //Restify functions
@@ -337,6 +344,18 @@ function rSequence (req, res, next) {
 	}
 }
 
+function rUpdate (req, res, next) {
+	exec('sh ./scripts/update.sh', (err, stdio, stderr) => {
+		res.send({ success : true })
+		process.exit(0)
+	})
+}
+
+function rRestart (req, res, next) {
+	res.send({ success : true })
+	process.exit(0)
+}
+
 //Ble functions
 
 function bFrame (obj, cb) {
@@ -509,6 +528,21 @@ function bReset (obj, cb) {
 	setTimeout(cb, 10)
 }
 
+function bUpdate (obj, cb) {
+	cb()
+	setTimeout(() => {
+		exec('sh ./scripts/update.sh', (err, stdio, stderr) => {
+			process.exit(0)
+		})
+	}, 20)
+}
+function bRestart (obj, cb) {
+	cb()
+	setTimeout(() => {
+		process.exit(0)
+	}, 20)
+}
+
 function seq () {
 	let dir = intval._state.frame.dir
 	let exposure = intval._state.frame.exposure
@@ -537,12 +571,6 @@ function seq () {
 			console.timeEnd('sequence time')
 		})
 	}
-}
-
-function update (req, res, next) {
-	exec('sh ./scripts/update.sh', (err, stdio, stderr) => {
-		process.exit()
-	})
 }
 
 function index (req, res, next) {
