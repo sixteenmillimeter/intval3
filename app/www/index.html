@@ -80,8 +80,7 @@
 		<button id="wifi" class="" onclick="mobile.setWifi();">CONNECT</button>
 		<button id="wifiRefresh" class="" onclick="mobile.getWifi();">REFRESH WIFI</button>
 	</div>
-	<div class="ble">
-		<br />
+	<div>
 		<button id="reset" onclick="mobile.reset();">RESET</button>
 		<button id="restart" onclick="mobile.restart();">RESTART</button>
 		<button id="update" onclick="mobile.update();">UPDATE</button>
@@ -113,10 +112,10 @@
 			</select>
 		</div>
 	</div>
-	<button id="cameraBtn" onclick="mobile.getCamera();">
+	<button id="cameraBtn" class="ble" onclick="mobile.getCamera();">
 		<i class="cameraIcon"></i>
 	</button>
-	<div class="clearfix">
+	<div class="clearfix ble">
 		<div id="camera_exposure">
 			<h3>PHONE</h3>
 			<div>
