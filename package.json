@@ -4,7 +4,7 @@
   "description": "Intervalometer for the Bolex",
   "main": "index.js",
   "scripts": {
-    "test": "mocha tests",
+    "test": "./node_modules/.bin/qunit",
     "docs": "sh docs.sh"
   },
   "repository": {
@@ -38,6 +38,7 @@
     "winston": "^2.3.1"
   },
   "devDependencies": {
-    "jsdoc-to-markdown": "^3.0.0"
+    "jsdoc-to-markdown": "^3.0.0",
+    "qunit": "^2.5.0"
   }
 }
