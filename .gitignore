@@ -1,4 +1,5 @@
 node_modules
 run_dev.sh
 state
-*.DS_Store
+*/.DS_Store
+.DS_Store
