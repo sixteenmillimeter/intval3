@@ -326,7 +326,12 @@ footer > div.selected{
     display: block;
 }
 #spinner{
+    display: none;
     margin-top: 200px;
+}
+
+#spinner.active{
+    display: block;
 }
 
 #disconnect,#scan{
