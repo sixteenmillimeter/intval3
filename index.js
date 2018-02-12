@@ -340,7 +340,8 @@ function rReset (req, res, next) {
 	log.info(`/reset`, {time : +new Date()})
 	intval.reset()
 	setTimeout(() => {
-		res.send(intval._state)
+		const obj = intval.status()
+		res.send(obj)
 		return next()
 	}, 10)
 }

@@ -168,15 +168,12 @@ web.reset = function () {
 	}
 	fetch('/reset', opts)
 		.then(web.useJson)
-		.then(web.resetSuccess)
+		.then(setState)
 		.catch(err => {
 			console.error('Error posting to /reset');
 			console.error(err);
 		})
 };
-web.resetSuccess = function (res) {
-	console.dir(res)
-}
 web.restart = function () {
 	const opts = {
 		method : 'POST',
