@@ -147,7 +147,7 @@ web.sequence = function () {
 			console.error('Error getting /sequence');
 			console.error(err);
 		})
-}
+};
 web.sequenceSuccess = function (res) {
 	if (res.started && res.started != false) {
 		STATE.sequence = true;
@@ -159,10 +159,61 @@ web.sequenceSuccess = function (res) {
 		seqState(false);
 		mobile.getState();
 	}
+};
+web.reset = function () {
+	const opts = {
+		method : 'POST',
+		headers : web._header,
+		body : JSON.stringify({})
+	}
+	fetch('/reset', opts)
+		.then(web.useJson)
+		.then(web.resetSuccess)
+		.catch(err => {
+			console.error('Error posting to /reset');
+			console.error(err);
+		})
+};
+web.resetSuccess = function (res) {
+	console.dir(res)
 }
+web.restart = function () {
+	const opts = {
+		method : 'POST',
+		headers : web._header,
+		body : JSON.stringify({})
+	}
+	fetch('/restart', opts)
+		.then(web.useJson)
+		.then(web.restartSuccess)
+		.catch(err => {
+			console.error('Error posting to /restart');
+			console.error(err);
+		})
+};
+web.restartSuccess = function (res) {
+	console.dir(res)
+};
+web.update = function () {
+	const opts = {
+		method : 'POST',
+		headers : web._header,
+		body : JSON.stringify({})
+	}
+	fetch('/update', opts)
+		.then(web.useJson)
+		.then(web.updateSuccess)
+		.catch(err => {
+			console.error('Error posting to /update');
+			console.error(err);
+		})
+};
+web.updateSuccess = function (res) {
+	console.dir(res)
+};
 web.useJson = function (res) {
 	return res.json();
-}
+};
 web.init = function () {
 	window.frame = web.frame;
 	window.getState = web.getState;
@@ -171,5 +222,8 @@ web.init = function () {
 	window.setExposure = web.setExposure;
 	window.setCounter = web.setCounter;
 	window.sequence = web.sequence;
+	window.reset = web.reset;
+	window.restart = web.restart;
+	window.update = web.update;
 	console.log('started web')
 };
