@@ -539,13 +539,18 @@ function bSequenceStop (obj, cb) {
 }
 
 function bReset (obj, cb) {
-	log.info(`reset`, { time : +new Date() })
+	log.info(`reset`, { method: 'ble' })
 	intval.reset()
 	setTimeout(cb, 10)
 }
 
 function bUpdate (obj, cb) {
+	log.info('update', { method : 'ble' })
 	exec('sh ./scripts/update.sh', (err, stdio, stderr) => {
+		if (err) {
+			log.error('update', err)
+		}
+		log.info('update', { stdio : stdio })
 		cb()
 		setTimeout(() => {
 			process.exit(0)
@@ -553,6 +558,7 @@ function bUpdate (obj, cb) {
 	})
 }
 function bRestart (obj, cb) {
+	log.info('restart', { method : 'ble' })
 	cb()
 	setTimeout(() => {
 		process.exit(0)
