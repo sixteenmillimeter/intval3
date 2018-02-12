@@ -24,6 +24,9 @@ window.setExposure = null;
 window.setDelay = null;
 window.setCounter = null;
 window.sequence = null;
+window.reset = null;
+window.restart = null;
+window.update = null;
 
 //ms
 var shutter = function (exposure) {
@@ -224,48 +227,64 @@ var cameraPage = function () {
 	document.getElementById('camera').classList.add('selected');
 	document.getElementById('cameraIcon').classList.add('selected');
 };
-var spinnerInit = function () {
-	const spinnerOpts = {
-		  lines: 13 // The number of lines to draw
-		, length: 33 // The length of each line
-		, width: 11 // The line thickness
-		, radius: 30 // The radius of the inner circle
-		, scale: 0.5 // Scales overall size of the spinner
-		, corners: 1 // Corner roundness (0..1)
-		, color: '#fff' // #rgb or #rrggbb or array of colors
-		, opacity: 0.25 // Opacity of the lines
-		, rotate: 0 // The rotation offset
-		, direction: 1 // 1: clockwise, -1: counterclockwise
-		, speed: 1 // Rounds per second
-		, trail: 60 // Afterglow percentage
-		, fps: 20 // Frames per second when using setTimeout() as a fallback for CSS
-		, zIndex: 2e9 // The z-index (defaults to 2000000000)
-		, className: 'spinner' // The CSS class to assign to the spinner
-		, top: '50%' // Top position relative to parent
-		, left: '50%' // Left position relative to parent
-		, shadow: true // Whether to render a shadow
-		, hwaccel: true // Whether to use hardware acceleration
-		, position: 'relative' // Element positioning
-	};
-	const target = document.getElementById('spinner');
-	const spinner = new Spinner(spinnerOpts).spin(target);
-};
-var spinnerShow = function () {
-	const elem = document.getElementById('overlay');
-	if (!elem.classList.contains('active')) {
-		elem.classList.add('active');
-	}
-};
-var spinnerHide = function () {
-	const elem = document.getElementById('overlay');
-	if (elem.classList.contains('active')) {
-		elem.classList.remove('active');
-	}
-};
+
 var isNumeric = function (n) {
 		return !isNaN(parseFloat(n)) && isFinite(n);
 };
 
+var UI = {};
+
+UI.overlay = {
+	elem : document.getElementById('overlay')
+}
+UI.overlay.show = function () {
+	if (!UI.overlay.elem.classList.contains('active')) {
+		UI.overlay.elem.classList.add('active');
+	}
+};
+UI.overlay.hide = function () {
+	if (UI.overlay.elem.classList.contains('active')) {
+		UI.overlay.elem.classList.remove('active');
+	}
+};
+UI.spinner = {
+	elem : document.getElementById('spinner')
+}
+UI.spinner.opts = {
+	  lines: 13 // The number of lines to draw
+	, length: 33 // The length of each line
+	, width: 11 // The line thickness
+	, radius: 30 // The radius of the inner circle
+	, scale: 0.5 // Scales overall size of the spinner
+	, corners: 1 // Corner roundness (0..1)
+	, color: '#fff' // #rgb or #rrggbb or array of colors
+	, opacity: 0.25 // Opacity of the lines
+	, rotate: 0 // The rotation offset
+	, direction: 1 // 1: clockwise, -1: counterclockwise
+	, speed: 1 // Rounds per second
+	, trail: 60 // Afterglow percentage
+	, fps: 20 // Frames per second when using setTimeout() as a fallback for CSS
+	, zIndex: 2e9 // The z-index (defaults to 2000000000)
+	, className: 'spinner' // The CSS class to assign to the spinner
+	, top: '50%' // Top position relative to parent
+	, left: '50%' // Left position relative to parent
+	, shadow: true // Whether to render a shadow
+	, hwaccel: true // Whether to use hardware acceleration
+	, position: 'relative' // Element positioning
+};
+UI.spinner.init = function () {
+	const spinner = new Spinner(UI.spinner.opts).spin(UI.spinner.elem);
+};
+UI.spinner.show = function () {
+	if (!UI.spinner.elem.classList.contains('active')) {
+		UI.spinner.elem.classList.add('active');
+	}
+};
+UI.spinner.hide = function () {
+	if (UI.spinner.elem.classList.contains('active')) {
+		UI.spinner.elem.classList.remove('active');
+	}
+};
 
 var init = function () {
 	document.querySelector('.angle').oninput = function () {
