@@ -24,15 +24,15 @@ mobile.wifi = {
 };
 
 mobile.ble.scan = function () {
+	UI.spinner.show('Scanning for INTVAL3...');
 	UI.overlay.show();
-	UI.spinner.show();
 	ble.scan([], 5, mobile.ble.onDiscover, mobile.ble.onError);
 	mobile.ble.devices = [];
 	setTimeout(() => {
 		UI.spinner.hide();
 		UI.overlay.hide();
 		if (!mobile.ble.connected) {
-			alert('No INTVAL devices found.');
+			mobile.alert('No devices found.')
 			settingsPage();
 		}
 	}, 5000);
@@ -40,7 +40,7 @@ mobile.ble.scan = function () {
 
 mobile.ble.onDiscover = function (device) {
 	if (device && device.name && device.name.indexOf('intval3') !== -1) {
-		console.log('BLE - Discovered INTVAL');
+		console.log('BLE - Discovered INTVAL3');
 		console.dir(device);
 		mobile.ble.devices.push(device);
 		if (!mobile.ble.connected) {
@@ -105,6 +105,8 @@ mobile.ble.disconnect = function () {
 
 	disconnect.classList.remove('active');
 	scan.classList.add('active');
+	UI.spinner.hide();
+	UI.overlay.hide();
 };
 
 mobile.ble.onDisconnect = function (res) {
@@ -114,13 +116,11 @@ mobile.ble.onDisconnect = function (res) {
 };
 
 mobile.ble.onError = function (err) {
-	console.dir(err);
-	
 	if (err.errorMessage && err.errorMessage === 'Peripheral Disconnected') {
 		console.log('Device disconnected');
 		mobile.ble.disconnect()
 	} else {
-		alert(JSON.stringify(err));
+		mobile.alert(JSON.stringify(err));
 	}
 	/*
 	Object
@@ -180,7 +180,7 @@ mobile.frame = function () {
 		type : 'frame'
 	};
 	if (!mobile.ble.connected) {
-		return alert('Not connected to an INTVAL device.');
+		return mobile.alert('Not connected to an INTVAL3 device.');
 	}
 	if (mobile.ble.active) {
 		return false;
@@ -275,19 +275,30 @@ mobile.delaySuccess = function () {
 };
 
 mobile.setCounter = function () {
-	const counter = document.getElementById('counter').value;
-	const change = prompt(`Change counter value?`, counter);
-	if (change === null || !isNumeric(change)) return false;
-		let opts = {
+	let opts = {
 		type : 'counter',
-		counter : change
+		counter : null
 	};
-	ble.write(mobile.ble.device.id,
-		mobile.ble.SERVICE_ID,
-		mobile.ble.CHAR_ID,
-		stringToBytes(JSON.stringify(opts)), //check length?
-		mobile.counterSuccess,
-		mobile.ble.onError);
+	const counter = document.getElementById('counter').value;
+	function counterPrompt (results) {
+		let change = results.input1
+		if (results.buttonIndex === 1) {
+		if (change === null || !isNumeric(change)) return false;
+			opts.counter = change;
+			ble.write(mobile.ble.device.id,
+				mobile.ble.SERVICE_ID,
+				mobile.ble.CHAR_ID,
+				stringToBytes(JSON.stringify(opts)), //check length?
+				mobile.counterSuccess,
+				mobile.ble.onError);
+		}
+	}
+	navigator.notification.prompt(
+		`Change counter value?`, 
+		counterPrompt,
+		'INTVAL3',
+		['Okay', 'Cancel'],
+		counter);
 };
 
 mobile.counterSuccess = function () {
@@ -301,7 +312,7 @@ mobile.sequence = function () {
 	};
 	const elem = document.getElementById('seq');
 	if (!mobile.ble.connected) {
-		return alert('Not connected to an INTVAL3 device.');
+		return mobile.alert('Not connected to an INTVAL3 device.');
 	}
 	ble.write(mobile.ble.device.id,
 			mobile.ble.SERVICE_ID,
@@ -335,8 +346,9 @@ mobile.sequenceSuccess = function () {
 //retreive object with list of available Wifi APs,
 //and state of current connection, if available 
 mobile.getWifi = function () {
+	UI.spinner.show('Refreshing WIFI...');
 	UI.overlay.show();
-	UI.spinner.show();
+	
 	ble.read(mobile.ble.device.id,
 			mobile.ble.SERVICE_ID,
 			mobile.ble.WIFI_ID,
@@ -428,17 +440,18 @@ mobile.setWifi = function () {
 	const opts = {
 		ssid : ssid,
 		pwd : pwd
-	}
+	};
+	UI.spinner.show('Setting WIFI...');
 	UI.overlay.show();
-	UI.spinner.show();
+	
 	if (ssid === '' || ssid === null || ssid === undefined) {
-		return alert('Cannot set wireless credentials with a blank SSID');
+		return mobile.alert('Cannot set wireless credentials with a blank SSID');
 	}
 	if (pwd === '' || pwd === null || pwd === undefined) {
-		return alert('Cannot set wireless credentials with a blank passphrase');
+		return mobile.alert('Cannot set wireless credentials with a blank passphrase');
 	}
 	if (pwd.length < 8 || pwd.length > 63) {
-		return alert('Passphrase must be 8..63 characters');
+		return mobile.alert('Passphrase must be 8..63 characters');
 	}
 	ble.write(mobile.ble.device.id,
 		mobile.ble.SERVICE_ID,
@@ -472,7 +485,7 @@ mobile.cameraSuccess = function (result) {
 };
 mobile.cameraError = function (err) {
 	console.error(err);
-	alert(err);
+	mobile.alert(JSON.stringify(err));
 };
 
 mobile.cameraExposure = function (exif) {
@@ -545,22 +558,29 @@ mobile.cameraExposure = function (exif) {
 	cam_f.value = cFstop;
 	cam_iso.value = cIso;
 
-	if (exposure > 500) {
-		proceed = confirm(`Set camera exposure to ${exposure}ms to match photo.`);
+	function exposureConfirm (index) {
+		if (index === 1) {
+			e1 = new Event('change');
+			e2 = new Event('change');
+
+			scale_elem = document.getElementById('scale');
+			exposure_elem = document.getElementById('exposure');
+
+			scale_elem.value = 'ms';
+			scale_elem.dispatchEvent(e1);
+
+			exposure_elem.value = exposure;
+			exposure_elem.dispatchEvent(e2);
+		}
 	}
 
-	if (proceed && exposure > 500) {
-		e1 = new Event('change');
-		e2 = new Event('change');
-
-		scale_elem = document.getElementById('scale');
-		exposure_elem = document.getElementById('exposure');
-
-		scale_elem.value = 'ms';
-		scale_elem.dispatchEvent(e1);
-
-		exposure_elem.value = exposure;
-		exposure_elem.dispatchEvent(e2);
+	if (exposure > 500) {
+		navigator.notification.confirm(
+			`Set camera exposure to ${exposure}ms to match photo?`,
+			exposureConfirm,
+			'INTVAL3',
+			['Okay', 'Cancel']
+		);
 	}
 
 	/*
@@ -623,38 +643,56 @@ mobile.EV = function (fstop, shutter) {
 };
 
 mobile.reset = function () {
-	const proceed = confirm(`Reset INTVAL3 to default settings and clear counter?`);
-	if (!proceed) return false;
 	let opts = {
 		type : 'reset'
 	};
-	ble.write(mobile.ble.device.id,
-		mobile.ble.SERVICE_ID,
-		mobile.ble.CHAR_ID,
-		stringToBytes(JSON.stringify(opts)),
-		mobile.resetSuccess,
-		mobile.ble.onError);
+	function resetConfirm (index) {
+		if (index === 1) {
+			ble.write(mobile.ble.device.id,
+					mobile.ble.SERVICE_ID,
+					mobile.ble.CHAR_ID,
+					stringToBytes(JSON.stringify(opts)),
+					mobile.resetSuccess,
+					mobile.ble.onError);
+		}
+	}
+	navigator.notification.confirm(
+		`Reset INTVAL3 to default settings and clear counter?`,
+		resetConfirm,
+		'INTVAL3',
+		['Okay', 'Cancel']
+	);
 };
 
 mobile.resetSuccess = function () {
 	console.log('Reset to default settings');
 	setTimeout(() => {
 		mobile.getState();
-	}, 20)
+	}, 100)
 };
 
 mobile.update = function () {
-	const proceed = confirm(`Check for updates? You will be disconnected from the INTVAL3 during this process.`);
-	if (!proceed) return false;
 	let opts = {
 		type : 'update'
 	};
-	ble.write(mobile.ble.device.id,
-		mobile.ble.SERVICE_ID,
-		mobile.ble.CHAR_ID,
-		stringToBytes(JSON.stringify(opts)),
-		mobile.updateSuccess,
-		mobile.ble.onError);
+	function updateConfirm (index) {
+		if (index === 1) {
+			UI.spinner.show('Updating INTVAL3...');
+			UI.overlay.show();
+			ble.write(mobile.ble.device.id,
+				mobile.ble.SERVICE_ID,
+				mobile.ble.CHAR_ID,
+				stringToBytes(JSON.stringify(opts)),
+				mobile.updateSuccess,
+				mobile.ble.onError);
+		}
+	}
+	navigator.notification.confirm(
+		`Check for updates? You will be disconnected from the INTVAL3 during this process.`,
+		updateConfirm,
+		'INTVAL3',
+		['Okay', 'Cancel']
+	);
 };
 
 mobile.updateSuccess = function () {
@@ -662,21 +700,44 @@ mobile.updateSuccess = function () {
 };
 
 mobile.restart = function () {
-	const proceed = confirm(`Restart the INTVAL3? You will be disconnected from it during this process.`);
-	if (!proceed) return false;
 	let opts = {
 		type : 'restart'
 	};
-	ble.write(mobile.ble.device.id,
-		mobile.ble.SERVICE_ID,
-		mobile.ble.CHAR_ID,
-		stringToBytes(JSON.stringify(opts)),
-		mobile.restartSuccess,
-		mobile.ble.onError);
+	function restartConfirm (index) {
+		if (index === 1) {
+		UI.spinner.show('Restarting INTVAL3...');
+		UI.overlay.show();
+		ble.write(mobile.ble.device.id,
+			mobile.ble.SERVICE_ID,
+			mobile.ble.CHAR_ID,
+			stringToBytes(JSON.stringify(opts)),
+			mobile.restartSuccess,
+			mobile.ble.onError);
+		}
+	}
+	navigator.notification.confirm(
+		`Restart the INTVAL3? You will be disconnected from it during this process.`,
+		restartConfirm,
+		'INTVAL3',
+		['Okay', 'Cancel']
+	);
 };
 mobile.restartSuccess = function () {
 	console.log('Restarting... ');
 }
+
+mobile.alert = function (msg) {
+	if (navigator && navigator.notification) {
+		navigator.notification.alert(
+				msg,
+				() => {},
+				'INTVAL3',
+				'Okay'
+			);
+	} else {
+		alert(msg);
+	}
+};
 
 /** 
  *  Mobile helper functions
