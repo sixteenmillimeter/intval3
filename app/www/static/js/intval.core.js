@@ -275,14 +275,32 @@ UI.spinner.opts = {
 UI.spinner.init = function () {
 	const spinner = new Spinner(UI.spinner.opts).spin(UI.spinner.elem);
 };
-UI.spinner.show = function () {
+UI.spinner.show = function (text) {
 	if (!UI.spinner.elem.classList.contains('active')) {
 		UI.spinner.elem.classList.add('active');
+	}
+	if (text) {
+		UI.message.show(text)
 	}
 };
 UI.spinner.hide = function () {
 	if (UI.spinner.elem.classList.contains('active')) {
 		UI.spinner.elem.classList.remove('active');
+	}
+
+};
+UI.message = {
+	elem : document.getElementById('msg')
+};
+UI.message.show = function (text) {
+	UI.message.elem.innerHTML = text
+	if (!UI.message.elem.classList.contains('active')) {
+		UI.message.elem.classList.add('active');
+	}
+};
+UI.message.hide = function () {
+	if (UI.message.elem.classList.contains('active')) {
+		UI.message.elem.classList.remove('active');
 	}
 };
 

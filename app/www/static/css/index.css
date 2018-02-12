@@ -413,3 +413,19 @@ body.mobile footer{
 #reset{
     margin-top: 60px;
 }
+#msg{
+    display: none;
+    width: 200px;
+    height: 44px;
+    border-radius: 6px;
+    position: fixed;
+    left: 50%;
+    margin-left: -100px;
+    margin-top: 45px;
+    background: rgba(100, 100, 100, 0.5);
+    color: #fff;
+    text-shadow: 1px 1px 0px #000;
+}
+#msg.active{
+    display: block;
+}
