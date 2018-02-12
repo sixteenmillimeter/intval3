@@ -545,12 +545,12 @@ function bReset (obj, cb) {
 }
 
 function bUpdate (obj, cb) {
-	cb()
-	setTimeout(() => {
-		exec('sh ./scripts/update.sh', (err, stdio, stderr) => {
+	exec('sh ./scripts/update.sh', (err, stdio, stderr) => {
+		cb()
+		setTimeout(() => {
 			process.exit(0)
-		})
-	}, 20)
+		}, 20)
+	})
 }
 function bRestart (obj, cb) {
 	cb()
