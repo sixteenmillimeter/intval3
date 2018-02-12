@@ -254,7 +254,7 @@ button i {
 }
 
 footer{
-    /*display: none;*/
+    display: block;
     width: 100%;
     height: 50px;
     position: fixed;
@@ -263,7 +263,7 @@ footer{
 }
 
 footer .icon {
-    /*width: 33.33%;*/
+    width: 33.33%
     width: 50%;
     height: 50px;
     float: left;
