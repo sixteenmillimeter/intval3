@@ -623,8 +623,8 @@ mobile.EV = function (fstop, shutter) {
 };
 
 mobile.reset = function () {
-	const reset = confirm(`Reset INTVAL3 to default settings and clear counter?`);
-	if (!reset) return false;
+	const proceed = confirm(`Reset INTVAL3 to default settings and clear counter?`);
+	if (!proceed) return false;
 	let opts = {
 		type : 'reset'
 	};
@@ -644,8 +644,8 @@ mobile.resetSuccess = function () {
 };
 
 mobile.update = function () {
-	const update = confirm(`Check for updates? You will be disconnected from the INTVAL3 during this process.`);
-	if (!update) return false;
+	const proceed = confirm(`Check for updates? You will be disconnected from the INTVAL3 during this process.`);
+	if (!proceed) return false;
 	let opts = {
 		type : 'update'
 	};
@@ -662,8 +662,8 @@ mobile.updateSuccess = function () {
 };
 
 mobile.restart = function () {
-	const restart = confirm(`Restart the INTVAL3? You will be disconnected from it during this process.`);
-	if (!restart) return false;
+	const proceed = confirm(`Restart the INTVAL3? You will be disconnected from it during this process.`);
+	if (!proceed) return false;
 	let opts = {
 		type : 'restart'
 	};

@@ -166,6 +166,8 @@ web.reset = function () {
 		headers : web._header,
 		body : JSON.stringify({})
 	}
+	const proceed = confirm(`Reset INTVAL3 to default settings and clear counter?`);
+	if (!proceed) return false
 	fetch('/reset', opts)
 		.then(web.useJson)
 		.then(setState)
@@ -180,6 +182,8 @@ web.restart = function () {
 		headers : web._header,
 		body : JSON.stringify({})
 	}
+	const proceed = confirm(`Restart the INTVAL3? You will be disconnected from it during this process.`);
+	if (!proceed) return false;
 	fetch('/restart', opts)
 		.then(web.useJson)
 		.then(web.restartSuccess)
@@ -197,6 +201,8 @@ web.update = function () {
 		headers : web._header,
 		body : JSON.stringify({})
 	}
+	const proceed = confirm(`Check for updates? You will be disconnected from the INTVAL3 during this process.`);
+	if (!proceed) return false;
 	fetch('/update', opts)
 		.then(web.useJson)
 		.then(web.updateSuccess)
