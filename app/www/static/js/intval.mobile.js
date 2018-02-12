@@ -24,11 +24,13 @@ mobile.wifi = {
 };
 
 mobile.ble.scan = function () {
-	spinnerShow();
+	UI.overlay.show();
+	UI.spinner.show();
 	ble.scan([], 5, mobile.ble.onDiscover, mobile.ble.onError);
 	mobile.ble.devices = [];
 	setTimeout(() => {
-		spinnerHide();
+		UI.spinner.hide();
+		UI.overlay.hide();
 		if (!mobile.ble.connected) {
 			alert('No INTVAL devices found.');
 			settingsPage();
@@ -62,7 +64,8 @@ mobile.ble.onConnect = function (peripheral, device) {
 	const disconnect = document.getElementById('disconnect');
 	const scan = document.getElementById('scan');
 
-	spinnerHide();
+	UI.spinner.hide();
+	UI.overlay.hide();
 	console.log(`BLE - Connected to ${device.id}`);
 	console.log(peripheral);
 	console.dir(device);
@@ -111,7 +114,21 @@ mobile.ble.onDisconnect = function (res) {
 };
 
 mobile.ble.onError = function (err) {
-	alert(JSON.stringify(err));
+	console.dir(err);
+	
+	if (err.errorMessage && err.errorMessage === 'Peripheral Disconnected') {
+		console.log('Device disconnected');
+		mobile.ble.disconnect()
+	} else {
+		alert(JSON.stringify(err));
+	}
+	/*
+	Object
+	errorDescription: "The specified device has disconnected from us."
+	errorMessage: "Peripheral Disconnected"
+	id: "E8EF4B8B-0B5E-4E96-B337-E878DB1E3C4B"
+	name: "intval3_b827ebc7461d"
+	*/
 };
 
 mobile.init = function () {
@@ -128,12 +145,15 @@ mobile.init = function () {
 	window.setDelay = mobile.setDelay;
 	window.setCounter = mobile.setCounter;
 	window.sequence = mobile.sequence;
+	window.reset = mobile.reset;
+	window.restart = mobile.restart;
+	window.update = mobile.update;
 
 	//show ble-specific fields in settings
 	for (let i of bleInputs) {
 		i.classList.add('active');
 	}
-	spinnerInit();
+	UI.spinner.init()
 	mobile.ble.scan();
 	mobile.cameraValues();
 
@@ -315,7 +335,8 @@ mobile.sequenceSuccess = function () {
 //retreive object with list of available Wifi APs,
 //and state of current connection, if available 
 mobile.getWifi = function () {
-	spinnerShow();
+	UI.overlay.show();
+	UI.spinner.show();
 	ble.read(mobile.ble.device.id,
 			mobile.ble.SERVICE_ID,
 			mobile.ble.WIFI_ID,
@@ -332,7 +353,8 @@ mobile.getWifiSuccess = function (data) {
 	let str = bytesToString(data);
 	let res = JSON.parse(str);
 
-	spinnerHide();
+	UI.spinner.hide();
+	UI.overlay.hide();
 	elem.innerHTML = ''
 	if (!res.available || res.available.length === 0) {
 		if (elem.classList.contains('active')) {
@@ -407,7 +429,8 @@ mobile.setWifi = function () {
 		ssid : ssid,
 		pwd : pwd
 	}
-	spinnerShow();
+	UI.overlay.show();
+	UI.spinner.show();
 	if (ssid === '' || ssid === null || ssid === undefined) {
 		return alert('Cannot set wireless credentials with a blank SSID');
 	}
@@ -426,7 +449,8 @@ mobile.setWifi = function () {
 };
 
 mobile.setWifiSuccess = function () {
-	spinnerHide();
+	UI.spinner.hide();
+	UI.overlay.hide();
 	console.log('Set new wifi credentials');
 	setTimeout(mobile.getWifi, 100);
 };
@@ -614,14 +638,16 @@ mobile.reset = function () {
 
 mobile.resetSuccess = function () {
 	console.log('Reset to default settings');
-	mobile.getState();
+	setTimeout(() => {
+		mobile.getState();
+	}, 20)
 };
 
 mobile.update = function () {
-	const reset = confirm(`Check for updates? You will be disconnected from the INTVAL3 during this process.`);
-	if (!reset) return false;
+	const update = confirm(`Check for updates? You will be disconnected from the INTVAL3 during this process.`);
+	if (!update) return false;
 	let opts = {
-		type : 'reset'
+		type : 'update'
 	};
 	ble.write(mobile.ble.device.id,
 		mobile.ble.SERVICE_ID,
@@ -632,10 +658,25 @@ mobile.update = function () {
 };
 
 mobile.updateSuccess = function () {
-	alert()
+	console.log('Finished updating firmware, restarting...');
 };
 
-mobile.restart = function () {}
+mobile.restart = function () {
+	const restart = confirm(`Restart the INTVAL3? You will be disconnected from it during this process.`);
+	if (!restart) return false;
+	let opts = {
+		type : 'restart'
+	};
+	ble.write(mobile.ble.device.id,
+		mobile.ble.SERVICE_ID,
+		mobile.ble.CHAR_ID,
+		stringToBytes(JSON.stringify(opts)),
+		mobile.restartSuccess,
+		mobile.ble.onError);
+};
+mobile.restartSuccess = function () {
+	console.log('Restarting... ');
+}
 
 /** 
  *  Mobile helper functions
