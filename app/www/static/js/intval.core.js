@@ -160,6 +160,7 @@ var setState = function (res) {
 		STATE.dir = res.frame.dir;
 		setDirLabel(false);
 	} else {
+		document.getElementById('dir').checked = false;
 		STATE.dir = res.frame.dir;
 		setDirLabel(true);
 	}
