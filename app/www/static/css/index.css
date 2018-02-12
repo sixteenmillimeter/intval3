@@ -263,8 +263,8 @@ footer{
 }
 
 footer .icon {
-    width: 33.33%
-    width: 50%;
+    width: 33.33%;
+    /*width: 50%;*/
     height: 50px;
     float: left;
     box-sizing: border-box;
