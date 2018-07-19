@@ -1,10 +1,11 @@
 {
   "name": "intval3",
-  "version": "0.0.1",
+  "version": "3.0.1",
   "description": "Intervalometer for the Bolex",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./node_modules/.bin/qunit",
+    "docs": "sh docs.sh"
   },
   "repository": {
     "type": "git",
@@ -27,8 +28,17 @@
     "cron": "^1.2.1",
     "gpio": "^0.2.7",
     "node-ipc": "^9.1.0",
+    "node-persist": "^2.1.0",
+    "onoff": "^1.1.5",
     "restify": "^5.2.0",
+    "rpio": "^0.9.20",
+    "sqlite3": "^3.1.13",
+    "squel": "^5.12.0",
     "uuid": "^3.1.0",
     "winston": "^2.3.1"
+  },
+  "devDependencies": {
+    "jsdoc-to-markdown": "^3.0.0",
+    "qunit": "^2.5.0"
   }
 }

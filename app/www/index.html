@@ -1,11 +1,181 @@
 <!doctype html>
 <html>
 <head>
-	<title>intval 3</title>
+	<title>INTVAL3</title>
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="viewport" content="width = 320, initial-scale = 1.0, user-scalable = no, minimal-ui, viewport-fit=cover">
+	<!--<link rel="stylesheet" href="static/css/codemirror.css" />
+	<link rel="stylesheet" href="static/css/monokai.css" />-->
+	<link rel="stylesheet" href="static/css/index.css" />
 </head>
 <body>
-	<form method="/frame">
-		
-	</form>
+<div id="overlay">
+	<div id="spinner"></div>
+	<div id="msg"></div>
+</div>
+<div id="app" class="page selected">
+	<h2>INTVAL3</h2>
+	<div>
+		<div class="label">Counter</div>
+		<input type="number" id="counter" onclick="setCounter();" value="0" step="1" readonly />
+	</div>
+	<div>
+		<div class="label">Direction</div>
+		<span id="bwdLabel">BACKWARD</span>
+		<span id="fwdLabel" class="selected">FORWARD</span>
+		<label class="switch">
+			<input type="checkbox" id="dir" onclick="setDir();">
+			<span class="slider round"></span>
+		</label>
+	</div>
+	<div>
+		<div class="label">Exposure <span id="str">1/5</span></div>
+		<input type="number" id="exposure" value="630" min="0" onchange="setExposure();" />
+		<select id="scale" onchange="setExposureScale();">
+			<option value="ms" selected>ms</option>
+			<option value="sec">sec</option>
+			<option value="min">min</option>
+			<option value="hour">hour</option>
+		</select>
+	</div>
+	<div>
+		<div class="label">Delay</div>
+		<input type="number" id="delay" value="0" min="0" step="1" onchange="setDelay();" />
+		<select id="delayScale" onchange="setDelayScale();">
+			<option value="ms" selected>ms</option>
+			<option value="sec">sec</option>
+			<option value="min">min</option>
+			<option value="hour">hour</option>
+		</select>
+	</div>
+	<div>
+		<button id="seq" onclick="sequence();">START SEQUENCE</button>
+	</div>
+	<div>
+		<button id="frame" onclick="frame();">+1 FRAME</button>
+	</div>
+</div>
+<div id="settings" class="page">
+	<div class="ble">
+		<h2>BLUETOOTH</h2>
+		<select id="bluetooth">
+			<option>N/A</option>
+		</select>
+		<button id="disconnect" onclick="mobile.ble.disconnect();">DISCONNECT</button>
+		<button id="scan" class="active" onclick="mobile.ble.scan();">SCAN FOR DEVICE</button>
+	</div>
+	<div class="ble">
+		<h2>WIFI</h2>
+		<div id="ip">
+			Local IP: null
+		</div>
+		<div>
+			<select id="available" class="" onchange="mobile.editWifi();">
+				<option>N/A</option>
+			</select>
+		</div>
+		<div>
+			<input type="password" id="password" class="" placeholder="Wifi Password" />
+		</div>
+		<button id="wifi" class="" onclick="mobile.setWifi();">CONNECT</button>
+		<button id="wifiRefresh" class="" onclick="mobile.getWifi();">REFRESH WIFI</button>
+	</div>
+	<div>
+		<button id="reset" onclick="reset();">RESET</button>
+		<button id="restart" onclick="restart();">RESTART</button>
+		<button id="update" onclick="update();">UPDATE</button>
+	</div>
+</div>
+<!--<div id="mscript" class="page">
+	<h2>MSCRIPT</h2>
+	<textarea id="mscript_editor"></textarea>
+	<button id="compile">COMPILE</button>
+	<button id="mscript_seq">START SEQUENCE</button>
+</div>-->
+<div id="camera" class="page">
+	<h2>CAMERA</h2>
+	<div class="clearfix">
+		<div class="setting">
+			<div class="label">ISO</div>
+			<input type="number" class="iso" placeholder="100" value="100" onchange="mobile.refreshExposure();">
+		</div>
+		<div class="setting">
+			<div class="label">F-stop</div>
+			<input type="number" class="fstop" placeholder="5.6" value="5.6" onchange="mobile.refreshExposure();" />
+		</div>
+		<div class="setting">
+			<div class="label">Rex-o-fader</div>
+			<select class="angle">
+				<option value="133" selected>0 (Normal)</option>
+				<option value="66">1 Stop</option>
+				<option value="33">2 Stop</option>
+			</select>
+		</div>
+	</div>
+	<button id="cameraBtn" class="ble" onclick="mobile.getCamera();">
+		<i class="cameraIcon"></i>
+	</button>
+	<div class="clearfix ble">
+		<div id="camera_exposure">
+			<h3>PHONE</h3>
+			<div>
+				<label for="cam_exp">EXP</label>
+				<input readonly id="cam_exp" type="text" />
+			</div>
+			<div>
+				<label for="cam_f">F</label>
+				<input readonly id="cam_f" type="text" />
+			</div>
+			<div>
+				<label for="cam_iso">ISO</label>
+				<input readonly id="cam_iso" type="text" />
+			</div>
+			<div>
+				<label>COMP</label>
+			</div>
+		</div>
+		<div id="bolex_exposure">
+			<h3>BOLEX</h3>
+			<div>
+				<label id="bol_exp_diff"></label>
+				<input readonly id="bol_exp" type="text" />
+			</div>
+			<div>
+				<label id="bol_f_diff"></label>
+				<input readonly id="bol_f" type="text" />
+			</div>
+			<div>
+				<label id="bol_iso_diff"></label>
+				<input readonly id="bol_iso" type="text" />
+			</div>
+			<div>
+				<label><span class="pos">+0.8</span></label>
+			</div>
+		</div>
+	</div>
+</div>
+<footer>
+	<div id="settingsIcon" onclick="settingsPage();" class="icon">
+		<div> </div>
+	</div>
+	<div id="appIcon" onclick="appPage();" class="icon selected">
+		<div></div>
+	</div>
+	<!--<div id="mscriptIcon" onclick="mscriptPage();" class="icon">
+		<div></div>
+	</div>-->
+	<div id="cameraIcon" onclick="cameraPage();" class="icon">
+		<div class="cameraIcon"></div>
+	</div>
+</footer>
+<script src="cordova.js"></script>
+<script src="static/js/spin.min.js"></script>
+<!--<script src="static/js/codemirror.js"></script>-->
+<script src="static/js/intval.core.js"></script>
+<script src="static/js/intval.web.js"></script>
+<script src="static/js/intval.mobile.js"></script>
+<!--<script src="static/js/intval.mscript.js"></script>-->
+<script src="static/js/index.js"></script>
 </body>
 </html>

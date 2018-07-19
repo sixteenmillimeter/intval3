@@ -1,18 +1,20 @@
 #!/bin/bash
 
-echo "Running blootstrap install script"
+echo "Running intval3 install script"
 apt-get update
-apt-get install git ufw nginx -y
+apt-get install git ufw nginx jq -y
 
 echo "Installing node.js dependencies.."
 apt-get install nodejs npm -y
 npm install -g n
-n latest
+n 9.1.0
 npm install -g npm@latest
-npm install -g pm2
+npm install -g pm2 node-gyp
 
 echo "Installing bluetooth dependencies..."
 apt-get install bluetooth bluez libbluetooth-dev libudev-dev -y
+systemctl disable bluetooth
+hciconfig hci0 up
 
 echo "Configuring ufw (firewall)..."
 ufw default deny incoming
@@ -22,13 +24,13 @@ ufw allow http
 ufw allow https
 ufw enable
 
-echo "Installing blootstrap project..."
-wget https://github.com/mattmcw/blootstrap/archive/master.zip
-unzip master.zip -d blootstrap/
+echo "Installing intval3 project..."
+wget https://github.com/sixteenmillimeter/intval3/archive/master.zip
+unzip master.zip -d intval3/
 rm master.zip
 
-cd blootstrap
+cd intval3
 npm install
 pm2 start process.json
 
-echo "Finished installing blootstrap"
+echo "Finished installing intval3"
