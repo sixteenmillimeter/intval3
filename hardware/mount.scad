@@ -63,6 +63,12 @@ module motor_key_120 (half = false, DECOYS = false, sides = 1, ALT = false) {
     }
 }
 
+
+module motor_key_120_reinforced () {
+
+
+}
+
 module motor_set_screw_120 () {
     cube([10.19, 2.95, 2.95], center = true);
     translate([(10.19 / 2) - (2.56 / 2), 0, 0]) cube([2.56, 5.8, 5.8], center = true);    
