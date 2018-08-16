@@ -44,13 +44,15 @@ module exploded_view () {
 //intval_laser_panel_cover(true, ALL_RED=true);
 //rotate([0, 0, 13]) intval_panel_laser();
 //rotate([0, 0, 13]) intval_laser_panel_cover();
-key_cap();
-//geared_motor_mount_120();
+//key_cap();
+geared_motor_mount_120();
 //motor_key();
 //motor_key_120();
 //plunger_plate();
+//plunger();
+//rotate([0, 180, 0]) plunger_top();
 //motor_cap(false);
-//motor_cap_120(false);
+//rotate([0, 180, 0]) motor_cap_120(false);
 //translate([0, 0, 39 / 2 + 5.75]) bolt_guide();
 
 //exploded_view();
