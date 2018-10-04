@@ -63,6 +63,22 @@ module motor_key_120 (half = false, DECOYS = false, sides = 1, ALT = false) {
     }
 }
 
+
+module motor_key_120_reinforced () {
+    motor_key_120();
+
+}
+
+module motor_key_120_master_mold () {
+    $fn = 200;
+    translate([54, -12, 26.4]) rotate([0, 180, 0]) motor_key_120();
+    difference() {
+        translate([0, 0, 16]) cylinder(r1= 30, r2 = 30, h = 42,  center = true);
+        translate([0, 0, 21]) cylinder(r1= 26, r2 = 26, h = 42,  center = true);
+    //translate([50, 0, 0]) cube([100, 100, 100], center = true);
+        }
+}
+
 module motor_set_screw_120 () {
     cube([10.19, 2.95, 2.95], center = true);
     translate([(10.19 / 2) - (2.56 / 2), 0, 0]) cube([2.56, 5.8, 5.8], center = true);    

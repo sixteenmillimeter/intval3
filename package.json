@@ -24,21 +24,21 @@
   },
   "homepage": "https://github.com/sixteenmillimeter/intval3#readme",
   "dependencies": {
-    "bleno": "^0.4.2",
+    "bleno": "^0.5.0",
     "cron": "^1.2.1",
     "gpio": "^0.2.7",
     "node-ipc": "^9.1.0",
     "node-persist": "^2.1.0",
     "onoff": "^1.1.5",
-    "restify": "^5.2.0",
+    "restify": "^7.2.1",
     "rpio": "^0.9.20",
-    "sqlite3": "^3.1.13",
+    "sqlite3": "^4.0.2",
     "squel": "^5.12.0",
     "uuid": "^3.1.0",
     "winston": "^2.3.1"
   },
   "devDependencies": {
-    "jsdoc-to-markdown": "^3.0.0",
-    "qunit": "^2.5.0"
+    "jsdoc-to-markdown": "^4.0.1",
+    "qunit": "^2.6.2"
   }
 }
