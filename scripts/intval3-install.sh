@@ -43,5 +43,7 @@ echo "Install node"
 
 npm install
 sudo pm2 start process.json
+sudo pm2 save
+sudo pm2 startup
 
 echo "Finished installing intval3"
