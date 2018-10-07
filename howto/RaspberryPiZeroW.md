@@ -21,7 +21,17 @@ From [learn.adafruit.com](https://learn.adafruit.com/turning-your-raspberry-pi-z
 
 ```sudo nano /etc/network/interfaces```
 
-Add at the end:
+Enable wlan0 by adding the following lines:
+
+```
+allow-hotplug wlan0
+iface wlan0 inet manual
+	wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
+```
+
+Enable with ```sudo systemctl enable wpa_supplicant.service```.
+
+For usb connection, add at the end:
 
 ```
 allow-hotplug usb0
