@@ -31,6 +31,6 @@ rm master.zip
 
 cd intval3
 npm install
-pm2 start process.json
+sudo pm2 start process.json
 
 echo "Finished installing intval3"
