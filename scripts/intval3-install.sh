@@ -1,28 +1,28 @@
 #!/bin/bash
 
 echo "Running intval3 install script"
-apt-get update
-apt-get install git ufw nginx jq -y
+sudo apt update
+sudo apt install git ufw nginx jq -y
 
 echo "Installing node.js dependencies.."
-apt-get install nodejs npm -y
-npm install -g n
-n 9.1.0
-npm install -g npm@latest
-npm install -g pm2 node-gyp
+sudo apt install nodejs npm -y
+sudo npm install -g n
+sudo n 9.1.0
+sudo npm install -g npm@latest
+sudo npm install -g pm2 node-gyp
 
 echo "Installing bluetooth dependencies..."
-apt-get install bluetooth bluez libbluetooth-dev libudev-dev -y
-systemctl disable bluetooth
-hciconfig hci0 up
+sudo apt install bluetooth bluez libbluetooth-dev libudev-dev -y
+sudo systemctl disable bluetooth
+sudo hciconfig hci0 up
 
 echo "Configuring ufw (firewall)..."
-ufw default deny incoming
-ufw default allow outgoing
-ufw allow ssh
-ufw allow http
-ufw allow https
-ufw enable
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw allow ssh
+sudo ufw allow http
+sudo ufw allow https
+sudo ufw enable
 
 echo "Installing intval3 project..."
 wget https://github.com/sixteenmillimeter/intval3/archive/master.zip
