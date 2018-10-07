@@ -1,6 +1,7 @@
 #!/bin/bash
 
 echo "Running intval3 install script (this will take a while)..."
+cd
 sudo apt update
 sudo apt install git ufw nginx jq -y
 
@@ -25,17 +26,18 @@ sudo ufw allow https
 sudo ufw enable
 
 echo "Installing intval3 project..."
-wget https://github.com/sixteenmillimeter/intval3/archive/master.zip
-unzip master.zip
-rm master.zip
-mv intval3-master/ intval3/
+mkdir state
+git clone https://github.com/sixteenmillimeter/intval3.git
 cd intval3
 
 echo "Configure nginx..."
 
-cp nginx.conf /etc/nginx/sites-available/intval3
-ln -s /etc/nginx/sites-available/intval3 /etc/nginx/sites-enabled/intval3
-rm /etc/nginx/sites-enabled/default
+sudo cp nginx.conf /etc/nginx/sites-available/intval3
+sudo ln -s /etc/nginx/sites-available/intval3 /etc/nginx/sites-enabled/intval3
+sudo rm /etc/nginx/sites-enabled/default
+
+sudo nginx -t
+sudo service nginx restart
 
 echo "Install node"
 
