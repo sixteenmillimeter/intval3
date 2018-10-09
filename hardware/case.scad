@@ -408,7 +408,7 @@ module bearing (x, y, z, width= 8, hole = true, calval = 0) {
 module key_cap () {
     $fn = 60;
     thickness = .75;
-    innerD = 22.1;
+    innerD = 22.5;
 	outerD = innerD + (thickness * 2);
     h = 18 - 2.5;
     
