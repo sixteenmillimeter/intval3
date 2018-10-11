@@ -44,7 +44,7 @@ module exploded_view () {
 //intval_laser_panel_cover(true, ALL_RED=true);
 //rotate([0, 0, 13]) intval_panel_laser();
 //rotate([0, 0, 13]) intval_laser_panel_cover();
-//key_cap();
+rotate([0, 180, 0]) key_cap();
 //geared_motor_mount_120();
 //motor_key();
 //motor_key_120();
@@ -56,5 +56,5 @@ module exploded_view () {
 //translate([0, 0, 39 / 2 + 5.75]) bolt_guide();
 
 //exploded_view();
-stl_plate();
+//stl_plate();
 //dxf_plate();
