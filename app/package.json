@@ -1,7 +1,7 @@
 {
   "name": "com.sixteenmillimeter.intval3",
   "displayName": "INTVAL3",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Mobile control app for the INTVAL intervalometer for Bolex 16mm cameras",
   "main": "index.js",
   "scripts": {
