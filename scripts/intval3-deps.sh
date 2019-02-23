@@ -9,7 +9,7 @@ sudo apt install nodejs npm -y
 sudo npm install -g n
 sudo n latest
 sudo npm install -g npm@latest
-sudo npm install -g pm2 node-gyp
+sudo npm install -g pm2 node-gyp node-pre-gyp
 
 echo "Installing bluetooth dependencies..."
 sudo apt install bluetooth bluez libbluetooth-dev libudev-dev -y
