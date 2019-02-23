@@ -444,6 +444,18 @@ module motor_cap_120 (HALF = false) {
     }
 }
 
+module bolt_guide () {
+    $fn = 80;
+    difference () {
+        union () {
+            cylinder(r = 10 /2, h = 38, center = true);
+            translate([0, 0, -(38 / 2) + 1.5]) cylinder(r = 16 /2, h = 3, center = true);
+        }
+        cylinder(r = 7.5 / 2, h = 40, center = true);
+        translate([0, -13, -(38 / 2) + 1.5]) cube([16, 16, 10], center = true);
+    }
+}
+
 module bearing_calibrate (val = 0) {
     mat = 25.4/8;
     difference () {
