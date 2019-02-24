@@ -26,12 +26,10 @@
   "dependencies": {
     "bleno": "^0.5.0",
     "cron": "^1.2.1",
-    "gpio": "^0.2.7",
     "node-ipc": "^9.1.0",
     "node-persist": "^3.0.4",
     "onoff": "^3.2.8",
     "restify": "^8.0.0",
-    "rpio": "^1.0.13",
     "sqlite3": "^4.0.2",
     "squel": "^5.12.0",
     "uuid": "^3.1.0",
