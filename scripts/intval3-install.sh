@@ -41,7 +41,7 @@ sudo service nginx restart
 
 echo "Install node"
 
-sudo npm install --allow-root --unsafe-perm=true
+npm install
 sudo pm2 start process.json
 sudo pm2 save
 sudo pm2 startup
