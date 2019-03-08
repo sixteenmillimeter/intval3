@@ -1,0 +1,26 @@
+*Pick And Place List
+*Company=
+*Author=
+*eMail=
+*
+*Project=intval_3_prototype
+*Date=21:34:57
+*CreatedBy=Fritzing 0.9.3b.04.19.5c895d327c44a3114e5fcc9d8260daf0cbb52806
+*
+*
+*Coordinates in mm, always center of component
+*Origin 0/0=Lower left corner of PCB
+*Rotation in degree (0-360, math. pos.)
+*
+*No;Value;Package;X;Y;Rotation;Side;Name
+1;330;THT;32.51;-16.1873;135;Bottom;R2
+2;;THT;18.4892;-6.06353;90;Bottom;J6
+3;;;26.3906;-14.5098;0;Bottom;Copper Fill3
+4;;;26.3906;-14.5098;0;Bottom;Copper Fill1
+5;;;37.2041;-1.24882;0;Bottom;Raspberry Pi 1
+6;;THT;5.78916;-6.06353;90;Bottom;J5
+7;5V;to220-igo;5.30459;-17.2394;-90;Bottom;IC1
+8;;THT;43.8892;-6.06353;90;Bottom;J8
+9;330;THT;27.43;-16.1873;135;Bottom;R1
+10;;;6.096;-22.1552;0;Bottom;Copper Fill2
+11;;THT;31.1892;-6.06353;90;Bottom;J7
