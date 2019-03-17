@@ -120,7 +120,7 @@ mobile.wble.disconnect = function () {
 	}
 	device = mobile.wble.device;
 	console.log(`BLE - Disconnecting from ${device.id}`);
-	ble.disconnect(device.id, mobile.wble.onDisconnect, mobile.wble.onDisconnect);
+	//ble.disconnect(device.id, mobile.wble.onDisconnect, mobile.wble.onDisconnect);
 
 	elem.innerHTML = '';
 	option.text = 'N/A';
@@ -186,11 +186,11 @@ mobile.getState = function () {
 	if (!mobile.wble.connected) {
 		//returning here will prevent error alert
 	}
-	ble.read(mobile.wble.device.id,
+	/*ble.read(mobile.wble.device.id,
 			mobile.wble.SERVICE_ID,
 			mobile.wble.CHAR_ID,
 			mobile.stateSuccess,
-			mobile.wble.onError);
+			mobile.wble.onError);*/
 };
 mobile.stateSuccess = function (data) {
 	let str = bytesToString(data);
@@ -208,12 +208,12 @@ mobile.frame = function () {
 	if (mobile.wble.active) {
 		return false;
 	}
-	ble.write(mobile.wble.device.id,
+	/*ble.write(mobile.wble.device.id,
 			mobile.wble.SERVICE_ID,
 			mobile.wble.CHAR_ID,
 			stringToBytes(JSON.stringify(opts)), //check length?
 			mobile.frameSuccess,
-			mobile.wble.onError);
+			mobile.wble.onError);*/
 	document.getElementById('frame').classList.add('focus');
 	mobile.wble.active = true;
 };
@@ -240,12 +240,12 @@ mobile.setDir = function () {
 		dir : !document.getElementById('dir').checked
 	};
 
-	ble.write(mobile.wble.device.id,
+	/*ble.write(mobile.wble.device.id,
 			mobile.wble.SERVICE_ID,
 			mobile.wble.CHAR_ID,
 			stringToBytes(JSON.stringify(opts)), //check length?
 			mobile.dirSuccess,
-			mobile.wble.onError);
+			mobile.wble.onError);*/
 };
 mobile.dirSuccess = function () {
 	console.log('Set direction');
@@ -265,12 +265,12 @@ mobile.setExposure = function () {
 	}
 	scaledExposure = scaleTime(exposure, STATE.scale);
 	opts.exposure = scaledExposure;
-	ble.write(mobile.wble.device.id,
+	/*ble.write(mobile.wble.device.id,
 			mobile.wble.SERVICE_ID,
 			mobile.wble.CHAR_ID,
 			stringToBytes(JSON.stringify(opts)), //check length?
 			mobile.exposureSuccess,
-			mobile.wble.onError);
+			mobile.wble.onError);*/
 };
 mobile.exposureSuccess = function () {
 	console.log('Set exposure');
@@ -284,12 +284,12 @@ mobile.setDelay = function () {
 		type : 'delay',
 		delay : scaledDelay
 	};
-	ble.write(mobile.wble.device.id,
+	/*ble.write(mobile.wble.device.id,
 			mobile.wble.SERVICE_ID,
 			mobile.wble.CHAR_ID,
 			stringToBytes(JSON.stringify(opts)), //check length?
 			mobile.delaySuccess,
-			mobile.wble.onError);
+			mobile.wble.onError);*/
 }
 
 mobile.delaySuccess = function () {
@@ -308,12 +308,12 @@ mobile.setCounter = function () {
 		if (results.buttonIndex === 1) {
 		if (change === null || !isNumeric(change)) return false;
 			opts.counter = change;
-			ble.write(mobile.wble.device.id,
+			/*ble.write(mobile.wble.device.id,
 				mobile.wble.SERVICE_ID,
 				mobile.wble.CHAR_ID,
 				stringToBytes(JSON.stringify(opts)), //check length?
 				mobile.counterSuccess,
-				mobile.wble.onError);
+				mobile.wble.onError);*/
 		}
 	}
 	navigator.notification.prompt(
@@ -337,12 +337,12 @@ mobile.sequence = function () {
 	if (!mobile.wble.connected) {
 		return mobile.alert('Not connected to an INTVAL3 device.');
 	}
-	ble.write(mobile.wble.device.id,
+	/*ble.write(mobile.wble.device.id,
 			mobile.wble.SERVICE_ID,
 			mobile.wble.CHAR_ID,
 			stringToBytes(JSON.stringify(opts)), //check length?
 			mobile.sequenceSuccess,
-			mobile.wble.onError);
+			mobile.wble.onError);*/
 
 	if (!elem.classList.contains('focus')) {
 		elem.classList.add('focus');
@@ -372,11 +372,11 @@ mobile.getWifi = function () {
 	UI.spinner.show('Refreshing WIFI...');
 	UI.overlay.show();
 	
-	ble.read(mobile.wble.device.id,
+	/*ble.read(mobile.wble.device.id,
 			mobile.wble.SERVICE_ID,
 			mobile.wble.WIFI_ID,
 			mobile.getWifiSuccess,
-			mobile.wble.onError);
+			mobile.wble.onError);*/
 };
 
 mobile.getWifiSuccess = function (data) {
@@ -476,12 +476,12 @@ mobile.setWifi = function () {
 	if (pwd.length < 8 || pwd.length > 63) {
 		return mobile.alert('Passphrase must be 8..63 characters');
 	}
-	ble.write(mobile.wble.device.id,
+	/*ble.write(mobile.wble.device.id,
 		mobile.wble.SERVICE_ID,
 		mobile.wble.WIFI_ID,
 		stringToBytes(JSON.stringify(opts)),
 		mobile.setWifiSuccess,
-		mobile.wble.onError);
+		mobile.wble.onError);*/
 };
 
 mobile.setWifiSuccess = function () {
@@ -671,12 +671,12 @@ mobile.reset = function () {
 	};
 	function resetConfirm (index) {
 		if (index === 1) {
-			ble.write(mobile.wble.device.id,
+			/*ble.write(mobile.wble.device.id,
 					mobile.wble.SERVICE_ID,
 					mobile.wble.CHAR_ID,
 					stringToBytes(JSON.stringify(opts)),
 					mobile.resetSuccess,
-					mobile.wble.onError);
+					mobile.wble.onError);*/
 		}
 	}
 	navigator.notification.confirm(
@@ -702,12 +702,12 @@ mobile.update = function () {
 		if (index === 1) {
 			UI.spinner.show('Updating INTVAL3...');
 			UI.overlay.show();
-			ble.write(mobile.wble.device.id,
+			/*ble.write(mobile.wble.device.id,
 				mobile.wble.SERVICE_ID,
 				mobile.wble.CHAR_ID,
 				stringToBytes(JSON.stringify(opts)),
 				mobile.updateSuccess,
-				mobile.wble.onError);
+				mobile.wble.onError);*/
 		}
 	}
 	navigator.notification.confirm(
@@ -730,12 +730,12 @@ mobile.restart = function () {
 		if (index === 1) {
 		UI.spinner.show('Restarting INTVAL3...');
 		UI.overlay.show();
-		ble.write(mobile.wble.device.id,
+		/*ble.write(mobile.wble.device.id,
 			mobile.wble.SERVICE_ID,
 			mobile.wble.CHAR_ID,
 			stringToBytes(JSON.stringify(opts)),
 			mobile.restartSuccess,
-			mobile.wble.onError);
+			mobile.wble.onError);*/
 		}
 	}
 	navigator.notification.confirm(
