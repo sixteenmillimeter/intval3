@@ -43,7 +43,7 @@ All of the non-electronic hardware is generated from OpenSCAD scripts and built 
 
 Electronics designs are available in the form of a Fritzing file, Gerber files, a wiring diagram and a mask image that can be used to fabricate a board from a blank PCB.
 
-Prototype of the bare PCB of the "bonnet" for the Raspberry Pi Zero W are available for order from OSH Park. See the parts list below for components for this board.
+Prototype of the bare PCB of the "bonnet" for the Raspberry Pi Zero W are available for order from OSH Park. See the parts list below of components for this board.
 
 <a href="https://oshpark.com/shared_projects/SkPyOK5S"><img src="https://oshpark.com/assets/badge-5b7ec47045b78aef6eb9d83b3bac6b1920de805e9a0c227658eac6e19a045b9c.png" alt="Order INTVAL3 Bonnet from OSH Park"></img></a>
 
