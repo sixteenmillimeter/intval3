@@ -58,8 +58,8 @@ Prototype of the bare PCB of the "bonnet" for the Raspberry Pi Zero W are availa
 4. Microswitch w/ Roller - [[Adafruit](https://www.adafruit.com/product/819)]
 5. L7805 5V Regulator - [[Adafruit](https://www.adafruit.com/product/2164)] [Sparkfun](https://www.sparkfun.com/products/107)]
 6. 2x Thru-hole Resistors - 330 Ohm
-7. 2x Thru-hole Capacitor - 10 uF
-8. 2x Thru-hole Capacitor - 100 uF
+7. 1x Thru-hole Capacitor - 10 uF
+8. 1x Thru-hole Capacitor - 100 uF
 9. 4x Terminal blocks
 
 * (Optional) Proto Bonnet - [[Adafruit](https://www.adafruit.com/product/3203)]
