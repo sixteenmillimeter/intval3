@@ -41,8 +41,13 @@ As a function of the firmware, there is an embedded web application that is host
 
 All of the non-electronic hardware is generated from OpenSCAD scripts and built into either STL files for 3D printing or DXF files for laser cutting or CNCing.
 
-Electronics designs are available in the form of a Fritzing file, a wiring diagram and a mask image that can be used to fabricate a board from a blank PCB. One of the easiest ways to 
+Electronics designs are available in the form of a Fritzing file, Gerber files, a wiring diagram and a mask image that can be used to fabricate a board from a blank PCB.
 
+Prototype of the bare PCB of the "bonnet" for the Raspberry Pi Zero W are available for order from OSH Park. See the parts list below of components for this board.
+
+<a href="https://oshpark.com/shared_projects/SkPyOK5S"><img src="https://oshpark.com/assets/badge-5b7ec47045b78aef6eb9d83b3bac6b1920de805e9a0c227658eac6e19a045b9c.png" alt="Order INTVAL3 Bonnet from OSH Park"></img></a>
+
+<br />
 <a name="parts-list"></a>
 
 ## PARTS
@@ -52,4 +57,10 @@ Electronics designs are available in the form of a Fritzing file, a wiring diagr
 3. 120RPM 12VDC Motor - ?
 4. Microswitch w/ Roller - [[Adafruit](https://www.adafruit.com/product/819)]
 5. L7805 5V Regulator - [[Adafruit](https://www.adafruit.com/product/2164)] [Sparkfun](https://www.sparkfun.com/products/107)]
-6. (Optional) Proto Bonnet - [[Adafruit](https://www.adafruit.com/product/3203)]
+6. 2x Thru-hole Resistors - 330 Ohm
+7. 1x Thru-hole Capacitor - 10 uF
+8. 1x Thru-hole Capacitor - 100 uF
+9. 4x Terminal blocks
+
+* (Optional) Proto Bonnet - [[Adafruit](https://www.adafruit.com/product/3203)]
+* (Optional) INTVAL3 Bonnet - [[OSH Park](https://oshpark.com/shared_projects/SkPyOK5S)]
