@@ -3,9 +3,9 @@
 
 
 'use strict';
-var mobile = {};
+var pwa = {};
 
-mobile.wble = {
+pwa.wble = {
 	BLENO_DEVICE_NAME : 'intval3',
 	DEVICE_ID : 'intval3',
 	SERVICE_ID : '149582bd-d49d-4b5c-acd1-1ae503d09e7a',
@@ -13,11 +13,15 @@ mobile.wble = {
 	WIFI_ID : '3fe7d9cf-7bd2-4ff0-97c5-ebe87288c2cc', //wifi only
 	devices : [],
 	device : {},
+	peripheral : {},
+	service : {},
+	characteristics : {},
+	descriptors : {},
 	connected : false,
 	active : false
 };
 
-mobile.wifi = {
+pwa.wifi = {
 	current : 'null',
 	available : [],
 	ip : null
@@ -29,59 +33,76 @@ async function delay (ms) {
 	})
 }
 
-mobile.wble.scan = async function () {
+pwa.wble.scan = async function () {
 	let device;
 	UI.spinner.show('Scanning for INTVAL3...');
 	UI.overlay.show();
+	document.getElementById('tap').style.display = 'none';
+
+	pwa.wble.devices = [];
+	
 	try {
-		device =  await navigator.bluetooth.requestDevice({
-			filters: [{ services: [ mobile.wble.SERVICE_ID ] }],
-			//optionalServices: optionalServices
+		device = await navigator.bluetooth.requestDevice({
+			filters: [{
+				name : pwa.wble.DEVICE_ID
+			}],
+			optionalServices: [ pwa.wble.SERVICE_ID ]
 		});
-		mobile.wble.onDiscover(device);
 	} catch (err) {
-		mobile.wble.onError(err);
+		console.error(err);
+		pwa.wble.onError(err.message);
 	}
-	//ble.scan([], 5, mobile.wble.onDiscover, mobile.wble.onError);
-	mobile.wble.devices = [];
+	
+	if (device) {
+		pwa.wble.onDiscover(device);
+	}
 
 	await delay(5000);
 
 	UI.spinner.hide();
 	UI.overlay.hide();
 
-	if (!mobile.wble.connected) {
-		mobile.alert('No devices found.')
+	if (!pwa.wble.connected) {
+		pwa.alert('No devices found.')
 		settingsPage();
 	}
 };
 
-mobile.wble.onDiscover = function (device) {
+pwa.wble.onDiscover = function (device) {
 	if (device && device.name && device.name.indexOf('intval3') !== -1) {
 		console.log('BLE - Discovered INTVAL3');
-		console.dir(device);
-		mobile.wble.devices.push(device);
-		if (!mobile.wble.connected) {
-			mobile.wble.connect(device);
+		//console.dir(device);
+		pwa.wble.devices.push(device);
+		if (!pwa.wble.connected) {
+			pwa.wble.connect(device);
 		}
 	} else {
 		//console.log(`BLE - Discovered Other ${device.id}`);
 	}
 };
 
-mobile.wble.connect = async function (device) {
+pwa.wble.connect = async function (device) {
 	console.log(`BLE - Connecting to ${device.id}`);
+	let peripheral;
+	let service;
+
 	try {
-		await device.gatt.connect()
+		peripheral = await device.gatt.connect();
 	} catch (err) {
-		mobile.wble.onError(err);
+		pwa.wble.onError(err);
 	}
-	ble.connect(device.id, (peripheral) => {
-		mobile.wble.onConnect(peripheral, device);
-	}, mobile.wble.onError);
+	try {
+		service = await peripheral.getPrimaryService(pwa.wble.SERVICE_ID);
+	} catch (err) {
+		console.error(err);
+		pwa.wble.onError(err.message);
+		return false;
+	}
+	
+	pwa.wble.onConnect(peripheral, device, service);
 };
 
-mobile.wble.onConnect = function (peripheral, device) {
+pwa.wble.onConnect = function (peripheral, device, service) {
 	const elem = document.getElementById('bluetooth');
 	const option = document.createElement('option');
 	const disconnect = document.getElementById('disconnect');
@@ -89,12 +110,15 @@ mobile.wble.onConnect = function (peripheral, device) {
 
 	UI.spinner.hide();
 	UI.overlay.hide();
-	console.log(`BLE - Connected to ${device.id}`);
-	console.log(peripheral);
-	console.dir(device);
 
-	mobile.wble.device = device;
-	mobile.wble.connected = true;
+	console.log(`BLE - Connected to ${device.id}`);
+	//console.dir(peripheral);
+	//console.dir(device);
+
+	pwa.wble.peripheral = peripheral;
+	pwa.wble.device = device;
+	pwa.wble.service = service;
+	pwa.wble.connected = true;
 
 	elem.innerHTML = '';
 	option.text = device.name;
@@ -105,22 +129,22 @@ mobile.wble.onConnect = function (peripheral, device) {
 	scan.classList.remove('active');
 
 	getState();
-	mobile.getWifi();
+	pwa.getWifi();
 };
 
-mobile.wble.disconnect = function () {
+pwa.wble.disconnect = function () {
 	const elem = document.getElementById('bluetooth');
 	const option = document.createElement('option');
 	const disconnect = document.getElementById('disconnect');
 	const scan = document.getElementById('scan');
 	let device;
-	if (!mobile.wble.connected) {
+	if (!pwa.wble.connected) {
 		console.warn('Not connected to any device');
 		return false;
 	}
-	device = mobile.wble.device;
+	device = pwa.wble.device;
 	console.log(`BLE - Disconnecting from ${device.id}`);
-	//ble.disconnect(device.id, mobile.wble.onDisconnect, mobile.wble.onDisconnect);
+	//ble.disconnect(device.id, pwa.wble.onDisconnect, pwa.wble.onDisconnect);
 
 	elem.innerHTML = '';
 	option.text = 'N/A';
@@ -132,234 +156,314 @@ mobile.wble.disconnect = function () {
 	UI.overlay.hide();
 };
 
-mobile.wble.onDisconnect = function (res) {
+pwa.wble.onDisconnect = function (res) {
 	console.log(`BLE - Disconnected from ${res}`);
-	mobile.wble.connected = false;
-	mobile.wble.device = {};
+	pwa.wble.connected = false;
+	pwa.wble.device = {};
 };
 
-mobile.wble.onError = function (err) {
+pwa.wble.onError = function (err) {
 	if (err.errorMessage && err.errorMessage === 'Peripheral Disconnected') {
 		console.log('Device disconnected');
-		mobile.wble.disconnect()
+		pwa.wble.disconnect()
 	} else {
-		mobile.alert(JSON.stringify(err));
+		pwa.alert(JSON.stringify(err));
 	}
-	/*
-	Object
-	errorDescription: "The specified device has disconnected from us."
-	errorMessage: "Peripheral Disconnected"
-	id: "E8EF4B8B-0B5E-4E96-B337-E878DB1E3C4B"
-	name: "intval3_b827ebc7461d"
-	*/
 };
 
-mobile.init = function () {
+pwa.wble.read = async function (characteristicId) {
+	const decoder = new TextDecoder('utf-8');
+	let characteristic;
+	let value;
+	let json;
+
+	if (typeof pwa.wble.characteristics[characteristicId] === 'undefined') {
+		try {
+			characteristic = await pwa.wble.service.getCharacteristic(characteristicId);
+			pwa.wble.characteristics[characteristicId] = characteristic;
+		} catch (err) {
+			console.error(err);
+			pwa.wble.onError(err.message);
+			return false;
+		}
+	} else {
+		characteristic = pwa.wble.characteristics[characteristicId]
+	}
+
+	try {
+		value = await characteristic.readValue();
+	} catch (err) {
+		console.error(err);
+		pwa.wble.onError(err.message);
+	}
+
+	json = decoder.decode(value);
+
+	return JSON.parse(json);
+}
+
+pwa.wble.write = async function ( characteristicId, json) {
+	const encoder = new TextEncoder('utf-8');
+	let characteristic;
+	let value;
+
+	if (typeof pwa.wble.characteristics[characteristicId] === 'undefined') {
+		try {
+			characteristic = await pwa.wble.service.getCharacteristic(characteristicId);
+			pwa.wble.charactersitics[characteristicId] = characteristic;
+		} catch (err) {
+			console.error(err);
+			pwa.wble.onError(err.message);
+			return false;
+		}
+	} else {
+		characteristic = pwa.wble.characteristics[characteristicId];
+	}
+
+	value = JSON.stringify(json);
+	encoder.encode(value);
+
+	try {
+		await characteristic.writeValue(encoder.encode(value))
+	} catch (err) {
+		console.error(err);
+		pwa.wble.onError(err.message);
+		return false;
+	}
+
+	return true;
+}
+
+pwa.init = function () {
 	const bleInputs = document.querySelectorAll('.ble');
 	const bolIso = document.querySelector('.iso');
 	const bolF = document.querySelector('.fstop');
+	const tap = document.getElementById('tap');
 
-	document.querySelector('body').classList.add('mobile');
+	//document.querySelector('body').classList.add('mobile');
 
-	window.frame = mobile.frame;
-	window.getState = mobile.getState;
-	window.setDir = mobile.setDir;
-	window.setExposure = mobile.setExposure;
-	window.setDelay = mobile.setDelay;
-	window.setCounter = mobile.setCounter;
-	window.sequence = mobile.sequence;
-	window.reset = mobile.reset;
-	window.restart = mobile.restart;
-	window.update = mobile.update;
+	window.frame = pwa.frame;
+	window.getState = pwa.getState;
+	window.setDir = pwa.setDir;
+	window.setExposure = pwa.setExposure;
+	window.setDelay = pwa.setDelay;
+	window.setCounter = pwa.setCounter;
+	window.sequence = pwa.sequence;
+	window.reset = pwa.reset;
+	window.restart = pwa.restart;
+	window.update = pwa.update;
 
 	//show ble-specific fields in settings
 	for (let i of bleInputs) {
 		i.classList.add('active');
 	}
-	UI.spinner.init()
-	mobile.wble.scan();
-	mobile.cameraValues();
+	UI.spinner.init();
+	UI.overlay.show();
+
+	tap.onclick = pwa.wble.scan;
+	tap.style.display = 'block';
+	//pwa.cameraValues();
 
 };
 
-mobile.getState = function () {
-	if (!mobile.wble.connected) {
-		//returning here will prevent error alert
+pwa.pairInteraction = function () {
+	pwa.wble.scan();
+}
+
+pwa.getState = async function () {
+	let state;
+	if (!pwa.wble.connected) {
+		return false
 	}
-	/*ble.read(mobile.wble.device.id,
-			mobile.wble.SERVICE_ID,
-			mobile.wble.CHAR_ID,
-			mobile.stateSuccess,
-			mobile.wble.onError);*/
-};
-mobile.stateSuccess = function (data) {
-	let str = bytesToString(data);
-	let res = JSON.parse(str);
-	setState(res);
+	try {
+		state = await pwa.wble.read(pwa.wble.CHAR_ID);
+	} catch (err) {
+		console.error(err);
+		pwa.wble.onError(err.message);
+		return false;
+	}
+	setState(state);
 };
 
-mobile.frame = function () {
+pwa.frame = async function () {
 	const opts = {
 		type : 'frame'
 	};
-	if (!mobile.wble.connected) {
-		return mobile.alert('Not connected to an INTVAL3 device.');
+	if (!pwa.wble.connected) {
+		return pwa.alert('Not connected to an INTVAL3 device.');
 	}
-	if (mobile.wble.active) {
+	if (pwa.wble.active) {
 		return false;
 	}
-	/*ble.write(mobile.wble.device.id,
-			mobile.wble.SERVICE_ID,
-			mobile.wble.CHAR_ID,
-			stringToBytes(JSON.stringify(opts)), //check length?
-			mobile.frameSuccess,
-			mobile.wble.onError);*/
+
 	document.getElementById('frame').classList.add('focus');
-	mobile.wble.active = true;
+	pwa.wble.active = true;
+	
+	try {
+		await pwa.wble.write(pwa.wble.CHAR_ID, opts);
+	} catch (err) {
+		console.error(err);
+		pwa.wble.onError(err.message);
+		return false;``
+	}
+
+	pwa.frameSuccess();
 };
 
 
-mobile.frameSuccess = function () {
+pwa.frameSuccess = function () {
 	if (STATE.exposure < 5000) {
 		console.log('Frame finished, getting state.');
-		mobile.wble.active = false;
+		pwa.wble.active = false;
 		document.getElementById('frame').classList.remove('focus');
-		mobile.getState();
+		pwa.getState();
 	} else {
 		setTimeout(() => {
 			console.log('Frame finished, getting state.');
-			mobile.wble.active = false;
+			pwa.wble.active = false;
 			document.getElementById('frame').classList.remove('focus');
-			mobile.getState();
+			pwa.getState();
 		}, STATE.exposure + 500)
 	}
 }
-mobile.setDir = function () {
+pwa.setDir = async function () {
 	const opts = {
 		type : 'dir',
 		dir : !document.getElementById('dir').checked
 	};
 
-	/*ble.write(mobile.wble.device.id,
-			mobile.wble.SERVICE_ID,
-			mobile.wble.CHAR_ID,
-			stringToBytes(JSON.stringify(opts)), //check length?
-			mobile.dirSuccess,
-			mobile.wble.onError);*/
+	try {
+		await pwa.wble.write(pwa.wble.CHAR_ID, opts);
+	} catch (err) {
+		console.error(err);
+		pwa.wble.onError(err.message);
+		return false;
+	}
+
+	pwa.dirSuccess();
 };
-mobile.dirSuccess = function () {
+pwa.dirSuccess = function () {
 	console.log('Set direction');
-	mobile.getState();
+	pwa.getState();
 	setTimeout(() => {
 		setDirLabel(STATE.dir);
 	}, 50);
 };
-mobile.setExposure = function () {
-	let exposure = document.getElementById('exposure').value;
-	let scaledExposure;
-	let opts = {
+
+pwa.setExposure = async function () {
+	const opts = {
 		type : 'exposure'
 	};
+	let exposure = document.getElementById('exposure').value;
+	let scaledExposure;
 	if (exposure === '' || exposure === null) {
 		exposure = 0;
 	}
 	scaledExposure = scaleTime(exposure, STATE.scale);
 	opts.exposure = scaledExposure;
-	/*ble.write(mobile.wble.device.id,
-			mobile.wble.SERVICE_ID,
-			mobile.wble.CHAR_ID,
-			stringToBytes(JSON.stringify(opts)), //check length?
-			mobile.exposureSuccess,
-			mobile.wble.onError);*/
-};
-mobile.exposureSuccess = function () {
-	console.log('Set exposure');
-	mobile.getState();
+	
+	try {
+		await pwa.wble.write(pwa.wble.CHAR_ID, opts);
+	} catch (err) {
+		console.error(err);
+		pwa.wble.onError(err.message);
+		return false;
+	}
+	pwa.exposureSuccess();
 };
 
-mobile.setDelay = function () {
+pwa.exposureSuccess = function () {
+	console.log('Set exposure');
+	pwa.getState();
+};
+
+pwa.setDelay = async function () {
 	const delay = document.getElementById('delay').value;
 	const scaledDelay = scaleTime(delay, STATE.delayScale);
-	let opts = {
+	const opts = {
 		type : 'delay',
 		delay : scaledDelay
 	};
-	/*ble.write(mobile.wble.device.id,
-			mobile.wble.SERVICE_ID,
-			mobile.wble.CHAR_ID,
-			stringToBytes(JSON.stringify(opts)), //check length?
-			mobile.delaySuccess,
-			mobile.wble.onError);*/
+	
+	try {
+		await pwa.wble.write(pwa.wble.CHAR_ID, opts);
+	} catch (err) {
+		console.error(err);
+		pwa.wble.onError(err.message);
+		return false;
+	}
+
+	pwa.delaySuccess();
 }
 
-mobile.delaySuccess = function () {
+pwa.delaySuccess = function () {
 	console.log('Set delay');
-	mobile.getState();
+	pwa.getState();
 };
 
-mobile.setCounter = function () {
-	let opts = {
+pwa.setCounter = async function () {
+	const opts = {
 		type : 'counter',
 		counter : null
 	};
 	const counter = document.getElementById('counter').value;
-	function counterPrompt (results) {
-		let change = results.input1
-		if (results.buttonIndex === 1) {
-		if (change === null || !isNumeric(change)) return false;
-			opts.counter = change;
-			/*ble.write(mobile.wble.device.id,
-				mobile.wble.SERVICE_ID,
-				mobile.wble.CHAR_ID,
-				stringToBytes(JSON.stringify(opts)), //check length?
-				mobile.counterSuccess,
-				mobile.wble.onError);*/
-		}
+	const change = prompt(`Change counter value?`, counter);
+
+	if (change === null || !isNumeric(change)) return false;
+
+	if (change === counter) return true;
+
+	opts.counter = change;
+	try {
+		await pwa.wble.write(pwa.wble.CHAR_ID, opts);
+	} catch (err) {
+		console.error(err);
+		pwa.wble.onError(err.message);
+		return false;
 	}
-	navigator.notification.prompt(
-		`Change counter value?`, 
-		counterPrompt,
-		'INTVAL3',
-		['Okay', 'Cancel'],
-		counter);
+	pwa.counterSuccess();
+		
 };
 
-mobile.counterSuccess = function () {
+pwa.counterSuccess = function () {
 	console.log('Set counter');
-	mobile.getState();
+	pwa.getState();
 };
 
-mobile.sequence = function () {
+pwa.sequence = async function () {
 	const opts = {
 		type : 'sequence'
 	};
 	const elem = document.getElementById('seq');
-	if (!mobile.wble.connected) {
-		return mobile.alert('Not connected to an INTVAL3 device.');
+	if (!pwa.wble.connected) {
+		return pwa.alert('Not connected to an INTVAL3 device.');
 	}
-	/*ble.write(mobile.wble.device.id,
-			mobile.wble.SERVICE_ID,
-			mobile.wble.CHAR_ID,
-			stringToBytes(JSON.stringify(opts)), //check length?
-			mobile.sequenceSuccess,
-			mobile.wble.onError);*/
+	try {
+		await pwa.wble.write(pwa.wble.CHAR_ID, opts);
+	} catch (err) {
+		console.error(err);
+		pwa.wble.onError(err.message);
+		return false;
+	}
+
+	pwa.sequenceSuccess();
 
 	if (!elem.classList.contains('focus')) {
 		elem.classList.add('focus');
 	}
 
-	mobile.wble.active = true;
+	pwa.wble.active = true;
 };
 
-mobile.sequenceSuccess = function () {
+pwa.sequenceSuccess = function () {
 	console.log('Sequence state changed');
-	mobile.getState();
+	pwa.getState();
 	setTimeout(() => {
 		if (STATE.sequence) {
-			mobile.wble.active = true;
+			pwa.wble.active = true;
 			seqState(true);
 		} else {
-			mobile.wble.active = false;
+			pwa.wble.active = false;
 			seqState(false);
 		}
 	}, 20);
@@ -368,25 +472,28 @@ mobile.sequenceSuccess = function () {
 
 //retreive object with list of available Wifi APs,
 //and state of current connection, if available 
-mobile.getWifi = function () {
+pwa.getWifi = async function () {
+	let wifiRes;
 	UI.spinner.show('Refreshing WIFI...');
 	UI.overlay.show();
 	
-	/*ble.read(mobile.wble.device.id,
-			mobile.wble.SERVICE_ID,
-			mobile.wble.WIFI_ID,
-			mobile.getWifiSuccess,
-			mobile.wble.onError);*/
+	try {
+		wifiRes = await pwa.wble.read(pwa.wble.WIFI_ID);
+	} catch (err) {
+		console.error(err);
+		pwa.wble.onError(err.message);
+		return false
+	}
+
+	pwa.getWifiSuccess(wifiRes);
 };
 
-mobile.getWifiSuccess = function (data) {
+pwa.getWifiSuccess = function (res) {
 	const elem = document.getElementById('available');
 	const wifi = document.getElementById('wifi');
 	const password = document.getElementById('password');
 	const ip = document.getElementById('ip');
 	let option = document.createElement('option');
-	let str = bytesToString(data);
-	let res = JSON.parse(str);
 
 	UI.spinner.hide();
 	UI.overlay.hide();
@@ -436,12 +543,12 @@ mobile.getWifiSuccess = function (data) {
 			ip.classList.remove('active');
 		}
 	}
-	mobile.wifi.current = res.current;
-	mobile.wifi.available = res.available;
-	mobile.wifi.ip = res.ip;
+	pwa.wifi.current = res.current;
+	pwa.wifi.available = res.available;
+	pwa.wifi.ip = res.ip;
 };
 
-mobile.editWifi = function () {
+pwa.editWifi = function () {
 	const available = document.getElementById('available');
 	const wifi = document.getElementById('wifi');
 	const password = document.getElementById('password');
@@ -452,12 +559,12 @@ mobile.editWifi = function () {
 		password.classList.add('active');
 	}
 	password.focus();
-	if (available.value !== mobile.wifi.current && available.classList.contains('active')) {
+	if (available.value !== pwa.wifi.current && available.classList.contains('active')) {
 		available.classList.remove('active');
 	}
 };
 
-mobile.setWifi = function () {
+pwa.setWifi = async function () {
 	const ssid = document.getElementById('available').value;
 	const pwd = document.getElementById('password').value;
 	const opts = {
@@ -468,50 +575,53 @@ mobile.setWifi = function () {
 	UI.overlay.show();
 	
 	if (ssid === '' || ssid === null || ssid === undefined) {
-		return mobile.alert('Cannot set wireless credentials with a blank SSID');
+		return pwa.alert('Cannot set wireless credentials with a blank SSID');
 	}
 	if (pwd === '' || pwd === null || pwd === undefined) {
-		return mobile.alert('Cannot set wireless credentials with a blank passphrase');
+		return pwa.alert('Cannot set wireless credentials with a blank passphrase');
 	}
 	if (pwd.length < 8 || pwd.length > 63) {
-		return mobile.alert('Passphrase must be 8..63 characters');
+		return pwa.alert('Passphrase must be 8..63 characters');
 	}
-	/*ble.write(mobile.wble.device.id,
-		mobile.wble.SERVICE_ID,
-		mobile.wble.WIFI_ID,
-		stringToBytes(JSON.stringify(opts)),
-		mobile.setWifiSuccess,
-		mobile.wble.onError);*/
+	try {
+		await pwa.wble.write(pwa.wble.WIFI_ID, opts);
+	} catch (err) {
+		console.error(err);
+		pwa.wble.onError(err.message);
+		return false;
+	}
+	pwa.setWifiSuccess();
 };
 
-mobile.setWifiSuccess = function () {
+pwa.setWifiSuccess = function () {
 	UI.spinner.hide();
 	UI.overlay.hide();
 	console.log('Set new wifi credentials');
-	setTimeout(mobile.getWifi, 100);
+	setTimeout(pwa.getWifi, 100);
 };
-mobile.exif = {}
+/*
+pwa.exif = {}
 
-mobile.getCamera = function () {
+pwa.getCamera = function () {
 	const opts = {
 		quality: 30,
 		sourceType: Camera.PictureSourceType.CAMERA,
     	destinationType: Camera.DestinationType.FILE_URI
 	};
-	navigator.camera.getPicture(mobile.cameraSuccess, mobile.cameraError, opts);
+	navigator.camera.getPicture(pwa.cameraSuccess, pwa.cameraError, opts);
 };
-mobile.cameraSuccess = function (result) {
+pwa.cameraSuccess = function (result) {
 	const thisResult = JSON.parse(result);
 	const metadata = JSON.parse(thisResult.json_metadata);
 	
-	mobile.cameraExposure(metadata.Exif);
+	pwa.cameraExposure(metadata.Exif);
 };
-mobile.cameraError = function (err) {
+pwa.cameraError = function (err) {
 	console.error(err);
-	mobile.alert(JSON.stringify(err));
+	pwa.alert(JSON.stringify(err));
 };
 
-mobile.cameraExposure = function (exif) {
+pwa.cameraExposure = function (exif) {
 	const cam_exp = document.getElementById('cam_exp');
 	const cam_f = document.getElementById('cam_f');
 	const cam_iso = document.getElementById('cam_iso');
@@ -546,7 +656,7 @@ mobile.cameraExposure = function (exif) {
 	let e1;
 	let e2;
 
-	mobile.exif = exif;
+	pwa.exif = exif;
 
 	//Determine if fstop of phone camera "f"
 	if (target !== f) {
@@ -606,7 +716,7 @@ mobile.cameraExposure = function (exif) {
 		);
 	}
 
-	/*
+	
 {
 	"Exif": {
 		"DateTimeOriginal": "2018:02:02 16:59:13",
@@ -650,107 +760,93 @@ mobile.cameraExposure = function (exif) {
 		"MeteringMode": 5
 	}
 }
-	*/
+	
 };
 
-mobile.refreshExposure = function () {
-	if (typeof mobile.exif.ExposureTime !== 'undefined') {
-		mobile.cameraExposure(mobile.exif);
+pwa.refreshExposure = function () {
+	if (typeof pwa.exif.ExposureTime !== 'undefined') {
+		pwa.cameraExposure(pwa.exif);
 	}
 };
 
-mobile.EV = function (fstop, shutter) {
+pwa.EV = function (fstop, shutter) {
 	const sec = shutter / 1000; //shutter in ms => seconds
 	const square = Math.pow(fstop, 2);
 	return Math.log(square / sec);
-};
+};*/
 
-mobile.reset = function () {
-	let opts = {
+pwa.reset = async function () {
+	const opts = {
 		type : 'reset'
 	};
-	function resetConfirm (index) {
-		if (index === 1) {
-			/*ble.write(mobile.wble.device.id,
-					mobile.wble.SERVICE_ID,
-					mobile.wble.CHAR_ID,
-					stringToBytes(JSON.stringify(opts)),
-					mobile.resetSuccess,
-					mobile.wble.onError);*/
+	const cont = confirm(`Reset INTVAL3 to default settings and clear counter?`);
+	if (cont) {
+		try {
+			await pwa.wble.write(pwa.wble.CHAR_ID, opts);
+		} catch (err) {
+			console.error(err);
+			pwa.wble.onError(err.message);
+			return false;
 		}
+		pwa.resetSuccess();
 	}
-	navigator.notification.confirm(
-		`Reset INTVAL3 to default settings and clear counter?`,
-		resetConfirm,
-		'INTVAL3',
-		['Okay', 'Cancel']
-	);
+	
 };
 
-mobile.resetSuccess = function () {
+pwa.resetSuccess = function () {
 	console.log('Reset to default settings');
 	setTimeout(() => {
-		mobile.getState();
+		pwa.getState();
 	}, 100)
 };
 
-mobile.update = function () {
-	let opts = {
+pwa.update = async function () {
+	const opts = {
 		type : 'update'
 	};
-	function updateConfirm (index) {
-		if (index === 1) {
-			UI.spinner.show('Updating INTVAL3...');
-			UI.overlay.show();
-			/*ble.write(mobile.wble.device.id,
-				mobile.wble.SERVICE_ID,
-				mobile.wble.CHAR_ID,
-				stringToBytes(JSON.stringify(opts)),
-				mobile.updateSuccess,
-				mobile.wble.onError);*/
+	const cont = confirm(`Check for updates? You will be disconnected from the INTVAL3 during this process.`);
+	if (cont) {
+		UI.spinner.show('Updating INTVAL3...');
+		UI.overlay.show();
+		try {
+			await pwa.wble.write(pwa.wble.CHAR_ID, opts);
+		} catch (err) {
+			console.error(err);
+			pwa.wble.onError(err.message);
+			return false;
 		}
+		pwa.updateSuccess();
 	}
-	navigator.notification.confirm(
-		`Check for updates? You will be disconnected from the INTVAL3 during this process.`,
-		updateConfirm,
-		'INTVAL3',
-		['Okay', 'Cancel']
-	);
 };
 
-mobile.updateSuccess = function () {
+pwa.updateSuccess = function () {
 	console.log('Finished updating firmware, restarting...');
 };
 
-mobile.restart = function () {
-	let opts = {
+pwa.restart = async function () {
+	const opts = {
 		type : 'restart'
 	};
-	function restartConfirm (index) {
-		if (index === 1) {
+	const cont = confirm(`Restart the INTVAL3? You will be disconnected from it during this process.`);
+	if (cont) {
 		UI.spinner.show('Restarting INTVAL3...');
 		UI.overlay.show();
-		/*ble.write(mobile.wble.device.id,
-			mobile.wble.SERVICE_ID,
-			mobile.wble.CHAR_ID,
-			stringToBytes(JSON.stringify(opts)),
-			mobile.restartSuccess,
-			mobile.wble.onError);*/
+		try {
+			await pwa.wble.write(pwa.wble.CHAR_ID, opts);
+		} catch (err) {
+			console.error(err);
+			pwa.wble.onError(err.message);
+			return false;
 		}
+		pwa.restartSuccess();
 	}
-	navigator.notification.confirm(
-		`Restart the INTVAL3? You will be disconnected from it during this process.`,
-		restartConfirm,
-		'INTVAL3',
-		['Okay', 'Cancel']
-	);
 };
-mobile.restartSuccess = function () {
+pwa.restartSuccess = function () {
 	console.log('Restarting... ');
 }
 
-mobile.alert = function (msg) {
-	if (navigator && navigator.notification) {
+pwa.alert = function (msg) {
+	if (typeof navigator !== 'undefined' && typeof navigator.notification !== 'undefined') {
 		navigator.notification.alert(
 				msg,
 				() => {},

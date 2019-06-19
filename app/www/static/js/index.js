@@ -22,7 +22,11 @@ var app = {
         document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
         document.addEventListener('resume', this.onDeviceResume.bind(this), false);
         document.addEventListener('DOMContentLoaded', event => {
-            if (typeof cordova === 'undefined') {
+            if (typeof navigator.bluetooth !== 'undefined' && typeof cordova === 'undefined') {
+                init();
+                pwa.init();
+                //getState();
+            } else if (typeof cordova === 'undefined') {
                 init();
                 web.init();
                 getState();
@@ -37,6 +41,7 @@ var app = {
     onDeviceReady: function() {
         init();
         mobile.init();
+        getState();
     },
     onDeviceResume : function () {
         getState();

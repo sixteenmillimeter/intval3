@@ -155,7 +155,7 @@ mobile.init = function () {
 	}
 	UI.spinner.init()
 	mobile.ble.scan();
-	mobile.cameraValues();
+	//mobile.cameraValues();
 
 };
 
