@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "./node_modules/.bin/qunit",
-    "docs": "sh docs.sh"
+    "docs": "sh docs.sh",
+    "build": "./node_modules/.bin/tsc -p tsconfig.json"
   },
   "repository": {
     "type": "git",
@@ -25,18 +26,21 @@
   "homepage": "https://github.com/sixteenmillimeter/intval3#readme",
   "dependencies": {
     "bleno": "^0.5.0",
-    "cron": "^1.2.1",
-    "node-ipc": "^9.1.0",
-    "node-persist": "^3.0.4",
-    "onoff": "^3.2.8",
-    "restify": "^8.0.0",
-    "sqlite3": "^4.0.6",
-    "squel": "^5.12.0",
-    "uuid": "^3.1.0",
+    "cron": "^1.7.2",
+    "delay": "file:lib/delay",
+    "node-ipc": "^9.1.1",
+    "node-persist": "^3.0.5",
+    "onoff": "^5.0.0",
+    "restify": "^8.4.0",
+    "sqlite3": "^4.1.0",
+    "squel": "^5.13.0",
+    "uuid": "^3.3.3",
     "winston": "^3.2.1"
   },
   "devDependencies": {
-    "jsdoc-to-markdown": "^4.0.1",
-    "qunit": "^2.6.2"
+    "@types/node": "^12.7.12",
+    "jsdoc-to-markdown": "^5.0.2",
+    "qunit": "^2.9.3",
+    "typescript": "^3.6.4"
   }
 }
