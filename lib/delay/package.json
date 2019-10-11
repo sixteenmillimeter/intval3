@@ -1,0 +1,11 @@
+{
+  "name": "delay",
+  "version": "0.0.1",
+  "description": "Promise-based setTimeout wrapper function",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "sixteenmillimeter",
+  "license": "MIT"
+}
