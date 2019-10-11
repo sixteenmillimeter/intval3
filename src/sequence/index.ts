@@ -2,11 +2,11 @@
 
 const uuid = require('uuid').v4
 const log = require('../log')('seq')
-import * as delay from 'delay'
+import '../delay'
 
 /** Object sequence features */
 class Sequence {
-	private _state : any = {
+	public _state : any = {
 		arr : [],
 		active : false,
 		paused : false,
@@ -16,7 +16,7 @@ class Sequence {
 		stop : null
 	}
 
-	private _loop : any = {
+	public _loop : any = {
 		arr : [],
 		count : 0,
 		max : 0
@@ -26,7 +26,7 @@ class Sequence {
 
 	}
 
-	public async start (options : any, cb : Function) {
+	public start (options : any, cb : Function) {
 		if (this._state.active) {
 			return false
 		}

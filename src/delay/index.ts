@@ -15,3 +15,5 @@ function delay (ms : number) {
 }
 
 module.exports.delay = delay;
+
+export default delay;
