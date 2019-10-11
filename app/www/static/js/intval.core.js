@@ -4,11 +4,11 @@ const BOLEX = {
 	prism : 0.8,
 	iso : 100,
 	fstop : 5.6,
-	expected : 630
+	expected : 530
 };
 const STATE = {
 	dir : true,
-	exposure : 630, //always ms
+	exposure : 530, //always ms
 	delay : 0,
 	scale : 'ms',
 	delayScale : 'ms',
