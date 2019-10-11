@@ -12,9 +12,6 @@
   "dependencies": {
     "cordova-android": "^6.4.0",
     "cordova-ios": "^4.5.5",
-    "cordova-plugin-appcenter-analytics": "^0.2.2",
-    "cordova-plugin-appcenter-crashes": "^0.2.2",
-    "cordova-plugin-appcenter-shared": "^0.2.2",
     "cordova-plugin-ble-central": "^1.2.2",
     "cordova-plugin-camera-with-exif": "^1.2.4",
     "cordova-plugin-compat": "^1.2.0",
@@ -34,9 +31,7 @@
         "BLUETOOTH_USAGE_DESCRIPTION": "INTVAL3 intervalometer controls"
       },
       "cordova-plugin-splashscreen": {},
-      "cordova-plugin-camera-with-exif": {},
-      "cordova-plugin-appcenter-analytics": {},
-      "cordova-plugin-appcenter-crashes": {}
+      "cordova-plugin-camera-with-exif": {}
     },
     "platforms": [
       "android",
