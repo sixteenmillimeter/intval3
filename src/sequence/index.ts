@@ -1,20 +1,30 @@
 'use strict'
 
-const uuid = require('uuid').v4
-const log = require('../log')('seq')
-import '../delay'
+import uuid from 'uuid/v4';
+const log = require('../log')('seq');
+import '../delay';
+
+const MAX_INTEGER = 2147483647;
+
+interface Options {
+	len? : number;
+}
 
 /** Object sequence features */
 class Sequence {
 	public _state : any = {
-		arr : [],
-		active : false,
-		paused : false,
-		frame: false,
-		delay : false,
-		count : 0,
-		stop : null
+		arr : []
 	}
+	private id : string;
+
+	private active : boolean = false;
+	private paused : boolean = false;
+
+	private frame : boolean = false;
+	private delay : boolean = false;
+	private count : number = 0;
+
+	private _stop : Function = null;
 
 	public _loop : any = {
 		arr : [],
@@ -22,17 +32,20 @@ class Sequence {
 		max : 0
 	}
 
-	constructor () {
+	constructor (intval : Intval) {
 
 	}
-
-	public start (options : any, cb : Function) {
+	/**
+	 * Start running a "sequence" of frames. Shoots a continuous sequence
+	 * of single frames with a delay in between each one.
+	 **/
+	public startOld (options : any, cb : Function) {
 		if (this._state.active) {
 			return false
 		}
 
-		this._state.active = true
-		this._state.count = 0
+		this.active = true
+		this.count = 0
 
 		if (options.arr) {
 			this._state.arr = options.arr
@@ -48,70 +61,74 @@ class Sequence {
 		} else {
 			this._loop.max = 0
 		}
-		this._state.stop = cb
+		this._stop = cb
 		this.step() 
-		this._state.id = uuid()
-		return this._state.id
+		this.id = uuid()
+		return this.id
+	}
+
+	public async start (options : Options) {
+
 	}
 
 	public setStop () {
-		this._state.active = false
+		this.active = false
 	}
 
 	public stop = function () {
-		this._state.active = false
-		this._state.count = 0
+		this.active = false
+		this.count = 0
 		this._state.arr = []
 
 		this._loop.count = 0
 		this._loop.max = 0
 		this._loop.arr = []
 
-		if (this._state.stop) this._state.stop()
+		if (this._stop) this._stop()
 
-		this._state.stop = null
+		this._stop = null
 	}
 
 	public pause () {
-		this._state.paused = true
+		this.paused = true
 	}
 
 	public resume () {
-		this._state.paused = false
+		this.paused = false
 		this.step()
 	}
 
 	public step () {
-		if (this._state.active && !this._state.paused) {
+		if (this.active && !this.paused) {
 			if (this._state.arr.length > 0) {
-				if (this._state.count > this._state.arr.length - 1) {
+				if (this.count > this._state.arr.length - 1) {
 					return this.stop()
 				}
-				log.info('step', { count : this._state.count, id : this._state.id })
-				return this._state.arr[this._state.count](() => {
-					this._state.count++
+				log.info('step', { count : this.count, id : this._state.id })
+				return this._state.arr[this.count](() => {
+					this.count++
 					this.step()
 				})
 			} else if (this._loop.arr.length > 0) {
-				if (this._state.count > this._loop.arr.length - 1) {
-					this._state.count = 0
+				if (this.count > this._loop.arr.length - 1) {
+					this.count = 0
 					this._loop.count++
 				}
 				if (this._loop.max > 0 && this._loop.count > this._loop.max) {
 					return this.stop()
 				}
-				log.info('step', { count : this._state.count, id : this._state.id })
-				return this._loop.arr[this._state.count](() => {
-					this._state.count++
+				log.info('step', { count : this.count, id : this.id })
+				return this._loop.arr[this.count](() => {
+					this.count++
 					this.step()
 				})
 			} else{
 				return this.stop()
 			}
-		} else if (this._state.paused) {
-			log.info('step', 'Sequence paused', { loop : this._loop.count, count : this._state.count })
-		} else if (!this._state.active) {
-			log.info('step', 'Sequence stopped', { loop : this._loop.count, count : this._state.count })
+		} else if (this.paused) {
+			log.info('step', 'Sequence paused', { loop : this._loop.count, count : this.count })
+		} else if (!this.active) {
+			log.info('step', 'Sequence stopped', { loop : this._loop.count, count : this.count })
 		}
 	}
 }

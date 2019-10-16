@@ -4,6 +4,7 @@
         "esModuleInterop": true,
         "target": "ES2017",
         "noImplicitAny": true,
+        "allowSyntheticDefaultImports" : true,
         "moduleResolution": "node",
         "sourceMap": true,
         "removeComments" : false,
