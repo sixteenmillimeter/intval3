@@ -23,6 +23,47 @@ let app = restify.createServer({
 
 let ble
 
+async function execAsync (cmd) {
+	return new Promise((resolve, reject) => {
+		return exec(cmd, (err, stdio, stderr) => {
+			if (err) {
+				return reject(err)
+			}
+			return resolve(stdio)
+		})
+	})
+}
+
+async function info () {
+	const data = {
+		version : 	PACKAGE.version,
+		node : 		null,
+		os : 		null,
+		kernel : 	null
+	}
+
+	try {
+		data.node = await execAsync('node -v')
+	} catch (err) {
+		log.error(err)
+	}
+
+	try {
+		data.kernel = await execAsync('uname -r')
+	} catch (err) {
+		log.error(err)
+	}
+
+	try {
+		data.os = await execAsync('lsb_release -a | grep "Description"')
+		data.os = data.os.replace('Description: ', '').trim()
+	} catch (err) {
+		log.error(err)
+	}
+
+	return data
+}
+
 function createServer () {
 	app.use(restify.plugins.queryParser())
 	app.use(restify.plugins.bodyParser({ mapParams: false }))
@@ -41,6 +82,7 @@ function createServer () {
 	app.post('/sequence', rSequence)
 
 	app.get( '/status', rStatus)
+	app.get( '/info', rInfo)
 	app.post('/reset', rReset)
 	app.post('/update', rUpdate)
 	app.post('/restart', rRestart)
@@ -65,6 +107,19 @@ function createBLE () {
 	ble.on('reset', bReset)
 	ble.on('update', bUpdate)
 	ble.on('restart', bRestart)
+	ble.on('info', bInfo)
+}
+
+async function rInfo (req, res, next) {
+	let data = {}
+	try {
+		data = await info()
+	} catch (err) {
+		log.error(err)
+		return next(err)
+	}
+	res.send(data)
+	return next()
 }
 
 //Restify functions
