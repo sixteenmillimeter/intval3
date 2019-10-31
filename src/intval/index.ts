@@ -526,7 +526,7 @@ export default class Intval {
 		}
 
 		if (dir) {
-			return new Promise (function (resolve, reject) {
+			return new Promise (function (resolve : Function, reject : Function) {
 				this._state.frame.cb = (len : number) => {
 					this._state.counter++
 					this._storeState()
@@ -534,7 +534,7 @@ export default class Intval {
 				}
 			}.bind(this))
 		} else {
-			return new Promise (function (resolve, reject) {
+			return new Promise (function (resolve : Function, reject : Function) {
 				this._state.frame.cb = (len : number) => {
 					this._state.counter--
 					this._storeState()
