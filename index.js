@@ -257,6 +257,7 @@ async function rSequence (req, res, next) {
 	let dir = true
 	let exposure = 0
 	let delay = 0
+	let options = {}
 
 	if (intval._state.frame.dir !== true) {
 		dir = false
@@ -303,13 +304,44 @@ async function rSequence (req, res, next) {
 			delay = req.query.delay
 		}
 	}
-	if (req.body && typeof req.body.delay!== 'undefined') {
+	if (req.body && typeof req.body.delay !== 'undefined') {
 		if (typeof req.body.delay === 'string') {
 			delay = parseInt(req.body.delay)
 		} else {
 			delay = req.body.delay
 		}
 	}
+
+	if (req.query && typeof req.query.len !== 'undefined') {
+		if (typeof req.query.len === 'string') {
+			options.len = parseInt(req.query.len)
+		} else {
+			options.len = req.query.len
+		}
+	}
+	if (req.body && typeof req.body.len !== 'undefined') {
+		if (typeof req.body.len === 'string') {
+			options.len = parseInt(req.body.len)
+		} else {
+			options.len = req.body.len
+		}
+	}
+
+	if (req.query && typeof req.query.multiple !== 'undefined') {
+		if (typeof req.query.multiple === 'string') {
+			options.multiple = parseInt(req.query.multiple)
+		} else {
+			options.multiple = req.query.multiple
+		}
+	}
+	if (req.body && typeof req.body.multiple !== 'undefined') {
+		if (typeof req.body.multiple === 'string') {
+			options.multiple = parseInt(req.body.multiple)
+		} else {
+			options.multiple = req.body.multiple
+		}
+	}
+
 	if (intval._state.sequence && sequence.active) {
 		intval._state.sequence = false
 		sequence.stop()
@@ -319,7 +351,7 @@ async function rSequence (req, res, next) {
 
 	} else {
 		intval._state.sequence = true
-		sequence.start()
+		sequence.start(options)
 		res.send({ started : true })
 		
 		return next()
@@ -468,6 +500,7 @@ function bSequence (obj, cb) {
 	let dir = true
 	let exposure = 0
 	let delay = 0
+	let options = {}
 
 	if (intval._state.frame.dir !== true) {
 		dir = false
@@ -493,6 +526,21 @@ function bSequence (obj, cb) {
 			exposure = obj.exposure
 		}
 	}
+	if (typeof obj.len !== 'undefined') {
+		if (typeof obj.len === 'string') {
+			options.len = parseInt(obj.len)
+		} else {
+			options.len = obj.len
+		}
+	}
+	if (typeof obj.multiple !== 'undefined') {
+		if (typeof obj.multiple === 'string') {
+			options.multiple = parseInt(obj.multiple)
+		} else {
+			options.multiple = obj.multiple
+		}
+	}
+
 	if (intval._state.sequence && sequence._state.active) {
 		//should not occur with single client
 		intval._state.sequence = false
@@ -501,16 +549,15 @@ function bSequence (obj, cb) {
 		return cb()
 	} else {
 		intval._state.sequence = true
-		sequence.start()
+		sequence.start(options)
 		log.info('sequence start', { method : 'ble' })
 		return cb()
 	}
 }
 
 function bSequenceStop (obj, cb) {
-	//
-	if (intval._state.sequence && sequence._state.active) {
-		sequence.setStop()
+	if (intval._state.sequence && sequence.active) {
+		sequence.stop()
 		intval._state.sequence = false
 		log.info('sequence stop', { method : 'ble' })
 		return cb()
@@ -543,36 +590,6 @@ function bRestart (obj, cb) {
 	setTimeout(() => {
 		process.exit(0)
 	}, 20)
-}
-
-function seq () {
-	let dir = intval._state.frame.dir
-	let exposure = intval._state.frame.exposure
-	let delay = intval._state.frame.delay
-
-	if (intval._state.sequence && sequence._state.active) {
-		log.info('sequence', { method : 'release' , stop: true })
-		sequence.setStop()
-		intval._state.sequence = false
-		return cb()
-	} else {
-		console.time('sequence time')
-		log.info('sequence', { method : 'release', start : true })
-		intval._state.sequence = true
-		sequence.start({
-			loop : [ (next) => {
-						intval.frame(dir, exposure, (len) => {
-							next()
-						})
-					}, (next) => {
-						setTimeout(() => {
-							next()
-						}, delay)
-					}]
-		}, (seq) => {
-			console.timeEnd('sequence time')
-		})
-	}
 }
 
 function index (req, res, next) {
