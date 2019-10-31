@@ -474,6 +474,10 @@ export default class Intval {
 	*/
 
 	public async frame (dir : boolean = null, exposure : number = null) {
+		if (this._state.frame.active) {
+			return false
+		}
+
 		if (dir === true || (dir === null && this._state.frame.dir === true) ) {
 			dir =  true;
 		} else {
@@ -523,7 +527,7 @@ export default class Intval {
 				this._state.frame.cb = (len : number) => {
 					this._state.counter++
 					this._storeState()
-					return resolve()
+					return resolve(true)
 				}
 			}.bind(this))
 		} else {
@@ -531,7 +535,7 @@ export default class Intval {
 				this._state.frame.cb = (len : number) => {
 					this._state.counter--
 					this._storeState()
-					return resolve()
+					return resolve(true)
 				}
 			}.bind(this))
 		}

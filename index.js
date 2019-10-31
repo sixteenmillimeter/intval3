@@ -188,6 +188,7 @@ function rCounter (req, res, next) {
 async function rFrame (req, res, next) {
 	let dir = true
 	let exposure = 0
+	let success = false
 	if (intval._state.frame.dir !== true) {
 		dir = false
 	}
@@ -226,8 +227,8 @@ async function rFrame (req, res, next) {
 	log.info('/frame', { method : req.method, dir : dir, exposure : exposure })
 
 	if (exposure < 30000) {
-		await intval.frame(dir, exposure)
-		res.send({ dir : dir, len : exposure })
+		success = await intval.frame(dir, exposure)
+		res.send({ dir : dir, len : exposure, success })
 		return next()
 	} else {
 		intval.frame(dir, exposure)
@@ -388,6 +389,7 @@ function rRestart (req, res, next) {
 async function bFrame (obj, cb) {
 	let dir = true
 	let exposure = 0
+	let success = false
 
 	if (sequence.active) {
 		return cb()
@@ -416,7 +418,7 @@ async function bFrame (obj, cb) {
 	log.info('frame', { method : 'ble', dir : dir, exposure : exposure })
 
 	if (exposure < 5000) {
-		await intval.frame(dir, exposure)
+		success = await intval.frame(dir, exposure)
 		return cb()
 	} else {
 		intval.frame(dir, exposure)
