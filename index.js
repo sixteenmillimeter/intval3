@@ -117,7 +117,6 @@ function createBLE () {
 	ble.on('reset', bReset)
 	ble.on('update', bUpdate)
 	ble.on('restart', bRestart)
-	ble.on('info', bInfo)
 }
 
 async function rInfo (req, res, next) {
