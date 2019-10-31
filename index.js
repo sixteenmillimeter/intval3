@@ -603,7 +603,6 @@ function index (req, res, next) {
 }
 
 function init () {
-	intval.sequence = seq
 	createServer()
 	createBLE()
 }
