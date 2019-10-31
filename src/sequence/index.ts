@@ -61,20 +61,23 @@ export class Sequence {
 		this.delay = typeof options.delay !== 'undefined' ? options.delay : 0
 		this.count = 0
 
+		log.info({ id : this.id, started : true })
+
 		for (let i = 0; i < len; i++) {
 			if (multiple > 1) {
 				for (let x = 0; x < multiple; x++) {
 					await this.intval.frame()
-					log.info({ id : this.id, count : this.count })
+					log.info('start', { id : this.id, count : this.count })
 					this.count++
 				}
 			} else {
 				await this.intval.frame()
-				log.info({ id : this.id, count : this.count })
+				log.info('start', { id : this.id, count : this.count })
 				this.count++
 			}
 
-			if (this.delay > 0) {
+
+			if (this.delay > 0 && i < len - 1) {
 				await delay(this.delay)
 			}
 
@@ -93,6 +96,8 @@ export class Sequence {
 		this.active = false
 		this.count = 0
 		this.delay = 0
+
+		log.info('start', { id : this.id, stopped : true })
 	}
 }
 
