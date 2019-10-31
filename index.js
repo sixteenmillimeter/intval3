@@ -6,7 +6,8 @@ const fs = require('fs')
 const { exec } = require('child_process')
 
 const BLE = require('./lib/ble')
-const intval = require('./lib/intval')
+const Intval = require('./lib/intval')
+const intval = new Intval()
 const Sequence = require('./lib/sequence')
 const sequence = new Sequence(intval)
 
