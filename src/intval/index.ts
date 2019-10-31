@@ -1,10 +1,10 @@
 'use strict'
 
-const db = require('../db');
-const log = require('../log')('intval');
-import * as storage from 'node-persist';
-import { pathExists, mkdir } from 'fs-extra';
-import { delay } from '../delay';
+const db = require('../db')
+const log = require('../log')('intval')
+import storage = require('node-persist')
+import { pathExists, mkdir } from 'fs-extra'
+import { delay } from '../delay'
 
 let Gpio : any
 try {
@@ -53,7 +53,7 @@ interface Entry {
 /** class representing the intval3 features */
 export default class Intval {
 
-	private STATE_DIR : string = '~/state';
+	private STATE_DIR : string = '~/state'
 
 	private _frame : any = {
 		open : 250, 	//delay before pausing frame in open state
@@ -76,6 +76,7 @@ export default class Intval {
 
 	private _pin : any = {};
 	private _state : any = {};
+	private storage : any;
 
 	public sequence : any;
 
