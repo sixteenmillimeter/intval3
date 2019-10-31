@@ -149,7 +149,7 @@ function rDelay (req, res, next) {
 	if (set) {
 		intval.setDelay(delay)
 	} else {
-		delay = intval._state.delay
+		delay = intval._state.frame.delay
 	}
 	log.info('/delay', { method: req.method, set : set, delay : delay })
 	res.send({ delay : delay })
@@ -252,8 +252,8 @@ async function rSequence (req, res, next) {
 	if (intval._state.frame.exposure !== 0) {
 		exposure = intval._state.frame.exposure
 	}
-	if (intval._state.delay !== 0) {
-		options.delay = intval._state.delay
+	if (intval._state.frame.delay !== 0) {
+		options.delay = intval._state.frame.delay
 	}
 
 	if (req.query && typeof req.query.dir !== 'undefined') {
@@ -495,8 +495,8 @@ function bSequence (obj, cb) {
 	if (intval._state.frame.exposure !== 0) {
 		exposure = intval._state.frame.exposure
 	}
-	if (intval._state.delay !== 0) {
-		delay = intval._state.delay
+	if (intval._state.frame.delay !== 0) {
+		delay = intval._state.frame.delay
 	}
 
 	if (typeof obj.dir !== 'undefined') {

@@ -58,7 +58,7 @@ export class Sequence {
 		let multiple : number = typeof options.multiple !== 'undefined' ? options.multiple : 1
 		
 		this.id = uuid()
-		this.delay = typeof options.delay !== 'undefined' ? options.delay : this.intval._state.delay
+		this.delay = typeof options.delay !== 'undefined' ? options.delay : this.intval._state.frame.delay
 		this.count = 0
 		this.active = true
 

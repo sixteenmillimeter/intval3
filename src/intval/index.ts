@@ -177,10 +177,10 @@ export default class Intval {
 				active : false, //should frame be running
 				paused : false,
 				exposure : 0, 	//length of frame exposure, in ms
+				delay : 0, 		//delay before start of frame, in ms
 				current : {}, 	//current settings
 				cb : () => {}
 			},
-			delay : 0, 			//delay before start of frame, in ms
 			counter : 0,
 			sequence : false
 		}
