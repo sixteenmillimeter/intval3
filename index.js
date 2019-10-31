@@ -227,6 +227,8 @@ async function rFrame (req, res, next) {
 
 	if (exposure < 30000) {
 		await intval.frame(dir, exposure)
+		res.send({ dir : dir, len : exposure })
+		return next()
 	} else {
 		intval.frame(dir, exposure)
 		res.send({ dir : dir, len : exposure, delaying : true })

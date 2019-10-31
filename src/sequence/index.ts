@@ -36,7 +36,8 @@ export class Sequence {
 	 **/
 
 	constructor (intval : any) {
-		this.intval = intval
+		this.intval = intval 
+		//push button callback
 		this.intval.sequence = function () {
 			if (this.active) {
 				this.stop()
