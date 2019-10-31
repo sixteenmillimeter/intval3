@@ -87,13 +87,19 @@ export class Sequence {
 			}
 		}
 
-		this.stop()
+		this._stop()
+	}
+	/**
+	 * Public method to stop a sequence from the web or ble interface
+	 **/
+	public stop () {
+		this.active = false
 	}
 
 	/**
 	 * Stop a running sequence and reset counter and delay
 	 **/
-	public stop = function () {
+	private _stop = function () {
 		this.active = false
 		this.count = 0
 		this.delay = 0
