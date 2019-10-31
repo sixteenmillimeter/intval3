@@ -104,7 +104,7 @@ export class Sequence {
 		this.count = 0
 		this.delay = 0
 
-		log.info('start', { id : this.id, stopped : true })
+		log.info('_stop', { id : this.id, stopped : true })
 	}
 }
 
