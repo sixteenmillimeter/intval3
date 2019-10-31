@@ -648,7 +648,7 @@ function bRestart (obj, cb) {
 	}, 20)
 }
 
-function index (req, res, next) {
+async function index (req, res, next) {
 	let data
 
 	try {
