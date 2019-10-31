@@ -38,6 +38,7 @@ async function info () {
 	const data = {
 		version : 	PACKAGE.version,
 		node : 		null,
+		npm : 		null,
 		os : 		null,
 		kernel : 	null
 	}
@@ -45,6 +46,13 @@ async function info () {
 	try {
 		data.node = await execAsync('node -v')
 		data.node = data.node.replace(/(\r\n|\n|\r)/gm, '')
+	} catch (err) {
+		log.error(err)
+	}
+
+	try {
+		data.npm = await execAsync('npm -v')
+		data.npm = data.npm.replace(/(\r\n|\n|\r)/gm, '')
 	} catch (err) {
 		log.error(err)
 	}
