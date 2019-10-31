@@ -2,7 +2,7 @@
 
 const restify = require('restify')
 const log = require('./lib/log')('main')
-const fs = require('fs')
+const { readFile } = require('fs-extra')
 const { exec } = require('child_process')
 
 const BLE = require('./lib/ble')
@@ -584,13 +584,13 @@ function bRestart (obj, cb) {
 }
 
 function index (req, res, next) {
-	fs.readFile(INDEXPATH, 'utf8', (err, data) => {
-		if (err) {
-			return next(err)
-		}
-		res.end(data)
-		next()
-	})
+	let data
+
+	try {
+		data = await readFile(INDEXPATH, 'utf8')
+	} catch (err) {
+		return next(err)
+	}
 }
 
 function init () {
