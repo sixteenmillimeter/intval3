@@ -596,7 +596,7 @@ function bSequence (obj, cb) {
 		}
 	}
 
-	if (intval._state.sequence && sequence._state.active) {
+	if (intval._state.sequence && sequence.active) {
 		//should not occur with single client
 		intval._state.sequence = false
 		sequence.stop()
