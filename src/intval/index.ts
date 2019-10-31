@@ -177,10 +177,10 @@ export default class Intval {
 				active : false, //should frame be running
 				paused : false,
 				exposure : 0, 	//length of frame exposure, in ms
-				delay : 0, 		//delay before start of frame, in ms
-				current : {}, //current settings
+				current : {}, 	//current settings
 				cb : () => {}
 			},
+			delay : 0, 			//delay before start of frame, in ms
 			counter : 0,
 			sequence : false
 		}
@@ -505,21 +505,14 @@ export default class Intval {
 			this._state.frame.paused = true;
 			if (dir) {
 				await delay(this._frame.open)
-
 				this._pause()
-				
 				await delay(exposure + this._frame.closed)
-
 				this._state.frame.paused = false
 				this._startFwd()
 			} else {
-
 				await delay(this._frame.openBwd)
-
 				this._pause()
-				
 				await delay(exposure + this._frame.closed)
-
 				this._state.frame.paused = false;
 				this._startBwd()
 			}

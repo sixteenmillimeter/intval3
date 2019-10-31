@@ -68,12 +68,12 @@ export class Sequence {
 			if (multiple > 1) {
 				for (let x = 0; x < multiple; x++) {
 					await this.intval.frame()
-					log.info('start', { id : this.id, count : this.count })
+					log.info('frame', { id : this.id, count : this.count })
 					this.count++
 				}
 			} else {
 				await this.intval.frame()
-				log.info('start', { id : this.id, count : this.count })
+				log.info('frame', { id : this.id, count : this.count })
 				this.count++
 			}
 
