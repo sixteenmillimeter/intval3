@@ -60,6 +60,7 @@ export class Sequence {
 		this.id = uuid()
 		this.delay = typeof options.delay !== 'undefined' ? options.delay : 0
 		this.count = 0
+		this.active = true
 
 		log.info({ id : this.id, started : true })
 
