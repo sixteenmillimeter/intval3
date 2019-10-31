@@ -524,16 +524,23 @@ export default class Intval {
 				this._startBwd()
 			}
 		}
+
 		if (dir) {
-			this._state.frame.cb = (len : number) => {
-				this._state.counter++;
-				this._storeState();
-			}
+			return new Promise (function (resolve, reject) {
+				this._state.frame.cb = (len : number) => {
+					this._state.counter++
+					this._storeState()
+					return resolve()
+				}
+			})
 		} else {
-			this._state.frame.cb = (len : number) => {
-				this._state.counter--;
-				this._storeState();
-			}
+			return new Promise (function (resolve, reject) {
+				this._state.frame.cb = (len : number) => {
+					this._state.counter--
+					this._storeState()
+					return resolve()
+				}
+			})
 		}
 	}
 
