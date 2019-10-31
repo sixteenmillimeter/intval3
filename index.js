@@ -44,19 +44,21 @@ async function info () {
 
 	try {
 		data.node = await execAsync('node -v')
+		data.node = data.node.replace(/(\r\n|\n|\r)/gm, '')
 	} catch (err) {
 		log.error(err)
 	}
 
 	try {
 		data.kernel = await execAsync('uname -r')
+		data.kernel = data.kernel.replace(/(\r\n|\n|\r)/gm, '')
 	} catch (err) {
 		log.error(err)
 	}
 
 	try {
 		data.os = await execAsync('lsb_release -a | grep "Description"')
-		data.os = data.os.replace('Description: ', '').trim()
+		data.os = data.os.replace('Description:', '').replace(/(\r\n|\n|\r)/gm, '').trim()
 	} catch (err) {
 		log.error(err)
 	}
