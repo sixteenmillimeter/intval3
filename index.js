@@ -7,7 +7,8 @@ const { exec } = require('child_process')
 
 const BLE = require('./lib/ble')
 const intval = require('./lib/intval')
-const sequence = require('./lib/sequence')
+const Sequence = require('./lib/sequence')
+const sequence = new Sequence(intval)
 
 const PACKAGE = require('./package.json')
 const PORT = process.env.PORT || 6699
@@ -183,7 +184,7 @@ function rCounter (req, res, next) {
 	return next()
 }
 
-function rFrame (req, res, next) {
+async function rFrame (req, res, next) {
 	let dir = true
 	let exposure = 0
 	if (intval._state.frame.dir !== true) {
@@ -235,10 +236,14 @@ function rFrame (req, res, next) {
 		}
 	}
 	log.info('/frame', { method : req.method, dir : dir, exposure : exposure })
-	intval.frame(dir, exposure, (len) => {
-		res.send({ dir : dir, len : len})
+
+	if (exposure < 30000) {
+		await intval.frame(dir, exposure)
+	} else {
+		intval.frame(dir, exposure)
+		res.send({ dir : dir, len : exposure, delaying : true })
 		return next()
-	})
+	}
 }
 
 function rStatus (req, res, next) {
@@ -247,7 +252,7 @@ function rStatus (req, res, next) {
 	return next()
 }
 
-function rSequence (req, res, next) {
+async function rSequence (req, res, next) {
 	let dir = true
 	let exposure = 0
 	let delay = 0
@@ -304,33 +309,17 @@ function rSequence (req, res, next) {
 			delay = req.body.delay
 		}
 	}
-	if (intval._state.sequence && sequence._state.active) {
-		sequence.setStop()
+	if (intval._state.sequence && sequence.active) {
 		intval._state.sequence = false
+		sequence.stop()
 		res.send({ stopped : true })
-		return next()
-	} else {
-		console.time('sequence time')
-		intval._state.sequence = true
-		let seq_id = sequence.start({
-			loop : [ (next) => {
-						intval.frame(dir, exposure, (len) => {
-							next()
-						})
-					}, (next) => {
-						setTimeout(() => {
-							next()
-						}, delay)
-					}]
-		}, (seq) => {
-			console.timeEnd('sequence time')
-		})
 
-		if (seq_id === false) {
-			res.send({ started : false })
-		} else {
-			res.send({ started : true , id : seq_id })
-		}
+		return next()
+
+	} else {
+		intval._state.sequence = true
+		sequence.start()
+		res.send({ started : true })
 		
 		return next()
 	}
@@ -374,9 +363,13 @@ function rRestart (req, res, next) {
 
 //Ble functions
 
-function bFrame (obj, cb) {
+async function bFrame (obj, cb) {
 	let dir = true
 	let exposure = 0
+
+	if (sequence.active) {
+		return cb()
+	}
 	
 	if (intval._state.frame.dir !== true) {
 		dir = false
@@ -401,11 +394,10 @@ function bFrame (obj, cb) {
 	log.info('frame', { method : 'ble', dir : dir, exposure : exposure })
 
 	if (exposure < 5000) {
-		intval.frame(dir, exposure, (len) => {
-			return cb()
-		})
+		await intval.frame(dir, exposure)
+		return cb()
 	} else {
-		intval.frame(dir, exposure, (len) => {})
+		intval.frame(dir, exposure)
 		return cb()
 	}
 
@@ -502,29 +494,14 @@ function bSequence (obj, cb) {
 	}
 	if (intval._state.sequence && sequence._state.active) {
 		//should not occur with single client
-		sequence.setStop()
 		intval._state.sequence = false
+		sequence.stop()
 		log.info('sequence stop', { method : 'ble' })
 		return cb()
 	} else {
-		console.time('sequence time')
 		intval._state.sequence = true
-		let seq_id = sequence.start({
-			loop : [ (next) => {
-						intval.frame(dir, exposure, (len) => {
-							next()
-						})
-					}, (next) => {
-						setTimeout(() => {
-							next()
-						}, delay)
-					}]
-		}, (seq) => {
-			console.timeEnd('sequence time')
-		})
-		if (seq_id !== false) {
-			log.info('sequence start', { method : 'ble', id : seq_id })
-		}
+		sequence.start()
+		log.info('sequence start', { method : 'ble' })
 		return cb()
 	}
 }
@@ -558,6 +535,7 @@ function bUpdate (obj, cb) {
 		}, 20)
 	})
 }
+
 function bRestart (obj, cb) {
 	log.info('restart', { method : 'ble' })
 	cb()
@@ -607,7 +585,6 @@ function index (req, res, next) {
 }
 
 function init () {
-	intval.init()
 	intval.sequence = seq
 	createServer()
 	createBLE()

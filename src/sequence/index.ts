@@ -2,135 +2,99 @@
 
 import uuid from 'uuid/v4';
 const log = require('../log')('seq');
-import '../delay';
+import { delay } from '../delay';
 
 const MAX_INTEGER = 2147483647;
 
 interface Options {
 	len? : number;
+	multiple? : number;
+	delay? : number;
+}
+
+interface Loop {
+	count : number;
+	max : number;
+	delay : number;
 }
 
 /** Object sequence features */
-class Sequence {
-	public _state : any = {
-		arr : []
+export class Sequence {
+	private id : string
+
+	private active : boolean = false
+
+	private delay : number = 0
+	private count : number = 0
+
+	private intval : any
+
+	/**
+	 * @constructor
+	 *
+	 * Create a sequencer object from class
+	 **/
+
+	constructor (intval : any) {
+		this.intval = intval
+		this.intval.sequence = function () {
+			if (this.active) {
+				this.stop()
+				return false
+			} else {
+				this.start()
+				return true
+			}
+		}
 	}
-	private id : string;
 
-	private active : boolean = false;
-	private paused : boolean = false;
-
-	private frame : boolean = false;
-	private delay : boolean = false;
-	private count : number = 0;
-
-	private _stop : Function = null;
-
-	public _loop : any = {
-		arr : [],
-		count : 0,
-		max : 0
-	}
-
-	constructor (intval : Intval) {
-
-	}
 	/**
 	 * Start running a "sequence" of frames. Shoots a continuous sequence
 	 * of single frames with a delay in between each one.
 	 **/
-	public startOld (options : any, cb : Function) {
-		if (this._state.active) {
-			return false
-		}
-
-		this.active = true
-		this.count = 0
-
-		if (options.arr) {
-			this._state.arr = options.arr
-		}
-
-		if (options.loop) {
-			this._loop.arr = options.loop
-			this._loop.count = 0
-		}
-
-		if (options.maxLoop) {
-			this._loop.max = options.maxLoop
-		} else {
-			this._loop.max = 0
-		}
-		this._stop = cb
-		this.step() 
-		this.id = uuid()
-		return this.id
-	}
 
 	public async start (options : Options) {
+		let len : number = typeof options.len !== 'undefined' ? options.len : MAX_INTEGER
+		let multiple : number = typeof options.multiple !== 'undefined' ? options.multiple : 1
+		
+		this.id = uuid()
+		this.delay = typeof options.delay !== 'undefined' ? options.delay : 0
+		this.count = 0
 
+		for (let i = 0; i < len; i++) {
+			if (multiple > 1) {
+				for (let x = 0; x < multiple; x++) {
+					await this.intval.frame()
+					log.info({ id : this.id, count : this.count })
+					this.count++
+				}
+			} else {
+				await this.intval.frame()
+				log.info({ id : this.id, count : this.count })
+				this.count++
+			}
+
+			if (this.delay > 0) {
+				await delay(this.delay)
+			}
+
+			if (!this.active) {
+				break
+			}
+		}
+
+		this.stop()
 	}
 
-	public setStop () {
-		this.active = false
-	}
-
+	/**
+	 * Stop a running sequence and reset counter and delay
+	 **/
 	public stop = function () {
 		this.active = false
 		this.count = 0
-		this._state.arr = []
-
-		this._loop.count = 0
-		this._loop.max = 0
-		this._loop.arr = []
-
-		if (this._stop) this._stop()
-
-		this._stop = null
-	}
-
-	public pause () {
-		this.paused = true
-	}
-
-	public resume () {
-		this.paused = false
-		this.step()
-	}
-
-	public step () {
-		if (this.active && !this.paused) {
-			if (this._state.arr.length > 0) {
-				if (this.count > this._state.arr.length - 1) {
-					return this.stop()
-				}
-				log.info('step', { count : this.count, id : this._state.id })
-				return this._state.arr[this.count](() => {
-					this.count++
-					this.step()
-				})
-			} else if (this._loop.arr.length > 0) {
-				if (this.count > this._loop.arr.length - 1) {
-					this.count = 0
-					this._loop.count++
-				}
-				if (this._loop.max > 0 && this._loop.count > this._loop.max) {
-					return this.stop()
-				}
-				log.info('step', { count : this.count, id : this.id })
-				return this._loop.arr[this.count](() => {
-					this.count++
-					this.step()
-				})
-			} else{
-				return this.stop()
-			}
-		} else if (this.paused) {
-			log.info('step', 'Sequence paused', { loop : this._loop.count, count : this.count })
-		} else if (!this.active) {
-			log.info('step', 'Sequence stopped', { loop : this._loop.count, count : this.count })
-		}
+		this.delay = 0
 	}
 }
 
-module.exports = new Sequence();
+module.exports = Sequence
+

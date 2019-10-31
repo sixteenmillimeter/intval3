@@ -3,8 +3,8 @@
 const db = require('../db');
 const log = require('../log')('intval');
 import * as storage from 'node-persist';
-import { exists, mkdir } from 'fs-extra';
-import '../delay';
+import { pathExists, mkdir } from 'fs-extra';
+import { delay } from '../delay';
 
 let Gpio : any
 try {
@@ -15,7 +15,7 @@ try {
 }
 
 
-const PINS = {
+const PINS : any = {
 	fwd : {
 		pin : 13,
 		dir : 'out'
@@ -51,7 +51,8 @@ interface Entry {
 }
 
 /** class representing the intval3 features */
-class Intval {
+export default class Intval {
+
 	private STATE_DIR : string = '~/state';
 
 	private _frame : any = {
@@ -62,12 +63,21 @@ class Intval {
 	}
 	private _release : any = {
 		min : 20,
-		seq : 1000
+		seq : 1000,
+		time : 0,
+		active : false
 	}
-	private _microDelay : number = 10; // delay after stop signal before stopping motors
+
+	private _micro : any = {
+		time : 0,
+		primed : false, //is ready to stop frame
+		delay : 10// delay after stop signal before stopping motors
+	}
+
 	private _pin : any = {};
 	private _state : any = {};
 
+	public sequence : any;
 
 	constructor() {
 		this._init();
@@ -79,22 +89,7 @@ class Intval {
 
 	private async _init () {
 		let dirExists : boolean;
-		
-		try {
-			dirExists = await exists(this.STATE_DIR);
-		} catch (err) {
-		 	log.error('init', `Error locating state directory ${this.STATE_DIR}`);
-		}
-
-		if (!dirExists) {
-			try {
-				await mkdir(this.STATE_DIR);
-			} catch (err) {
-				log.error('init', `Error creating state directory ${this.STATE_DIR}`)
-			}
-		}
-		
-		storage.init({
+		const storateOptions = {
 			dir: this.STATE_DIR,
 			stringify: JSON.stringify,
 			parse: JSON.parse,
@@ -105,25 +100,60 @@ class Intval {
 			ttl: false, // ttl* [NEW], can be true for 24h default or a number in MILLISECONDS
 			//expiredInterval: 2 * 60 * 1000, // [NEW] every 2 minutes the process will clean-up the expired cache
 		    //forgiveParseErrors: false // [NEW]
-		}).then(this._restoreState).catch((err) => { 
-			log.warn('init', err) 
+		}
+		
+		try {
+			dirExists = await pathExists(this.STATE_DIR);
+		} catch (err) {
+		 	log.error('_init', `Error locating state directory ${this.STATE_DIR}`);
+		}
+
+		if (!dirExists) {
+			try {
+				await mkdir(this.STATE_DIR);
+			} catch (err) {
+				log.error('_init', `Error creating state directory ${this.STATE_DIR}`);
+			}
+		}
+		
+		try {
+			await storage.init(storateOptions);
+		} catch (err) {
+			log.error('_init', err);
+		}
+
+		try {
+			await this._restoreState();
+		} catch (err) { 
+			log.warn('_init', err) ;
 			this.reset();
 			this._declarePins();
-		})
+		}
 
-		process.on('SIGINT', this._undeclarePins);
-		process.on('uncaughtException', this._undeclarePins);
+		process.on('SIGINT', this._undeclarePins.bind(this));
+		process.on('uncaughtException', this._undeclarePins.bind(this));
 	}
 
 	/**
 	 * Restore the state from the storage object
 	 */
 
-	private _restoreState () {
-		storage.getItem('_state', 'test').then(this._setState).catch((err) => {
-			this._setState();
+	private async _restoreState () {
+		let data : any;
+
+		try {
+			data = await storage.getItem('_state');
+		} catch (err) {
 			log.error('_restoreState', err);
-		})
+		}
+
+		try {
+			this._setState(data);
+		} catch (err) {
+			log.error('_restoreState', err);
+			this._setState();
+		}
+
 		this._declarePins();
 	}
 
@@ -150,14 +180,6 @@ class Intval {
 				current : {}, //current settings
 				cb : () => {}
 			},
-			release : {
-				time: 0,
-				active : false //is pressed
-			},
-			micro : {
-				time : 0,
-				primed : false //is ready to stop frame
-			},
 			counter : 0,
 			sequence : false
 		}
@@ -169,11 +191,11 @@ class Intval {
 	 */
 
 	private _storeState () {
-		storage.setItem('_state', this._state)
-			.then(() => {})
-			.catch((err) => {
-				log.error('_storeState', err);
-			})
+		try {
+			storage.setItem('_state', this._state);
+		} catch (err) {
+			log.error('_storeState', err);
+		}
 	}
 
 	/**
@@ -181,7 +203,7 @@ class Intval {
 	 */
 
 	private _declarePins () {
-		let pin;
+		let pin : any;
 		for (let p in PINS) {
 			pin = PINS[p];
 			if (pin.edge) this._pin[p] = new Gpio(pin.pin, pin.dir, pin.edge);
@@ -290,7 +312,7 @@ class Intval {
 	*
 	*/
 
-	private _watchMicro (err : Error, val : number) {
+	private async _watchMicro (err : Error, val : number) {
 		const now : number = +new Date();
 		if (err) {
 			log.error('_watchMicro', err);
@@ -298,18 +320,17 @@ class Intval {
 		//log.info(`Microswitch val: ${val}`)
 		//determine when to stop
 		if (val === 0 && this._state.frame.active) {
-			if (!this._state.micro.primed) {
-				this._state.micro.primed = true;
-				this._state.micro.time = now;
+			if (!this._micro.primed) {
+				this._micro.primed = true;
+				this._micro.time = now;
 				log.info('Microswitch primed to stop motor');
 			}
 		} else if (val === 1 && this._state.frame.active) {
 			if (this._state.micro.primed && !this._state.micro.paused && (now - this._state.frame.start) > this._frame.open) {
 				this._state.micro.primed = false;
 				this._state.micro.time = 0;
-				setTimeout( () => {
-					this._stop();
-				}, this._microDelay);
+				await delay(this._micro.delay)
+				this._stop();
 			}
 		}
 	}
@@ -320,7 +341,7 @@ class Intval {
 	*
 	* 1) If closed, start timer.
 	* 2) If opened, check timer AND
-	* 3) If `press` (`now - this._state.release.time`) greater than minimum and less than `this._release.seq`, start frame
+	* 3) If `press` (`now - this._release.time`) greater than minimum and less than `this._release.seq`, start frame
 	* 4) If `press` greater than `this._release.seq`, start sequence
 	*
 	* Button + 10K ohm resistor 
@@ -342,22 +363,28 @@ class Intval {
 		if (val === 0) {
 			//closed
 			if (this._releaseClosedState(now)) {
-				this._state.release.time = now;
-				this._state.release.active = true; //maybe unncecessary 
+				this._release.time = now;
+				this._release.active = true; //maybe unncecessary 
 			}
 		} else if (val === 1) {
 			//opened
-			if (this._state.release.active) {
-				press = now - this._state.release.time;
+			if (this._release.active) {
+				press = now - this._release.time;
 				if (press > this._release.min && press < this._release.seq) {
 					this.frame();
 				} else if (press >= this._release.seq) {
-					this.sequence();
+					this._sequence();
 				}
 				//log.info(`Release closed for ${press}ms`)
-				this._state.release.time = 0;
-				this._state.release.active = false;
+				this._release.time = 0;
+				this._release.active = false;
 			}
+		}
+	}
+
+	private _sequence () {
+		if (this.sequence) {
+			this._state.sequence = this.sequence()
 		}
 	}
 
@@ -366,10 +393,10 @@ class Intval {
 	 */
 
 	private _releaseClosedState (now : number) {
-		if (!this._state.release.active && this._state.release.time === 0) {
+		if (!this._release.active && this._release.time === 0) {
 			return true;
 		}
-		if (this._state.release.active && (now - this._state.release.time) > (this._release.seq * 10)) {
+		if (this._release.active && (now - this._release.time) > (this._release.seq * 10)) {
 			return true;
 		}
 		return false;
@@ -445,7 +472,7 @@ class Intval {
 	*
 	*/
 
-	public frame (dir : boolean = null, exposure : number = null, cb : Function = () => {}) {
+	public async frame (dir : boolean = null, exposure : number = null) {
 		if (dir === true || (dir === null && this._state.frame.dir === true) ) {
 			dir =  true;
 		} else {
@@ -465,42 +492,46 @@ class Intval {
 		this._state.frame.active = true;
 		this._pin.micro.watch(this._watchMicro);
 
-		log.info('frame', {dir : dir ? 'forward' : 'backward', exposure : exposure});
+		log.info('frame', {dir : dir ? 'forward' : 'backward', exposure });
 
 		if (dir) {
 			this._startFwd();
 		} else {
 			this._startBwd();
 		}
+
 		if (exposure !== 0) {
 			this._state.frame.paused = true;
 			if (dir) {
-				setTimeout(this._pause, this._frame.open);
-				//log.info('frame', { pausing : time + this._frame.open })
-				setTimeout( () => {
-					this._state.frame.paused = false;
-					this._startFwd();
-				}, exposure + this._frame.closed);
+				await delay(this._frame.open)
+
+				this._pause()
+				
+				await delay(exposure + this._frame.closed)
+
+				this._state.frame.paused = false
+				this._startFwd()
 			} else {
-				setTimeout(this._pause, this._frame.openBwd);
-				setTimeout( () => {
-					//log.info('frame', 'restarting')
-					this._state.frame.paused = false;
-					this._startBwd();
-				}, exposure + this._frame.closed);
+
+				await delay(this._frame.openBwd)
+
+				this._pause()
+				
+				await delay(exposure + this._frame.closed)
+
+				this._state.frame.paused = false;
+				this._startBwd()
 			}
 		}
 		if (dir) {
 			this._state.frame.cb = (len : number) => {
 				this._state.counter++;
 				this._storeState();
-				cb(len);
 			}
 		} else {
 			this._state.frame.cb = (len : number) => {
 				this._state.counter--;
 				this._storeState();
-				cb(len);
 			}
 		}
 	}
@@ -514,6 +545,4 @@ class Intval {
 	}
 }
 
-module.exports = new Intval();
-
-export default Intval;
+module.exports = Intval
