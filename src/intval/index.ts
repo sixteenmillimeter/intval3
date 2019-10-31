@@ -41,13 +41,13 @@ interface State {
 }
 
 interface Entry {
-	start : number;
-	stop : number;
-	len : number;
-	dir : number;
-	exposure  : number;
-	counter  : number;
-	sequence : number;
+	start : number
+	stop : number
+	len : number
+	dir : number
+	exposure  : number
+	counter  : number
+	sequence : number
 }
 
 /** class representing the intval3 features */
@@ -81,7 +81,7 @@ export default class Intval {
 	public sequence : any;
 
 	constructor() {
-		this._init();
+		this._init()
 	}
 
 	/**
@@ -211,7 +211,7 @@ export default class Intval {
 			if (!pin.edge) this._pin[p] = new Gpio(pin.pin, pin.dir);
 			log.info('_declarePins', { pin : pin.pin, dir : pin.dir, edge : pin.edge });
 		}
-		this._pin.release.watch(this._watchRelease);
+		this._pin.release.watch(this._watchRelease.bind(this));
 	}
 
 	/** 
@@ -327,9 +327,9 @@ export default class Intval {
 				log.info('Microswitch primed to stop motor');
 			}
 		} else if (val === 1 && this._state.frame.active) {
-			if (this._state.micro.primed && !this._state.micro.paused && (now - this._state.frame.start) > this._frame.open) {
-				this._state.micro.primed = false;
-				this._state.micro.time = 0;
+			if (this._micro.primed && !this._micro.paused && (now - this._state.frame.start) > this._frame.open) {
+				this._micro.primed = false;
+				this._micro.time = 0;
 				await delay(this._micro.delay)
 				this._stop();
 			}
@@ -491,7 +491,7 @@ export default class Intval {
 
 		this._state.frame.start = +new Date();
 		this._state.frame.active = true;
-		this._pin.micro.watch(this._watchMicro);
+		this._pin.micro.watch(this._watchMicro.bind(this));
 
 		log.info('frame', {dir : dir ? 'forward' : 'backward', exposure });
 
