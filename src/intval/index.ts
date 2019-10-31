@@ -532,7 +532,7 @@ export default class Intval {
 					this._storeState()
 					return resolve()
 				}
-			})
+			}.bind(this))
 		} else {
 			return new Promise (function (resolve, reject) {
 				this._state.frame.cb = (len : number) => {
@@ -540,7 +540,7 @@ export default class Intval {
 					this._storeState()
 					return resolve()
 				}
-			})
+			}.bind(this))
 		}
 	}
 
