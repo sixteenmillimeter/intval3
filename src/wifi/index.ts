@@ -1,24 +1,29 @@
 'use strict'
 
-const networkPattern = /network[\s\S]*?=[\s\S]*?{([\s\S]*?)}/gi
-const quoteRe = new RegExp('"', 'g')
+const networkPattern : RegExp = /network[\s\S]*?=[\s\S]*?{([\s\S]*?)}/gi
+const quoteRe : RegExp = new RegExp('"', 'g')
 
-const filePath = '/etc/wpa_supplicant/wpa_supplicant.conf'
-const reconfigure = '/sbin/wpa_cli reconfigure'
-const refresh = 'ip link set wlan0 down && ip link set wlan0 up'
-const iwlist = '/sbin/iwlist wlan0 scanning | grep "ESSID:"'
-const iwgetid = '/sbin/iwgetid'
+const filePath : string = '/etc/wpa_supplicant/wpa_supplicant.conf'
+const reconfigure : string = '/sbin/wpa_cli reconfigure'
+const refresh : string = 'ip link set wlan0 down && ip link set wlan0 up'
+const iwlist : string = '/sbin/iwlist wlan0 scanning | grep "ESSID:"'
+const iwgetid : string = '/sbin/iwgetid'
 
-const log = require('../log')('wifi')
-const exec = require('child_process').exec
-const fs = require('fs')
+const log : any = require('../log')('wifi')
+import { exec } from 'child_process'
+import { readFile, writeFile } from 'fs'
 
-let _entry = null
-let _ssid = null
-let _cb = null
+let _entry : string = null
+let _ssid : string = null
+
+interface Network {
+	raw : string
+	ssid : string
+}
 
 /** Class representing the wifi features */
 class Wifi {
+	private _cb : Function = null
 	constructor () {
 
 	}
@@ -27,7 +32,7 @@ class Wifi {
 	*
 	* @param {function} 	callback 	Function which gets invoked after list is returned
 	*/
-	list (callback) {
+	list (callback : Function) {
 		exec(iwlist, (err, stdout, stderr) => {
 			if (err) {
 				console.error(err)
@@ -59,15 +64,15 @@ class Wifi {
 	* @param {object} 	err 		(optional) Error object only present if problem reading config file
 	* @param {string} 	data 		Contents of the config file
 	*/
-	_readConfigCb (err, data) {
-		let parsed
-		let current
+	_readConfigCb (err : Error, data : string) {
+		let parsed : Network[]
+		let current : Network
 		if (err) {
 			console.error(err)
-			return _cb(err)
+			return this._cb(err)
 		}
 		parsed = this._parseConfig(data)
-		current = parsed.find(network => {
+		current = parsed.find((network : Network) => {
 			return network.ssid === _ssid
 		})
 		if (typeof current !== 'undefined') {
@@ -76,7 +81,7 @@ class Wifi {
 			data += '\n\n' + _entry
 		}
 		_entry = null
-		fs.writeFile(filePath, data, 'utf8', this._writeConfigCb.bind(this))
+		writeFile(filePath, data, 'utf8', this._writeConfigCb.bind(this))
 	}
 	/**
 	* (internal function) Invoked after config file is written, 
@@ -84,10 +89,10 @@ class Wifi {
 	*
 	* @param {object} 	err 		(optional) Error object only present if problem writing config file
 	*/
-	_writeConfigCb (err) {
+	_writeConfigCb (err : Error) {
 		if (err) {
 			console.error(err)
-			return _cb(err)
+			return this._cb(err)
 		}
 		exec(reconfigure, this._reconfigureCb.bind(this))
 	}
@@ -98,12 +103,12 @@ class Wifi {
 	* @param {string} 	stdout 		Standard output from reconfiguration command
 	* @param {string} 	stderr 		Error output from command if fails
 	*/
-	_reconfigureCb (err, stdout, stderr) {
+	_reconfigureCb (err : Error, stdout : string, stderr : string) {
 		if (err) {
 			console.error(err)
-			return _cb(err)
+			return this._cb(err)
 		}
-		console.log('Wifi reconfigured')
+		log.info('Wifi reconfigured')
 		exec(refresh, this._refreshCb.bind(this))
 	}
 	/**
@@ -113,22 +118,22 @@ class Wifi {
 	* @param {string} 	stdout 		Standard output from refresh command
 	* @param {string} 	stderr 		Error output from command if fails
 	*/
-	_refreshCb (err, stdout, stderr) {
+	_refreshCb (err : Error, stdout : string, stderr : string) {
 		if (err) {
 			console.error(err)
-			return _cb(err)
+			return this._cb(err)
 		}
-		console.log('Wifi refreshed')
-		_cb(null, { ssid : _ssid })
-		_cb = () => {}
+		log.info('Wifi refreshed')
+		this._cb(null, { ssid : _ssid })
+		this._cb = () => {}
 	}
-	_parseConfig (str) {
-		const networks = []
+	_parseConfig (str : string) : Network[] {
+		const networks : Network[] = []
 		const lines = str.split('\n')
-		let network = {}
+		let network : Network = {} as Network
 		for (let line of lines) {
 			if (line.substring(0, 9) === 'network={') {
-				network = {}
+				network = {} as Network
 				network.raw = line
 			} else if (network.raw && line.indexOf('ssid=') !== -1) {
 				network.ssid = line.replace('ssid=', '').trim().replace(quoteRe, '')
@@ -138,7 +143,7 @@ class Wifi {
 			} else if (network.raw && line.substring(0, 1) === '}') {
 				network.raw += '\n' + line
 				networks.push(network)
-				network = {}
+				network = {} as Network
 			} else if (network.raw) {
 				network.raw += '\n' + line
 			}
@@ -159,11 +164,11 @@ class Wifi {
 	 * @param {string}  pwd 		Plaintext passphrase of wifi network
 	 * @param {function} callback 	Function called after psk hash is generated
 	 */
-	createPSK (ssid, pwd, callback) {
-		const cmd = `wpa_passphrase '${ssid.replace(/'/g, `'\\''`)}' '${pwd.replace(/'/g, `'\\''`)}' | grep "psk="`
-		let lines
-		let hash
-		let plaintext
+	createPSK (ssid : string, pwd : string, callback : Function) {
+		const cmd : string = `wpa_passphrase '${ssid.replace(/'/g, `'\\''`)}' '${pwd.replace(/'/g, `'\\''`)}' | grep "psk="`
+		let lines : string[]
+		let hash : string
+		let plaintext : string
 		exec(cmd, (err, stdout, stderr) => {
 			if (err) {
 				return callback(err)
@@ -182,19 +187,19 @@ class Wifi {
 	* @param {string} 	hash 		Password/SSID of access point, securely hashed
 	* @param {function} callback 	Function invoked after process is complete, or fails
 	*/
-	setNetwork (ssid, pwd, hash, callback) {
-		let masked = pwd.split('').map(char => { return char !== '"' ? '*' : '"' }).join('')
+	setNetwork (ssid : string, pwd : string, hash : string, callback : Function) {
+		let masked : string = pwd.split('').map(char => { return char !== '"' ? '*' : '"' }).join('')
 		_entry = `network={\n\tssid="${ssid}"\n\t#psk=${masked}\n\tpsk=${hash}\n}\n`
-		_cb = callback
+		this._cb = callback
 		_ssid = ssid
-		fs.readFile(filePath, 'utf8', this._readConfigCb.bind(this))
+		readFile(filePath, 'utf8', this._readConfigCb.bind(this))
 	}
 	/**
 	* Executes command which gets the currently connected network
 	*
 	* @param {function} 	callback 	Function which is invoked after command is completed
 	*/
-	getNetwork (callback) {
+	getNetwork (callback : Function) {
 		let output
 		exec(iwgetid, (err, stdout, stderr) => {
 			if (err) {
