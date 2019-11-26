@@ -6,7 +6,12 @@
   "scripts": {
     "test": "./node_modules/.bin/qunit",
     "docs": "sh docs.sh",
-    "compile": "./node_modules/.bin/tsc -p tsconfig.json"
+    "compile": "./node_modules/.bin/tsc -p tsconfig.json",
+    "pretest": "",
+    "version": "",
+    "postversion": "git push && git push --tags",
+    "u": "npm run git -- -m \"update\"",
+    "git": "npm version patch --force"
   },
   "repository": {
     "type": "git",
@@ -43,6 +48,7 @@
     "@types/node-persist": "0.0.33",
     "@types/uuid": "^3.4.5",
     "jsdoc-to-markdown": "^5.0.2",
+    "pkg": "^4.4.0",
     "qunit": "^2.9.3",
     "typescript": "^3.6.4"
   }
