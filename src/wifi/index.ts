@@ -12,9 +12,7 @@ const iwgetid : string = '/sbin/iwgetid'
 const log : any = require('../log')('wifi')
 import { exec } from 'child_process'
 import { readFile, writeFile } from 'fs'
-
-let _entry : string = null
-let _ssid : string = null
+import { reject } from 'q'
 
 interface Network {
 	raw : string
@@ -22,8 +20,10 @@ interface Network {
 }
 
 /** Class representing the wifi features */
-class Wifi {
-	private _cb : Function = null
+export class Wifi {
+	private _ssid : string = null
+	private _entry : string = null
+
 	constructor () {
 
 	}
@@ -32,102 +32,110 @@ class Wifi {
 	*
 	* @param {function} 	callback 	Function which gets invoked after list is returned
 	*/
-	list (callback : Function) {
-		exec(iwlist, (err, stdout, stderr) => {
-			if (err) {
-				console.error(err)
-				return callback(err)
-			}
-			const limit = 20;
-			const lines = stdout.split('\n')
-			let output = []
-			let line
-			let i = 0
-			for (let l of lines) {
-				line = l.replace('ESSID:',  '').trim()
-				if (line !== '""' && i < limit) {
-					line = line.replace(quoteRe, '')
-					output.push(line)
+	public async list () {
+		return new Promise ((resolve : Function, reject : Function) => {
+			return exec(iwlist, (err, stdout, stderr) => {
+				if (err) {
+					log.error('list', err)
+					return reject(err)
 				}
-				i++
-			}
-			output = output.filter(ap => {
-				if (ap !== '') return ap
+				const limit : number = 20;
+				const lines : string[] = stdout.split('\n')
+				let output : string[] = []
+				let line : string
+				let i = 0
+				for (let l of lines) {
+					line = l.replace('ESSID:',  '').trim()
+					if (line !== '""' && i < limit) {
+						line = line.replace(quoteRe, '')
+						output.push(line)
+					}
+					i++
+				}
+				output = output.filter(ap => {
+					if (ap !== '') return ap
+				})
+				return resolve(output)
 			})
-			return callback(null, output)
 		})
 	}
 	/**
 	* (internal function) Invoked after config file is read, 
 	* then invokes file write on the config file
 	*
-	* @param {object} 	err 		(optional) Error object only present if problem reading config file
-	* @param {string} 	data 		Contents of the config file
 	*/
-	_readConfigCb (err : Error, data : string) {
+	async _readConfig () {
+		let data : string
 		let parsed : Network[]
 		let current : Network
-		if (err) {
-			console.error(err)
-			return this._cb(err)
+
+		try {
+			data = await readFile(filePath, 'utf8')
+		} catch (err) {
+			log.error('_readConfig', err)
+			throw err
 		}
+
 		parsed = this._parseConfig(data)
 		current = parsed.find((network : Network) => {
-			return network.ssid === _ssid
+			return network.ssid === this._ssid
 		})
 		if (typeof current !== 'undefined') {
-			data = data.replace(current.raw, _entry)
+			data = data.replace(current.raw, this._entry)
 		} else {
-			data += '\n\n' + _entry
+			data += '\n\n' + this._entry
 		}
-		_entry = null
-		writeFile(filePath, data, 'utf8', this._writeConfigCb.bind(this))
+		this._entry = null
+
+		return data
+
 	}
 	/**
 	* (internal function) Invoked after config file is written, 
 	* then executes reconfiguration command
 	*
-	* @param {object} 	err 		(optional) Error object only present if problem writing config file
 	*/
-	_writeConfigCb (err : Error) {
-		if (err) {
-			console.error(err)
-			return this._cb(err)
+	private async _writeConfig (data : string) {
+		try {
+			await writeFile(filePath, data, { encoding : 'utf-8' })
+		} catch (err) {
+			log.error('_readConfigCb', err)
+			throw err
 		}
-		exec(reconfigure, this._reconfigureCb.bind(this))
+
 	}
 	/**
 	* (internal function) Invoked after reconfiguration command is complete
 	*
-	* @param {object} 	err 		(optional) Error object only present if configuration command fails
-	* @param {string} 	stdout 		Standard output from reconfiguration command
-	* @param {string} 	stderr 		Error output from command if fails
 	*/
-	_reconfigureCb (err : Error, stdout : string, stderr : string) {
-		if (err) {
-			console.error(err)
-			return this._cb(err)
-		}
-		log.info('Wifi reconfigured')
-		exec(refresh, this._refreshCb.bind(this))
+	private async _reconfigure () {
+		return new Promise((resolve : Function, reject : Function) => {
+			return exec(reconfigure, (err : Error, stdout : string, stderr : string) => {
+				if (err) {
+					return reject(err)
+				}
+				log.info('Wifi reconfigured')
+				return resolve(true)
+			})
+		})
 	}
 	/**
 	* (internal function) Invoked after wifi refresh command is complete
 	*
-	* @param {object} 	err 		(optional) Error object only present if refresh command fails
-	* @param {string} 	stdout 		Standard output from refresh command
-	* @param {string} 	stderr 		Error output from command if fails
 	*/
-	_refreshCb (err : Error, stdout : string, stderr : string) {
-		if (err) {
-			console.error(err)
-			return this._cb(err)
-		}
-		log.info('Wifi refreshed')
-		this._cb(null, { ssid : _ssid })
-		this._cb = () => {}
+	private async _refresh () {
+		return new Promise((resolve : Function, reject : Function) => {
+			return exec(refresh, (err : Error, stdout : string, stderr : string) => {
+				if (err) {
+					return reject(err)
+				}
+				log.info('Wifi refreshed')
+				return resolve({ ssid : this._ssid });
+			})
+		})
 	}
-	_parseConfig (str : string) : Network[] {
+
+	private _parseConfig (str : string) : Network[] {
 		const networks : Network[] = []
 		const lines = str.split('\n')
 		let network : Network = {} as Network
@@ -162,21 +170,22 @@ class Wifi {
 	 *
 	 * @param {string} 	ssid 		SSID of wifi network
 	 * @param {string}  pwd 		Plaintext passphrase of wifi network
-	 * @param {function} callback 	Function called after psk hash is generated
 	 */
-	createPSK (ssid : string, pwd : string, callback : Function) {
+	createPSK (ssid : string, pwd : string) {
 		const cmd : string = `wpa_passphrase '${ssid.replace(/'/g, `'\\''`)}' '${pwd.replace(/'/g, `'\\''`)}' | grep "psk="`
 		let lines : string[]
 		let hash : string
 		let plaintext : string
-		exec(cmd, (err, stdout, stderr) => {
-			if (err) {
-				return callback(err)
-			}
-			lines = stdout.replace('#psk=', '').split('psk=')
-			hash = lines[1]
-			plaintext = lines[0]
-			callback(null, hash.trim(), plaintext.trim())
+		return new Promise ((resolve : Function, reject : Function) => {
+			return exec(cmd, (err, stdout, stderr) => {
+				if (err) {
+					return reject(err)
+				}
+				lines = stdout.replace('#psk=', '').split('psk=')
+				hash = lines[1]
+				plaintext = lines[0]
+				return resolve({ hash : hash.trim(), plaintext : plaintext.trim()})
+			})
 		})
 	}
 	/**
@@ -185,30 +194,54 @@ class Wifi {
 	* @param {string} 	ssid 		SSID of network to configure
 	* @param {string} 	pwd 		Password of access point, plaintext to be masked
 	* @param {string} 	hash 		Password/SSID of access point, securely hashed
-	* @param {function} callback 	Function invoked after process is complete, or fails
 	*/
-	setNetwork (ssid : string, pwd : string, hash : string, callback : Function) {
+	async setNetwork (ssid : string, pwd : string, hash : string) {
 		let masked : string = pwd.split('').map(char => { return char !== '"' ? '*' : '"' }).join('')
-		_entry = `network={\n\tssid="${ssid}"\n\t#psk=${masked}\n\tpsk=${hash}\n}\n`
-		this._cb = callback
-		_ssid = ssid
-		readFile(filePath, 'utf8', this._readConfigCb.bind(this))
+		let data : string
+		this._entry = `network={\n\tssid="${ssid}"\n\t#psk=${masked}\n\tpsk=${hash}\n}\n`
+		this._ssid = ssid
+		
+		try {
+			data = await this._readConfig()
+		} catch (err) {
+			log.error(err)
+		}
+		try {
+			await this._writeConfig(data)
+		} catch (err) {
+			log.error(err)
+		}
+		try {
+			await this._reconfigure()
+		} catch (err) {
+			log.error(err)
+		}
+		try {
+			await this._refresh()
+		} catch (err) {
+			log.error(err)
+		}
+
+		return { ssid : this._ssid }
 	}
 	/**
 	* Executes command which gets the currently connected network
 	*
 	* @param {function} 	callback 	Function which is invoked after command is completed
 	*/
-	getNetwork (callback : Function) {
-		let output
-		exec(iwgetid, (err, stdout, stderr) => {
-			if (err) {
-				return callback(err)
-			}
-			output = stdout.split('ESSID:')[1].replace(quoteRe, '').trim()
-			callback(null, output)
-		})
+	public async getNetwork () {
+		let output : string
+		return new Promise((resolve : Function, reject : Function) => {
+			return exec(iwgetid, (err : Error, stdout : string, stderr : string) => {
+				if (err) {
+					return reject(err)
+				}
+				output = stdout.split('ESSID:')[1].replace(quoteRe, '').trim()
+				return resolve(output)
+			})
+		}) 
+
 	}
 }
 
-module.exports = new Wifi()
+module.exports.Wifi = Wifi

@@ -43,6 +43,7 @@
     "winston": "^3.2.1"
   },
   "devDependencies": {
+    "@types/bleno": "^0.4.1",
     "@types/fs-extra": "^8.0.0",
     "@types/node": "^12.7.12",
     "@types/node-persist": "0.0.33",
