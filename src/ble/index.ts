@@ -183,8 +183,11 @@ function capitalize (str : string) {
     return str[0].toUpperCase() + str.slice(1)
 }
 
+type functionKeys = "_onRead" | "_onWrite";
+
 /** Class representing the bluetooth interface */
 class BLE {
+	listeners : any = {}	
 	/**
 	* Establishes Bluetooth Low Energy services, accessible to process through this class
 	*
@@ -228,6 +231,7 @@ class BLE {
 
 		this._refreshWifi()
 	}
+	
 	private async _refreshWifi () {
 		let ssid : string
 
@@ -241,11 +245,11 @@ class BLE {
 		currentAddr = getIp()
 		log.info('wifi.getNetwork', {ssid : ssid, ip : currentAddr })
 	}
+
 	private _onWrite (data : any, offset : number, withoutResponse : Function, callback : Function) {
-		let result = {}
-		let utf8
-		let obj
-		let fn
+		let result : any = {}
+		let utf8 : string
+		let obj : any
 
 		if (offset) {
 			log.warn(`Offset scenario`)
@@ -256,17 +260,16 @@ class BLE {
 	 	utf8 = data.toString('utf8')
  		obj = JSON.parse(utf8)
 	 	result = bleno.Characteristic.RESULT_SUCCESS
-		fn = `_on${capitalize(obj.type)}`
 		 
-	 	if (obj.type && this[fn]) {
-	 		return this[fn](obj, () => {
+	 	if (obj.type && this.listeners[obj.type]) {
+	 		return this.listeners[obj.type](obj, () => {
 	 			callback(result)
 	 		})
 	 	} else {
 	 		return callback(result)
 	 	}
-	 	
 	}
+
 	private _onRead (offset : number, callback : Function) {
 		const result = bleno.Characteristic.RESULT_SUCCESS
 		const state = getState()
@@ -280,7 +283,7 @@ class BLE {
 	* @param {function} 	callback 	Invoked when the event is triggered
 	*/
 	on (eventName : string, callback : Function) {
-		this[`_on${capitalize(eventName)}`] = callback
+		this.listeners[eventName] = callback
 	}
 
 }

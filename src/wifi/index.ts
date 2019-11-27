@@ -11,7 +11,7 @@ const iwgetid : string = '/sbin/iwgetid'
 
 const log : any = require('../log')('wifi')
 import { exec } from 'child_process'
-import { readFile, writeFile } from 'fs'
+import { readFile, writeFile } from 'fs-extra'
 import { reject } from 'q'
 
 interface Network {
@@ -97,7 +97,7 @@ export class Wifi {
 	*/
 	private async _writeConfig (data : string) {
 		try {
-			await writeFile(filePath, data, { encoding : 'utf-8' })
+			await writeFile(filePath, data, 'utf8')
 		} catch (err) {
 			log.error('_readConfigCb', err)
 			throw err
