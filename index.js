@@ -656,7 +656,7 @@ async function index (req, res, next) {
 		return next(err)
 	}
 
-	res.send(data)
+	res.end(data)
 	return next()
 }
 
