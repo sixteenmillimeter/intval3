@@ -655,6 +655,9 @@ async function index (req, res, next) {
 	} catch (err) {
 		return next(err)
 	}
+
+	res.end(data)
+	return next()
 }
 
 function init () {

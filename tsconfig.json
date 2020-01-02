@@ -12,8 +12,11 @@
         "outDir": "./lib/",
         "rootDir" : "./src/",
         "paths" : {
-            "log" : ["./lib/log"],
-            "delay" : [ "./lib/delay"]
+            "log" : [ "./lib/log" ],
+            "delay" : [ "./lib/delay" ],
+            "intval" : [ "./lib/intval" ],
+            "ble" : [ "./lib/ble" ],
+            "wifi" : [ "./lib/wifi" ]
         }
     },
     "exclude" : [
