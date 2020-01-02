@@ -162,6 +162,7 @@ mobile.init = function () {
 mobile.getState = function () {
 	if (!mobile.ble.connected) {
 		//returning here will prevent error alert
+		return true
 	}
 	ble.read(mobile.ble.device.id,
 			mobile.ble.SERVICE_ID,
