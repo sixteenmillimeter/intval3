@@ -324,7 +324,7 @@ export default class Intval {
 			if (!this._micro.primed) {
 				this._micro.primed = true;
 				this._micro.time = now;
-				log.info('Microswitch primed to stop motor');
+				//log.info('Microswitch primed to stop motor');
 			}
 		} else if (val === 1 && this._state.frame.active) {
 			if (this._micro.primed && !this._micro.paused && (now - this._state.frame.start) > this._frame.open) {
