@@ -69,7 +69,7 @@ Prototype of the bare PCB of the "bonnet" for the Raspberry Pi Zero W are availa
 11. 1x 3.5mm Stereo Audio Cable - [[Amazon](https://amzn.to/3beNPrQ)]
 12. 1x Momentary Push Button 7mm Diameter - [[Amazon](https://amzn.to/2LavqBK)]
 13. 1x Micro Switch w/ Roller Lever 28mm x 30.2mm x 10.2mm - [[Adafruit](https://www.adafruit.com/products/819)] [[Amazon](https://amzn.to/2SMBFzX)]
-14. 1x Skateboard bearings 608-2RS - [[Amazon](https://amzn.to/3b7X2lC)]
+14. 1x Skateboard bearing 608-2RS - [[Amazon](https://amzn.to/3b7X2lC)]
 15. 4x M3.5 - 0.6 x 20mm Screws
 16. 3x M2 - 0.6 x 15mm Bolts
 17. 6x M5 - 0.8 x 25mm Bolts
