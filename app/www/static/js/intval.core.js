@@ -184,7 +184,6 @@ var setState = function (res) {
 	setDelayScale();
 
 	if (res.sequence == true) {
-		STATE.sequence = true;
 		if (mobile.ble) mobile.ble.active = true;
 		seqState(true);
 	} else {
@@ -197,13 +196,15 @@ var seqState = function (state) {
 	if (state) {
 		if (!elem.classList.contains('focus')) {
 			elem.classList.add('focus');
-			elem.innerHTML = 'STOP SEQUENCE';
 		}
+		elem.innerHTML = 'STOP SEQUENCE';
+		STATE.sequence = true;
 	} else {
 		if (elem.classList.contains('focus')) {
 			elem.classList.remove('focus');
-			elem.innerHTML = 'START SEQUENCE';
 		}
+		elem.innerHTML = 'START SEQUENCE';
+		STATE.sequence = false;
 	}
 };
 
