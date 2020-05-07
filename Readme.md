@@ -8,6 +8,10 @@ This is the third incarnation of the INTVAL project, this time utilizing the [Ra
 
 The [INTVAL2](https://github.com/sixteenmillimeter/intval2) project should be used if you prefer a simpler, physical interface approach.
 
+Does your browser support [Web Bluetooth](https://caniuse.com/#feat=web-bluetooth)? Control your INTVAL3 using this web app.
+
+### [intval.sixteenmillimeter.com](https://intval.sixteenmillimeter.com)
+
 ### Components
 
 * [Firmware](#firmware) for the Raspberry Pi Zero W running [Node.js](https://nodejs.org) on Raspian
@@ -50,17 +54,28 @@ Prototype of the bare PCB of the "bonnet" for the Raspberry Pi Zero W are availa
 <br />
 <a name="parts-list"></a>
 
-## PARTS
+## Parts
 
-1. Raspberry Pi Zero W - [[Adafruit](https://www.adafruit.com/product/3400)] [[Sparkfun](https://www.sparkfun.com/products/14277)]
-2. L298N Breakout Board - ?
-3. 120RPM 12VDC Motor - ?
-4. Microswitch w/ Roller - [[Adafruit](https://www.adafruit.com/product/819)]
-5. L7805 5V Regulator - [[Adafruit](https://www.adafruit.com/product/2164)] [Sparkfun](https://www.sparkfun.com/products/107)]
+1. Raspberry Pi Zero W - [[Adafruit](https://www.adafruit.com/product/3400)] [[Sparkfun](https://www.sparkfun.com/products/14277)] [[Amazon](https://amzn.to/2Wf46J8)]
+2. L298N Breakout Board - [[BC Robotics](https://www.bc-robotics.com/shop/l298n-motor-driver-board/)] [[Amazon](https://amzn.to/35CRFKa)]
+3. 120RPM 12VDC Motor - [[Amazon](https://amzn.to/2YDGFe2)]
+4. Microswitch w/ Roller - [[Adafruit](https://www.adafruit.com/product/819)] [[Amazon](https://amzn.to/2YDGFe2)]
+5. L7805 5V Regulator - [[Adafruit](https://www.adafruit.com/product/2164)] [Sparkfun](https://www.sparkfun.com/products/107)] [[Amazon](https://amzn.to/2WaF39O)]
 6. 2x Thru-hole Resistors - 330 Ohm
 7. 1x Thru-hole Capacitor - 10 uF
 8. 1x Thru-hole Capacitor - 100 uF
 9. 4x Terminal blocks
+10. 1x 3.5mm Socket Audio Connector - [[Amazon](https://amzn.to/2SGFVAY)]
+11. 1x 3.5mm Stereo Audio Cable - [[Amazon](https://amzn.to/3beNPrQ)]
+12. 1x Momentary Push Button 7mm Diameter - [[Amazon](https://amzn.to/2LavqBK)]
+13. 1x Micro Switch w/ Roller Lever 28mm x 30.2mm x 10.2mm - [[Adafruit](https://www.adafruit.com/products/819)] [[Amazon](https://amzn.to/2SMBFzX)]
+14. 1x Skateboard bearings 608-2RS - [[Amazon](https://amzn.to/3b7X2lC)]
+15. 4x M3.5 - 0.6 x 20mm Screws
+16. 3x M2 - 0.6 x 15mm Bolts
+17. 6x M5 - 0.8 x 25mm Bolts
+18. 4x M5 - 0.8 Nuts
 
 * (Optional) Proto Bonnet - [[Adafruit](https://www.adafruit.com/product/3203)]
 * (Optional) INTVAL3 Bonnet - [[OSH Park](https://oshpark.com/shared_projects/SkPyOK5S)]
+
+## License
