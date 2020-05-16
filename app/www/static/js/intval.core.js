@@ -185,11 +185,11 @@ var setState = function (res) {
 
 	if (res.sequence == true) {
 		if (mobile.ble) mobile.ble.active = true;
-		if (pwa.wble) pwa.ble.active = true;
+		if (pwa.wble) pwa.wble.active = true;
 		seqState(true);
 	} else {
 		if (mobile.ble) mobile.ble.active = false;
-		if (pwa.wble) pwa.ble.active = false;
+		if (pwa.wble) pwa.wble.active = false;
 		seqState(false);
 	}
 };

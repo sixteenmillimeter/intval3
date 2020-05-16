@@ -82,7 +82,7 @@ mobile.ble.onConnect = function (peripheral, device) {
 	scan.classList.remove('active');
 
 	getState();
-	mobile.getWifi();
+	getWifi();
 };
 
 mobile.ble.disconnect = function () {
@@ -148,6 +148,9 @@ mobile.init = function () {
 	window.reset = mobile.reset;
 	window.restart = mobile.restart;
 	window.update = mobile.update;
+	window.getWifi = mobile.getWifi;
+	window.setWifi = mobile.setWifi;
+	window.editWifi = mobile.editWifi;
 
 	//show ble-specific fields in settings
 	for (let i of bleInputs) {

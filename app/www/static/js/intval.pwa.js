@@ -129,7 +129,7 @@ pwa.wble.onConnect = function (peripheral, device, service) {
 	scan.classList.remove('active');
 
 	getState();
-	pwa.getWifi();
+	getWifi();
 };
 
 pwa.wble.disconnect = function () {
@@ -252,6 +252,9 @@ pwa.init = function () {
 	window.reset = pwa.reset;
 	window.restart = pwa.restart;
 	window.update = pwa.update;
+	window.getWifi = pwa.getWifi;
+	window.setWifi = pwa.setWifi;
+	window.editWifi = pwa.editWifi;
 
 	//show ble-specific fields in settings
 	for (let i of bleInputs) {
@@ -497,7 +500,8 @@ pwa.getWifiSuccess = function (res) {
 
 	UI.spinner.hide();
 	UI.overlay.hide();
-	elem.innerHTML = ''
+	elem.innerHTML = '';
+	console.dir(res);
 	if (!res.available || res.available.length === 0) {
 		if (elem.classList.contains('active')) {
 			elem.classList.remove('active');
