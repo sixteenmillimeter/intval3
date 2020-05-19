@@ -13,7 +13,8 @@ const STATE = {
 	scale : 'ms',
 	delayScale : 'ms',
 	counter : 0,
-	sequence : false
+	sequence : false,
+	advanced : 0
 };
 
 //functions
@@ -27,6 +28,7 @@ window.sequence = null;
 window.reset = null;
 window.restart = null;
 window.update = null;
+window.advanced = null;
 
 //ms
 var shutter = function (exposure) {
@@ -183,6 +185,8 @@ var setState = function (res) {
 	document.getElementById('delayScale').value = delayScale;
 	setDelayScale();
 
+	calcStats();
+
 	if (res.sequence == true) {
 		if (mobile.ble) mobile.ble.active = true;
 		if (pwa.wble) pwa.wble.active = true;
@@ -195,18 +199,28 @@ var setState = function (res) {
 };
 
 var seqState = function (state) {
-	const elem = document.getElementById('seq')
+	const elem = document.getElementById('seq');
+	const advancedElem = document.getElementById('run');
+
 	if (state) {
 		if (!elem.classList.contains('focus')) {
 			elem.classList.add('focus');
 		}
+		if (!advancedElem.classList.contains('focus')) {
+			advancedElem.classList.add('focus');
+		}
 		elem.innerHTML = 'STOP SEQUENCE';
+		advancedElem.innerHTML = 'STOP';
 		STATE.sequence = true;
 	} else {
 		if (elem.classList.contains('focus')) {
 			elem.classList.remove('focus');
 		}
+		if (advancedElem.classList.contains('focus')) {
+			advancedElem.classList.remove('focus');
+		}
 		elem.innerHTML = 'START SEQUENCE';
+		advancedElem.innerHTML = 'RUN';
 		STATE.sequence = false;
 	}
 };
@@ -232,9 +246,85 @@ var cameraPage = function () {
 	document.getElementById('camera').classList.add('selected');
 	document.getElementById('cameraIcon').classList.add('selected');
 };
+var advancedPage = function () {
+	unsetPages();
+	document.getElementById('advanced').classList.add('selected');
+	document.getElementById('advancedIcon').classList.add('selected');
+};
 
 var isNumeric = function (n) {
 		return !isNaN(parseFloat(n)) && isFinite(n);
+};
+
+var calcStats = function () {
+	const extraFwd = BOLEX.expected;
+	const extraBwd = BOLEX.expected + 150;
+	const total = parseInt(document.getElementById('len').value);
+	const multiple = parseInt(document.getElementById('multiple').value);
+	const filmTime = (total * multiple) / 24;
+	const delays = total - 1;
+	const frameEnd = STATE.counter + (STATE.dir ? total * multiple : -total * multiple);
+
+	let exp;
+	let realTime;
+	let realTimePartial;
+	let realTimeDisplay;
+	let filmTimeDisplay;
+
+	if (STATE.exposure > BOLEX.expected) {
+		exp = STATE.exposure + (STATE.dir ? extraFwd : extraBwd);
+	} else {
+		exp = BOLEX.expected;
+	}
+	realTime = (exp * total * multiple) + (delays * STATE.delay);
+
+	STATE.advanced = realTime;
+
+	if (realTime < 60 * 1000) { //1min
+		realTimeDisplay = Math.floor(realTime * 100) / 100000;
+		realTimeDisplay += ' sec';
+	} else if (realTime >= 60 * 1000 && realTime < 60 * 60 * 1000) {   //1hr
+		realTimePartial = Math.floor(realTime * 100) / (60 * 100000);
+		realTimeDisplay = Math.floor(realTimePartial);
+		realTimeDisplay += ' min';
+		if (realTimePartial > Math.floor(realTimePartial)) {
+			realTimeDisplay += ' ' + Math.round((realTimePartial - Math.floor(realTimePartial) ) * 60);
+			realTimeDisplay += ' sec'
+		}
+	} else if (realTime >= 60 * 60 * 1000 && realTime < 24 * 60 * 60 * 1000) { //1day
+		realTimePartial = Math.floor(realTime * 100) / (60 * 60 * 100000);
+		realTimeDisplay = Math.floor(realTimePartial);
+		realTimeDisplay += ' hr';
+		if (realTimePartial > Math.floor(realTimePartial)) {
+			realTimeDisplay += ' ' + Math.round((realTimePartial - Math.floor(realTimePartial) ) * 60);
+			realTimeDisplay += ' min'
+		}
+	} else if (realTime >= 24 * 60 * 60 * 1000 && realTime < 24 * 60 * 60 * 1000) { //1day
+		realTimePartial = Math.floor(realTime * 100) / (60 * 60 * 100000);
+		realTimeDisplay = Math.floor(realTimePartial);
+		realTimeDisplay += ' day';
+		if (realTimePartial > Math.floor(realTimePartial)) {
+			realTimeDisplay += ' ' + Math.round((realTimePartial - Math.floor(realTimePartial) ) * 24);
+			realTimeDisplay += ' hr'
+		}
+	}
+
+	if (filmTime < 60 * 1000) { //1min
+		filmTimeDisplay = Math.floor(filmTime * 100) / 100;
+		filmTimeDisplay += ' sec';
+	} else if (filmTime >= 60 * 1000) {  
+		filmTimePartial = Math.floor(filmTime * 100) / (60 * 100000);
+		filmTimeDisplay = Math.floor(filmTimePartial);
+		filmTimeDisplay += ' min';
+		if (filmTimePartial > Math.floor(filmTimePartial)) {
+			filmTimeDisplay += ' ' + Math.round((filmTimePartial - Math.floor(filmTimePartial) ) * 60);
+			filmTimeDisplay += ' sec'
+		}
+	}
+
+	document.getElementById('realTime').innerHTML = realTimeDisplay;
+	document.getElementById('filmTime').innerHTML = filmTimeDisplay;
+	document.getElementById('frameEnd').innerHTML = frameEnd;
 };
 
 var UI = {};
@@ -319,4 +409,6 @@ var init = function () {
 	document.querySelector('.fstop').oninput = function () {
 		BOLEX.fstop = parseFloat(this.value);
 	};
+	document.getElementById('len').oninput = calcStats;
+	document.getElementById('multiple').oninput = calcStats;
 };

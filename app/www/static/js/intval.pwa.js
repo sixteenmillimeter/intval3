@@ -263,6 +263,7 @@ pwa.init = function () {
 	window.getWifi = pwa.getWifi;
 	window.setWifi = pwa.setWifi;
 	window.editWifi = pwa.editWifi;
+	window.advanced = pwa.advanced;
 
 	//show ble-specific fields in settings
 	for (let i of bleInputs) {
@@ -480,6 +481,67 @@ pwa.sequenceSuccess = function () {
 	}, 20);
 };
 
+
+pwa.advanced = async function () {
+	const len = parseInt(document.getElementById('len').value);
+	const multiple = parseInt(document.getElementById('multiple').value);
+	const opts = {
+		type : 'sequence',
+		len,
+		multiple
+	};
+	
+	if (!opts.len) {
+		return pwa.alert('You must set a total frame count.');
+	}
+
+	if (!opts.multiple) {
+		return pwa.alert('You must set a frame multiple value.');
+	}
+	const elem = document.getElementById('run');
+	if (!pwa.wble.connected) {
+		return pwa.alert('Not connected to an INTVAL3 device.');
+	}
+	try {
+		await pwa.wble.write(pwa.wble.CHAR_ID, opts);
+	} catch (err) {
+		console.error(err);
+		pwa.wble.onError(err.message);
+		return false;
+	}
+
+	pwa.advancedSuccess();
+
+	if (!elem.classList.contains('focus')) {
+		elem.classList.add('focus');
+	}
+
+	pwa.wble.active = true;
+};
+
+pwa.advancedSuccess = function () {
+	console.log('Sequence state changed');
+	pwa.getState();
+	setTimeout(() => {
+		if (STATE.sequence) {
+			seqState(true);
+		} else {
+			seqState(false);
+		}
+		document.getElementById('seq').blur();
+	}, 42);
+	setTimeout(() => {
+		console.log('Sequence complete');
+		getState();
+		setTimeout(() => {
+			if (STATE.sequence) {
+				seqState(true);
+			} else {
+				seqState(false);
+			}
+		}, 42);
+	}, STATE.advanced + 1000);
+};
 
 //retreive object with list of available Wifi APs,
 //and state of current connection, if available 

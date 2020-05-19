@@ -160,6 +160,56 @@ web.sequenceSuccess = function (res) {
 		mobile.getState();
 	}
 };
+web.advanced = function () {
+	const len = parseInt(document.getElementById('len').value);
+	const multiple = parseInt(document.getElementById('multiple').value);
+	const params = {
+		len,
+		multiple
+	}
+	const opts = {
+		method : 'POST',
+		headers : web._header,
+		body : JSON.stringify(params)
+	}
+	if (!params.len) {
+		return alert('You must set a total frame count.');
+	}
+
+	if (!params.multiple) {
+		return alert('You must set a frame multiple value.');
+	}
+	fetch('/sequence', opts)
+		.then(web.useJson)
+		.then(web.advancedSuccess)
+		.catch(err => {
+			console.error('Error getting /sequence');
+			console.error(err);
+		})
+};
+web.advancedSuccess = function (res) {
+	if (res.started && res.started != false) {
+		STATE.sequence = true;
+		document.getElementById('seq').focus();
+		seqState(true);
+	} else if (res.stopped) {
+		STATE.sequence = false;
+		document.getElementById('seq').blur();
+		seqState(false);
+		getState();
+	}
+	setTimeout(() => {
+		console.log('Sequence complete');
+		getState();
+		setTimeout(() => {
+			if (STATE.sequence) {
+				seqState(true);
+			} else {
+				seqState(false);
+			}
+		}, 42);
+	}, STATE.advanced + 1000);
+};
 web.reset = function () {
 	const opts = {
 		method : 'POST',
@@ -228,5 +278,6 @@ web.init = function () {
 	window.reset = web.reset;
 	window.restart = web.restart;
 	window.update = web.update;
+	window.advanced = web.advanced;
 	console.log('started web')
 };

@@ -151,6 +151,7 @@ mobile.init = function () {
 	window.getWifi = mobile.getWifi;
 	window.setWifi = mobile.setWifi;
 	window.editWifi = mobile.editWifi;
+	window.advanced = mobile.advanced;
 
 	//show ble-specific fields in settings
 	for (let i of bleInputs) {
@@ -173,6 +174,7 @@ mobile.getState = function () {
 			mobile.stateSuccess,
 			mobile.ble.onError);
 };
+
 mobile.stateSuccess = function (data) {
 	let str = bytesToString(data);
 	let res = JSON.parse(str);
@@ -205,13 +207,13 @@ mobile.frameSuccess = function () {
 		console.log('Frame finished, getting state.');
 		mobile.ble.active = false;
 		document.getElementById('frame').classList.remove('focus');
-		mobile.getState();
+		getState();
 	} else {
 		setTimeout(() => {
 			console.log('Frame finished, getting state.');
 			mobile.ble.active = false;
 			document.getElementById('frame').classList.remove('focus');
-			mobile.getState();
+			getState();
 		}, STATE.exposure + 500)
 	}
 }
@@ -230,7 +232,7 @@ mobile.setDir = function () {
 };
 mobile.dirSuccess = function () {
 	console.log('Set direction');
-	mobile.getState();
+	getState();
 	setTimeout(() => {
 		setDirLabel(STATE.dir);
 	}, 50);
@@ -255,7 +257,7 @@ mobile.setExposure = function () {
 };
 mobile.exposureSuccess = function () {
 	console.log('Set exposure');
-	mobile.getState();
+	getState();
 };
 
 mobile.setDelay = function () {
@@ -275,7 +277,7 @@ mobile.setDelay = function () {
 
 mobile.delaySuccess = function () {
 	console.log('Set delay');
-	mobile.getState();
+	getState();
 };
 
 mobile.setCounter = function () {
@@ -307,7 +309,7 @@ mobile.setCounter = function () {
 
 mobile.counterSuccess = function () {
 	console.log('Set counter');
-	mobile.getState();
+	getState();
 };
 
 mobile.sequence = function () {
@@ -334,18 +336,75 @@ mobile.sequence = function () {
 
 mobile.sequenceSuccess = function () {
 	console.log('Sequence state changed');
-	mobile.getState();
+	getState();
 	setTimeout(() => {
 		if (STATE.sequence) {
-			mobile.ble.active = true;
 			seqState(true);
 		} else {
-			mobile.ble.active = false;
 			seqState(false);
 		}
-	}, 20);
+	}, 42);
 };
 
+mobile.advanced = function () {
+	const len = parseInt(document.getElementById('len').value);
+	const multiple = parseInt(document.getElementById('multiple').value);
+	const opts = {
+		type : 'sequence',
+		len,
+		multiple
+	};
+	
+	if (!opts.len) {
+		return mobile.alert('You must set a total frame count.');
+	}
+
+	if (!opts.multiple) {
+		return mobile.alert('You must set a frame multiple value.');
+	}
+	const elem = document.getElementById('run');
+
+	if (!mobile.ble.connected) {
+		return mobile.alert('Not connected to an INTVAL3 device.');
+	}
+	ble.write(mobile.ble.device.id,
+			mobile.ble.SERVICE_ID,
+			mobile.ble.CHAR_ID,
+			stringToBytes(JSON.stringify(opts)), //check length?
+			mobile.advanceSuccess,
+			mobile.ble.onError);
+
+	if (!elem.classList.contains('focus')) {
+		elem.classList.add('focus');
+	}
+
+	mobile.ble.active = true;
+};
+
+mobile.advancedSuccess = function () {
+	console.log('Sequence state changed');
+	getState();
+	setTimeout(() => {
+		if (STATE.sequence) {
+			seqState(true);
+		} else {
+			seqState(false);
+		}
+		document.getElementById('seq').blur();
+		document.getElementById('run').blur();
+	}, 42);
+	setTimeout(() => {
+		console.log('Sequence complete');
+		getState();
+		setTimeout(() => {
+			if (STATE.sequence) {
+				seqState(true);
+			} else {
+				seqState(false);
+			}
+		}, 42);
+	}, STATE.advanced + 1000);
+};
 
 //retreive object with list of available Wifi APs,
 //and state of current connection, if available 
@@ -471,6 +530,23 @@ mobile.setWifiSuccess = function () {
 	console.log('Set new wifi credentials');
 	setTimeout(mobile.getWifi, 100);
 };
+
+mobile.getInfo = function () {
+	const opts = {
+		type : 'info'
+	};
+
+	ble.write(mobile.ble.device.id,
+			mobile.ble.SERVICE_ID,
+			mobile.ble.CHAR_ID,
+			stringToBytes(JSON.stringify(opts)), //check length?
+			mobile.dirSuccess,
+			mobile.ble.onError);
+};
+mobile.infoSuccess = function () {
+	console.dir()
+};
+
 mobile.exif = {}
 
 mobile.getCamera = function () {
@@ -671,7 +747,7 @@ mobile.reset = function () {
 mobile.resetSuccess = function () {
 	console.log('Reset to default settings');
 	setTimeout(() => {
-		mobile.getState();
+		getState();
 	}, 100)
 };
 

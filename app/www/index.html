@@ -88,6 +88,7 @@
 		<button id="restart" onclick="restart();">RESTART</button>
 		<button id="update" onclick="update();">UPDATE</button>
 	</div>
+	<div id="version">v1.0.7 build cfb0a7be</div>
 </div>
 <!--<div id="mscript" class="page">
 	<h2>MSCRIPT</h2>
@@ -107,7 +108,7 @@
 			<input type="number" class="fstop" placeholder="5.6" value="5.6" onchange="mobile.refreshExposure();" />
 		</div>
 		<div class="setting">
-			<div class="label">Rex-o-fader</div>
+			<div class="label">Variable Shutter</div>
 			<select class="angle">
 				<option value="133" selected>0 (Normal)</option>
 				<option value="66">1 Stop</option>
@@ -157,6 +158,28 @@
 		</div>
 	</div>
 </div>
+<div id="advanced" class="page">
+	<h2>ADVANCED</h2>
+	<div>
+		<div class="label">Loops</div>
+		<input type="number" id="len" value="1" step="1" min="1" />
+	</div>
+	<div>
+		<div class="label">Frame Multiplier</div>
+		<input type="number" id="multiple" value="1" step="1" min="1" />
+	</div>
+	<div>
+		<div id="stats">
+			<div><label>Real time</label> <span id="realTime">0 s</span></div>
+			<div><label>Film time</label> <span id="filmTime">0 s</span></div>
+			<div><label>Frame end</label> <span id="frameEnd">0</span></div>
+		</div>
+	</div>
+	<div>
+		<button id="run" onclick="advanced();">RUN</button>
+	</div>
+	<div id="progress"></div>
+</div>
 <footer>
 	<div id="settingsIcon" onclick="settingsPage();" class="icon">
 		<div> </div>
@@ -164,9 +187,9 @@
 	<div id="appIcon" onclick="appPage();" class="icon selected">
 		<div></div>
 	</div>
-	<!--<div id="mscriptIcon" onclick="mscriptPage();" class="icon">
+	<div id="advancedIcon" onclick="advancedPage();" class="icon">
 		<div></div>
-	</div>-->
+	</div>
 	<div id="cameraIcon" onclick="cameraPage();" class="icon">
 		<div class="cameraIcon"></div>
 	</div>
