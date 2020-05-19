@@ -198,8 +198,8 @@ class BLE {
 
 		getState = bleGetState
 
-		bleno.on('stateChange', state  => {
-			log.info('stateChange', { state : state })
+		bleno.on('stateChange', (state : any ) => {
+			log.info('stateChange', { state })
 			if (state === 'poweredOn') {
 				log.info('Starting advertising', { DEVICE_NAME, DEVICE_ID : process.env.BLENO_DEVICE_NAME })
 				bleno.startAdvertising(DEVICE_NAME, [CHAR_ID])
@@ -208,7 +208,7 @@ class BLE {
 			}
 		})
 
-		bleno.on('advertisingStart', err => {
+		bleno.on('advertisingStart', (err : Error) => {
 			log.info('advertisingStart', { res : (err ? 'error ' + err : 'success') })
 			createChars(this._onWrite.bind(this), this._onRead.bind(this))
 			if (!err) {
@@ -221,12 +221,12 @@ class BLE {
 			}
 		})
 
-		bleno.on('accept', clientAddress => {
-			log.info('accept', { clientAddress : clientAddress })
+		bleno.on('accept', (clientAddress : any) => {
+			log.info('accept', { clientAddress })
 		})
 
-		bleno.on('disconnect', clientAddress => {
-			log.info('disconnect', { clientAddress : clientAddress })
+		bleno.on('disconnect', (clientAddress : any) => {
+			log.info('disconnect', { clientAddress })
 		})
 
 		this._refreshWifi()
