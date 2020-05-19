@@ -105,6 +105,8 @@ export class Sequence {
 		this.count = 0
 		this.delay = 0
 
+		this.intval._state.sequence = false;
+
 		log.info('_stop', { id : this.id, stopped : true })
 	}
 }
