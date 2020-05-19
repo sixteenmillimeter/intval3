@@ -176,6 +176,7 @@ pwa.wble.read = async function (characteristicId) {
 	let characteristic;
 	let value;
 	let json;
+	let obj;
 
 	if (typeof pwa.wble.characteristics[characteristicId] === 'undefined') {
 		try {
@@ -199,7 +200,14 @@ pwa.wble.read = async function (characteristicId) {
 
 	json = decoder.decode(value);
 
-	return JSON.parse(json);
+	try {
+		obj = JSON.parse(json);
+	} catch (err) {
+		console.warn(json);
+		throw err;
+	}
+
+	return obj;
 }
 
 pwa.wble.write = async function ( characteristicId, json) {
