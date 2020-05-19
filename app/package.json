@@ -1,12 +1,13 @@
 {
   "name": "com.sixteenmillimeter.intval3",
   "displayName": "INTVAL3",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Mobile control app for the INTVAL intervalometer for Bolex 16mm cameras",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "ios": "cordova build ios --buildFlag='-UseModernBuildSystem=0'"
+    "ios": "npm run build && cordova build ios --buildFlag='-UseModernBuildSystem=0'",
+    "build": "node ./scripts/build.js"
   },
   "author": "M McWilliams",
   "license": "MIT",
@@ -26,7 +27,8 @@
     "cordova-plugin-dialogs": "^2.0.2",
     "cordova-plugin-splashscreen": "^5.0.3",
     "cordova-plugin-statusbar": "^2.4.3",
-    "cordova-plugin-whitelist": "^1.3.4"
+    "cordova-plugin-whitelist": "^1.3.4",
+    "uuid": "^8.0.0"
   },
   "cordova": {
     "plugins": {
