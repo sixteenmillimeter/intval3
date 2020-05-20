@@ -327,6 +327,48 @@ var calcStats = function () {
 	document.getElementById('frameEnd').innerHTML = frameEnd;
 };
 
+var seqProgress = function () {
+	console.log('sequence progress')
+	const extraFwd = BOLEX.expected;
+	const extraBwd = BOLEX.expected + 150;
+	const loops = parseInt(document.getElementById('len').value);
+	const multiple = parseInt(document.getElementById('multiple').value);
+	const progressElem = document.getElementById('progress');
+	const total = loops * multiple;
+	let delay = 0;
+
+	let exp;
+
+	if (STATE.exposure > BOLEX.expected) {
+		exp = STATE.exposure + (STATE.dir ? extraFwd : extraBwd);
+	} else {
+		exp = BOLEX.expected;
+	}
+
+	if (!progressElem.classList.contains('active')) {
+		progressElem.classList.add('active');
+	}
+	
+	for (let x = 0; x < loops; x++) {
+		for (let y = 0; y < multiple; y++) {
+			let progress = ((x * multiple) + y + 1) / total;
+			let time = (((x * multiple) + y) * exp) + delay;
+			setTimeout(() => {
+				//console.log(progress);
+				document.getElementById('progressVal').style = `width: ${progress * 100}%;`;
+				document.getElementById('progressText').innerHTML = `${Math.round(progress * 100)}%`;
+			}, time);
+		}
+		delay += STATE.delay;
+	}
+	setTimeout(() => {
+		//console.log(progress);
+		document.getElementById('progressVal').style = `width: 100%;`;
+		document.getElementById('progressText').innerHTML = `100%`;
+
+	}, (exp * total) + ((loops - 1) * STATE.delay));
+}
+
 var UI = {};
 
 UI.overlay = {

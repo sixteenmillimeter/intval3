@@ -328,13 +328,13 @@ pwa.frameSuccess = function () {
 		console.log('Frame finished, getting state.');
 		pwa.wble.active = false;
 		document.getElementById('frame').classList.remove('focus');
-		pwa.getState();
+		getState();
 	} else {
 		setTimeout(() => {
 			console.log('Frame finished, getting state.');
 			pwa.wble.active = false;
 			document.getElementById('frame').classList.remove('focus');
-			pwa.getState();
+			getState();
 		}, STATE.exposure + 500)
 	}
 }
@@ -356,7 +356,7 @@ pwa.setDir = async function () {
 };
 pwa.dirSuccess = function () {
 	console.log('Set direction');
-	pwa.getState();
+	getState();
 	setTimeout(() => {
 		setDirLabel(STATE.dir);
 	}, 50);
@@ -386,7 +386,7 @@ pwa.setExposure = async function () {
 
 pwa.exposureSuccess = function () {
 	console.log('Set exposure');
-	pwa.getState();
+	getState();
 };
 
 pwa.setDelay = async function () {
@@ -410,7 +410,7 @@ pwa.setDelay = async function () {
 
 pwa.delaySuccess = function () {
 	console.log('Set delay');
-	pwa.getState();
+	getState();
 };
 
 pwa.setCounter = async function () {
@@ -439,7 +439,7 @@ pwa.setCounter = async function () {
 
 pwa.counterSuccess = function () {
 	console.log('Set counter');
-	pwa.getState();
+	getState();
 };
 
 pwa.sequence = async function () {
@@ -469,7 +469,7 @@ pwa.sequence = async function () {
 
 pwa.sequenceSuccess = function () {
 	console.log('Sequence state changed');
-	pwa.getState();
+	getState();
 	setTimeout(() => {
 		if (STATE.sequence) {
 			pwa.wble.active = true;
@@ -521,25 +521,13 @@ pwa.advanced = async function () {
 
 pwa.advancedSuccess = function () {
 	console.log('Sequence state changed');
-	pwa.getState();
-	setTimeout(() => {
-		if (STATE.sequence) {
-			seqState(true);
-		} else {
-			seqState(false);
-		}
-		document.getElementById('seq').blur();
-	}, 42);
+	if (STATE.sequence === false) {
+		seqProgress();
+	}
+	getState();
 	setTimeout(() => {
 		console.log('Sequence complete');
 		getState();
-		setTimeout(() => {
-			if (STATE.sequence) {
-				seqState(true);
-			} else {
-				seqState(false);
-			}
-		}, 42);
 	}, STATE.advanced + 1000);
 };
 

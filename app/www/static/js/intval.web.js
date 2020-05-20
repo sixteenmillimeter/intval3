@@ -192,6 +192,7 @@ web.advancedSuccess = function (res) {
 		STATE.sequence = true;
 		document.getElementById('seq').focus();
 		seqState(true);
+		seqProgress();
 	} else if (res.stopped) {
 		STATE.sequence = false;
 		document.getElementById('seq').blur();
@@ -201,13 +202,6 @@ web.advancedSuccess = function (res) {
 	setTimeout(() => {
 		console.log('Sequence complete');
 		getState();
-		setTimeout(() => {
-			if (STATE.sequence) {
-				seqState(true);
-			} else {
-				seqState(false);
-			}
-		}, 42);
 	}, STATE.advanced + 1000);
 };
 web.reset = function () {

@@ -371,7 +371,7 @@ mobile.advanced = function () {
 			mobile.ble.SERVICE_ID,
 			mobile.ble.CHAR_ID,
 			stringToBytes(JSON.stringify(opts)), //check length?
-			mobile.advanceSuccess,
+			mobile.advancedSuccess,
 			mobile.ble.onError);
 
 	if (!elem.classList.contains('focus')) {
@@ -383,26 +383,16 @@ mobile.advanced = function () {
 
 mobile.advancedSuccess = function () {
 	console.log('Sequence state changed');
+	if (STATE.sequence === false) {
+		seqProgress();
+	}
 	getState();
-	setTimeout(() => {
-		if (STATE.sequence) {
-			seqState(true);
-		} else {
-			seqState(false);
-		}
-		document.getElementById('seq').blur();
-		document.getElementById('run').blur();
-	}, 42);
+	document.getElementById('seq').blur();
+	document.getElementById('run').blur();
+
 	setTimeout(() => {
 		console.log('Sequence complete');
 		getState();
-		setTimeout(() => {
-			if (STATE.sequence) {
-				seqState(true);
-			} else {
-				seqState(false);
-			}
-		}, 42);
 	}, STATE.advanced + 1000);
 };
 

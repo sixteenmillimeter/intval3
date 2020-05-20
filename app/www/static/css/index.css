@@ -467,3 +467,31 @@ body.mobile footer{
 #stats span{
     color: #fff;
 }
+
+#progress{
+    display: none;
+    position: absolute;
+    height: 18px;
+    margin: 0 2%;
+    width: 96%;
+    bottom: 58px;
+    left: 0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+#progress.active{
+    display: block;
+}
+#progressVal{
+    height: 18px;
+    background: #999;
+}
+#progressText{
+    position: absolute;
+    top: 0;
+    margin: 0 auto;
+    width: 100%;
+    text-align: center;
+    color: #999;
+    mix-blend-mode: difference;
+}
