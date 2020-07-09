@@ -44,7 +44,7 @@ module exploded_view () {
 //intval_laser_panel_cover(true, ALL_RED=true);
 //rotate([0, 0, 13]) intval_panel_laser();
 //rotate([0, 0, 13]) intval_laser_panel_cover();
-rotate([0, 180, 0]) key_cap();
+//rotate([0, 180, 0]) key_cap();
 //geared_motor_mount_120();
 //motor_key();
 //motor_key_120();
@@ -54,6 +54,8 @@ rotate([0, 180, 0]) key_cap();
 //motor_cap(false);
 //rotate([0, 180, 0]) motor_cap_120(false);
 //translate([0, 0, 39 / 2 + 5.75]) bolt_guide();
+//motor_key_120_reinforced();
+//motor_key_120_reinforced_roller();
 
 //exploded_view();
 //stl_plate();

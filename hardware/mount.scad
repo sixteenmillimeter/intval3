@@ -58,15 +58,35 @@ module motor_key_120 (half = false, DECOYS = false, sides = 1, ALT = false) {
 		}
 	}
   // translate([one_to_one_x, one_to_one_y, 17]) translate([6.42 - .2, 0, 6 - 1.7]) rotate([0, 90, 0]) motor_set_screw_120_alt();
-    if (DECOYS) {
-        translate([one_to_one_x, one_to_one_y, 20.5]) decoys(24);
-    }
 }
 
 
 module motor_key_120_reinforced () {
-    motor_key_120();
+    intersection () {
+        motor_key_120();
+        translate([one_to_one_x, one_to_one_y, 4]) union () {
+            cylinder(r = 16 / 2, h = 25, center = true);
+            translate([0, 0, 10]) cube([20, 12, 5], center = true);
+            translate([0, 0, 10]) cube([12, 20, 5], center = true);
+        }
+    } 
+}
 
+module motor_key_120_reinforced_roller () {
+    difference () {
+        motor_key_120();
+        translate([one_to_one_x, one_to_one_y, 4]) union () {
+            cylinder(r = 16 / 2, h = 25, center = true);
+            translate([0, 0, 10]) cube([20.2, 12.2, 5.1], center = true);
+            translate([0, 0, 10]) cube([12.2, 20.2, 5.1], center = true);
+            hobbled_rod_120(40);
+            //nut
+            translate([5, 0, 0]) cube([2.5, 5.25, 42], center = true);
+            //half
+            //translate([0, 50, 0]) cube([100, 100, 100], center = true);
+        }
+        
+    } 
 }
 
 module motor_key_120_master_mold () {
@@ -86,17 +106,25 @@ module motor_set_screw_120 () {
 
 module motor_set_screw_120_alt () {
     $fn = 60;
-    cylinder(r = 2.95 / 2, h = 10.19, center= true);
+    D1 = 2.95;
+    H1 = 10.19;
+    cylinder(r = D1 / 2, h = H1, center= true);
+    translate([0.25, 0, 0]) scale([1, .75, 1]) rotate([0, 0, 45]) difference () {
+        cube([D1, D1, H1], center = true);
+        rotate([0, 0, 45]) translate([0, D1, 0])  cube([D1 * 2, D1 * 2, H1], center = true);
+    }
     translate([0, 0, (10.19 / 2) - (2.56 / 2)]) cylinder(r = 5.8 / 2, h = 2.56, center = true);
 }
 
 module hobbled_rod_120 (h = 10) {
-            d = 4.00;
-        diff = 3.33;
+    d = 4.00;
+    diff = 3.33;
     difference () {
-        
-        cylinder(r = d/2, h = h, center = true, $fn = 60);
-        translate([d/2 + ((d/2) - (d - diff)), 0, 0]) cube([d, d, h + 1], center = true);
+        union () {
+            cylinder(r = d/2, h = h, center = true, $fn = 60);
+            translate([0, 0, -h / 2 - (d / 4) + .01]) cylinder(r2 = d / 2, r1 = 0.4 / 2, h = d / 2, center = true, $fn = 60);
+        }
+        translate([d/2 + ((d/2) - (d - diff)), 0, 0]) cube([d, d, h + 10], center = true);
     }
 }
 
