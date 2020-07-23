@@ -4,3 +4,5 @@ state
 */.DS_Store
 .DS_Store
 *.tsbuildinfo
+bin/*
+!bin/*.md

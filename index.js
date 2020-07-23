@@ -1,14 +1,14 @@
 'use strict'
 
 const restify = require('restify')
-const log = require('./lib/log')('main')
+const log = require('./lib/log/index.js')('main')
 const { readFile } = require('fs-extra')
 const { exec } = require('child_process')
 
-const BLE = require('./lib/ble')
-const Intval = require('./lib/intval')
+const BLE = require('./lib/ble/index.js')
+const Intval = require('./lib/intval/index.js')
 const intval = new Intval()
-const Sequence = require('./lib/sequence')
+const Sequence = require('./lib/sequence/index.js')
 const sequence = new Sequence(intval)
 
 const PACKAGE = require('./package.json')

@@ -11,7 +11,8 @@
     "version": "",
     "postversion": "git push && git push --tags",
     "u": "npm run git -- -m \"update\"",
-    "git": "npm version patch --force"
+    "git": "npm version patch --force",
+    "pkg": "pkg . --output ./bin/intval3"
   },
   "repository": {
     "type": "git",
@@ -52,5 +53,23 @@
     "pkg": "^4.4.0",
     "qunit": "^2.9.3",
     "typescript": "^3.6.4"
+  },
+  "bin": "index.js",
+  "pkg": {
+    "scripts": [
+      "./lib/ble/index.js",
+      "./lib/db/index.js",
+      "./lib/delay/index.js",
+      "./lib/intval/index.js",
+      "./lib/log/index.js",
+      "./lib/mscript/index.js",
+      "./lib/onoff/index.js",
+      "./lib/sequence/index.js",
+      "./lib/wifi/index.js"
+    ],
+    "targets": [
+      "node10"
+    ],
+    "out-file": "./bin/intval3"
   }
 }
