@@ -68,7 +68,7 @@
       "./lib/wifi/index.js"
     ],
     "targets": [
-      "node10"
+      "node9"
     ],
     "out-file": "./bin/intval3"
   }
