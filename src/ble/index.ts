@@ -11,10 +11,10 @@ const log = require('../log')('ble')
 import { Wifi } from '../wifi'
 const wifi = new Wifi()
 
-const DEVICE_NAME : string = process.env.DEVICE_NAME || 'intval3'
-const SERVICE_ID : string  = process.env.SERVICE_ID || 'intval3_ble'
-const CHAR_ID : string  = process.env.CHAR_ID || 'intval3char'
-const WIFI_ID  : string = process.env.WIFI_ID || 'wifichar'
+const DEVICE_NAME : string = typeof process.env.DEVICE_NAME !== 'undefined' ? process.env.DEVICE_NAME : 'intval3'
+const SERVICE_ID : string  = typeof process.env.SERVICE_ID !== 'undefined' ? process.env.SERVICE_ID : 'intval3_ble'
+const CHAR_ID : string  = typeof process.env.CHAR_ID !== 'undefined' ? process.env.CHAR_ID : 'intval3char'
+const WIFI_ID  : string = typeof process.env.WIFI_ID !== 'undefined' ? process.env.WIFI_ID : 'wifichar'
 const NETWORK : any = networkInterfaces() //?type?
 const MAC : string = getMac() || spoofMac()
 
