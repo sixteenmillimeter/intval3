@@ -8,7 +8,7 @@ sudo apt install git ufw nginx jq -y
 echo "Installing node.js dependencies.."
 sudo apt install nodejs npm -y
 sudo npm install -g n
-sudo n lts
+sudo n 9.9.0
 sudo npm install -g npm@latest
 sudo npm install -g pm2 node-gyp node-pre-gyp
 
