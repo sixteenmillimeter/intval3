@@ -14,4 +14,6 @@ sudo npm install -g pm2 node-gyp node-pre-gyp
 echo "Installing bluetooth dependencies..."
 sudo apt install bluetooth bluez libbluetooth-dev libudev-dev -y
 
+sudo mkdir -p /root/state
+
 echo "Finished installing intval3 dependencies"

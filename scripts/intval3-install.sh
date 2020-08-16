@@ -39,6 +39,8 @@ sudo rm /etc/nginx/sites-enabled/default
 sudo nginx -t
 sudo service nginx restart
 
+sudo mkdir -p /root/state
+
 echo "Install node"
 
 npm install
