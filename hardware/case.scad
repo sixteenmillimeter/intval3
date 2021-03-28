@@ -136,11 +136,34 @@ module bolex_pin_laser (x, y) {
 	}
 }
 
+module bolex_pin_laser_alt (x, y) {
+    in = innerD;
+    $fn = 120;
+    translate ([x, y, 1]) {
+        difference () {
+            union () {
+                translate([0, 0, (height / 2) + 1.5]) cylinder(r = (outerD + 1.5) / 2, h = 2, center = true);
+                translate([0, 0, 1.175/2]) cylinder(r = outerD / 2, h = height + 1.175 - 1 , center = true);
+            }
+            cylinder(r = in / 2, h = height * 2, center = true);
+            translate([0, 0, (height / 2) - 1.9]) cylinder(r1 =4.5 / 2, r2 = 6.7 / 2, h = 2, center = true);
+            translate([0, 0, (height / 2) + 1]) cylinder(r = 6.7 / 2, h = 4, center = true);
+        }
+    }
+}
+
 module intval_laser_standoffs () {
     $fn = 40;
     for (i = [0 : len(xArray) - 1]) {
         bolex_pin_laser(xArray[i], yArray[i]);
 	}
+}
+
+module intval_laser_standoffs_alt () {
+    $fn = 40;
+    for (i = [0 : len(xArray) - 1]) {
+        bolex_pin_laser_alt(xArray[i], yArray[i]);
+    }
 }
 
 module intval_laser_standoffs_plate () {
@@ -150,6 +173,18 @@ module intval_laser_standoffs_plate () {
         bolex_pin_laser(15, 0);
         bolex_pin_laser(0, 15);
         bolex_pin_laser(15, 15);
+    }
+    //decoys
+    //translate([7, 7, 0]) decoys(23, 5.5, 6);
+}
+
+module intval_laser_standoffs_plate_alt () {
+    $fn = 40;
+    rotate ([0, 180, 0]) {
+        bolex_pin_laser_alt(0, 0);
+        bolex_pin_laser_alt(15, 0);
+        bolex_pin_laser_alt(0, 15);
+        bolex_pin_laser_alt(15, 15);
     }
     //decoys
     //translate([7, 7, 0]) decoys(23, 5.5, 6);
@@ -285,6 +320,7 @@ module intval_laser_panel_cover (LASER = false, DEBUG = false, ALL_RED = false) 
     }
 } 
 
+//DEP
 module intval_laser_panel_cover_standoff (DECOYS = false) {
     tight = 0.2;
     cover_h = 21;
