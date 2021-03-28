@@ -32,13 +32,14 @@ module exploded_view () {
     translate([0, 0, 20]) motor_key_120();
     translate([one_to_one_x, one_to_one_y, 50]) geared_motor_mount_120();
     translate([one_to_one_x, one_to_one_y, 50]) motor_cap_120(false);
-    translate([0, 0, 60]) intval_laser_panel_cover(false, ALL_RED=true);
+    //translate([0, 0, 60]) intval_laser_panel_cover(false, ALL_RED=true);
+    translate([0, 0, -10]) intval_laser_standoffs_alt();
 }
 
 
 //bolex_pin_laser(0, 0);
 //intval_laser_standoffs_plate();
-//intval_electronics_mount("METRO");
+//intval_electronics_mount();
 //motor_mount_bottom();
 //projection () intval_panel_laser();
 //intval_laser_panel_cover(true, ALL_RED=true);
@@ -56,7 +57,9 @@ module exploded_view () {
 //translate([0, 0, 39 / 2 + 5.75]) bolt_guide();
 //motor_key_120_reinforced();
 //motor_key_120_reinforced_roller();
+//intval_laser_standoffs_alt();
+//intval_laser_standoffs_plate_alt();
 
-//exploded_view();
+exploded_view();
 //stl_plate();
 //dxf_plate();
