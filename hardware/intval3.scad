@@ -47,7 +47,6 @@ module exploded_view () {
 //rotate([0, 0, 13]) intval_laser_panel_cover();
 //rotate([0, 180, 0]) key_cap();
 //geared_motor_mount_120();
-//motor_key();
 //motor_key_120();
 //plunger_plate();
 //plunger();
@@ -56,10 +55,10 @@ module exploded_view () {
 //rotate([0, 180, 0]) motor_cap_120(false);
 //translate([0, 0, 39 / 2 + 5.75]) bolt_guide();
 //motor_key_120_reinforced();
-//motor_key_120_reinforced_roller();
+motor_key_120_reinforced_roller();
 //intval_laser_standoffs_alt();
 //intval_laser_standoffs_plate_alt();
 
-exploded_view();
+//exploded_view();
 //stl_plate();
 //dxf_plate();

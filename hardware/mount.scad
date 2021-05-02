@@ -68,6 +68,10 @@ module motor_key_120_reinforced () {
             cylinder(r = 16 / 2, h = 25, center = true);
             translate([0, 0, 10]) cube([20, 12, 5], center = true);
             translate([0, 0, 10]) cube([12, 20, 5], center = true);
+            translate([-(12 / 2) - (4 / 2), -(12 / 2) - (4 / 2), 10]) difference () {
+		    	cube([4, 4, 5], center = true);
+		    	rotate([0, 0, -45]) translate([0, -4, 0]) cube([8, 8, 5 + 1], center = true);
+		    }
         }
     } 
 }
@@ -79,6 +83,10 @@ module motor_key_120_reinforced_roller () {
             cylinder(r = 16 / 2, h = 25, center = true);
             translate([0, 0, 10]) cube([20.2, 12.2, 5.1], center = true);
             translate([0, 0, 10]) cube([12.2, 20.2, 5.1], center = true);
+            translate([-(12 / 2) - (4 / 2), -(12 / 2) - (4 / 2), 10]) difference () {
+		    	cube([4, 4, 5], center = true);
+		    	rotate([0, 0, -45]) translate([0, -4.2, 0]) cube([8, 8, 5 + 1], center = true);
+		    }
             hobbled_rod_120(40);
             //nut
             translate([5, 0, 0]) cube([2.5, 5.25, 42], center = true);
