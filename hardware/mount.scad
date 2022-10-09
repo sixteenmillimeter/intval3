@@ -89,7 +89,7 @@ module motor_key_120_reinforced_roller () {
 		    }
             hobbled_rod_120(40);
             //nut
-            translate([5, 0, 0]) cube([2.5, 5.25, 42], center = true);
+            translate([5, 0, 0]) cube([2.5 + .5, 5.25 + .5, 42], center = true);
             //half
             //translate([0, 50, 0]) cube([100, 100, 100], center = true);
         }
@@ -205,8 +205,8 @@ module motor_mount_bottom () {
 				translate([2.5, 19.5, 0]) cylinder(r=10/2, h = 60, center=true); // hole for panel bolt
 				translate([22.5, 19.5, 0]) cube([40, 40, 60], center = true); //remove front entirely
                 translate([-6.5, 0, 7.5]) {
-                    translate([0, screw_distance/2, 0]) sphere(r=screw_d, center = true);
-                    translate([0, -screw_distance/2, 0]) sphere(r=screw_d,  center = true);
+                    translate([0, screw_distance/2, 0]) sphere(r=screw_d);
+                    translate([0, -screw_distance/2, 0]) sphere(r=screw_d);
                 }
 			}
 			translate ([-one_to_one_x, -one_to_one_y, 0]) bolt_holder([mm_x[0], mm_y[0], -shelf_h / 2], mm_r[0], height - shelf_h, mm_l[0], tight = 0.2); //Bottom bolt holder
@@ -255,14 +255,8 @@ module motor_mount_bottom () {
 	microswitch_holder();
 	bolt_holder([mm_x[2], mm_y[2], ((height - shelf_h)/ 2) + 3.75], 0, height - shelf_h - 4, 6); //bottom left mount
 	bolt_holder([mm_x[3], mm_y[3], ((height - shelf_h)/ 2) + 3.75], 180, height - shelf_h - 4, 6); //bottom right mount
-	if (DECOYS) {
-		difference () {
-			translate([35, 0 , 0]) decoys(44, 8, 6);
-		}
-		translate([0, 0, 8]) cube([4, 4, 4], center = true);
-		translate([40, 55, 8]) cube([4, 4, 4], center = true);
-	}
 }
+
 module bolt_holder (position = [0, 0, 0], rotate_z = 0, h = 17, length = 4.5, hole = true, tight = 0) {
     bolt_r = 6; 
 	

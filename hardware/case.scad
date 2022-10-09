@@ -30,7 +30,7 @@ module intval_panel_laser () {
 			difference () {
 				translate ([0, 0, 8.5]) {
 					union () {
-						translate([12 - 10, , 0]) {
+						translate([12 - 10, 0]) {
                             rotate([0, 0, -13]) {
                                 rounded_cube([panel_2_x + 20 + 20, panel_2_y, 25.4/8], d = 20, center = true);
                             }

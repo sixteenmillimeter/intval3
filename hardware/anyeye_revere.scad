@@ -125,13 +125,3 @@ module reference_projector_shaft () {
 		bearing_laser(hole=false);
 	}
 }
-
-difference() {
-	union () {
-		//reference_projector_shaft();
-		translate([0, 0, 17.5]) color("red")rotate([180, 0, 0]) motor_key_bottom();
-	}
-	//translate([30, 0, 0]) cube([60, 60, 60], center = true);
-}
-
-//translate([0, 0, 7]) motor_key_120();

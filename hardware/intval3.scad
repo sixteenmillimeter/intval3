@@ -1,6 +1,8 @@
 include <./case.scad>
 include <./mount.scad>
 include <./plunger.scad>
+//include <./anyeye_revere.scad>
+
 /*
 
  INTVAL 3 
@@ -36,29 +38,43 @@ module exploded_view () {
     translate([0, 0, -10]) intval_laser_standoffs_alt();
 }
 
+//exploded_view();
+MODEL = "stl_plate";
+if (MODEL == "stl_plate") {
+    stl_plate();
+} else if (MODEL == "plunger_plate") {
+    plunger_plate();
+} else if (MODEL == "standoffs_plate") {
+    intval_laser_standoffs_plate();
+} else if (MODEL == "standoff") {
+    bolex_pin_laser(0, 0);
+} else if (MODEL == "electronics_mount") {
+    intval_electronics_mount();
+} else if (MODEL == "motor_mount_bottom") {
+    motor_mount_bottom();
+} else if (MODEL == "motor_mount_120") {
+    geared_motor_mount_120();
+} else if (MODEL == "motor_key_120") {
+    motor_key_120();
+}
+//motor_key_120_reinforced ()
+//motor_key_120_reinforced_roller ()
 
-//bolex_pin_laser(0, 0);
-//intval_laser_standoffs_plate();
-//intval_electronics_mount();
-//motor_mount_bottom();
-//projection () intval_panel_laser();
-//intval_laser_panel_cover(true, ALL_RED=true);
-//rotate([0, 0, 13]) intval_panel_laser();
-//rotate([0, 0, 13]) intval_laser_panel_cover();
 //rotate([0, 180, 0]) key_cap();
-//geared_motor_mount_120();
-//motor_key_120();
-//plunger_plate();
+
 //plunger();
-//rotate([0, 180, 0]) plunger_top();
+//plunger_top();
 //motor_cap(false);
 //rotate([0, 180, 0]) motor_cap_120(false);
 //translate([0, 0, 39 / 2 + 5.75]) bolt_guide();
-//motor_key_120_reinforced();
-motor_key_120_reinforced_roller();
 //intval_laser_standoffs_alt();
 //intval_laser_standoffs_plate_alt();
 
-//exploded_view();
-//stl_plate();
-//dxf_plate();
+LASER = "dxf_plate";
+if (LASER == "laser_plate") {
+    dxf_plate();
+} else if (LASER == "panel") {
+    intval_panel_laser();
+} else if (LASER == "panel_cover") {
+    intval_laser_panel_cover(true, ALL_RED=true);
+}
