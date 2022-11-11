@@ -56,9 +56,11 @@ if (MODEL == "stl_plate") {
     geared_motor_mount_120();
 } else if (MODEL == "motor_key_120") {
     motor_key_120();
+} else if (MODEL == "motor_key_120_reinforced") {
+    motor_key_120_reinforced();
+} else if (MODEL == "motor_key_120_reinforced_roller") {
+    motor_key_120_reinforced_roller();
 }
-//motor_key_120_reinforced ()
-//motor_key_120_reinforced_roller ()
 
 //rotate([0, 180, 0]) key_cap();
 
