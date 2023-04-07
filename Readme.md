@@ -1,5 +1,10 @@
 # INTVAL3
 
+### [Project Home - git.sixteenmillimeter.com/16mm/intval3](https://git.sixteenmillimeter.com/16mm/intval3)
+
+* Github Mirror - [github.com/sixteenmillimeter/intval3](https://github.com/sixteenmillimeter/intval3)
+* Gitlab Mirror - [gitlab.com/16mm/intval3](https://gitlab.com/16mm/intval3)
+
 ### What is this?
 
 INTVAL3 is an open source intervalometer for the Bolex 16mm camera. The goal of the project is to create a cheap-to-make intervalometer that can be used to automate time-lapse or animation on the Bolex using mobile, web or physical controls.
