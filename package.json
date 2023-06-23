@@ -37,8 +37,8 @@
     "node-ipc": "^9.1.1",
     "node-persist": "^3.0.5",
     "onoff": "^5.0.0",
-    "restify": "^8.4.0",
-    "sqlite3": "^4.1.0",
+    "restify": "^11.1.0",
+    "sqlite3": "^5.1.6",
     "squel": "^5.13.0",
     "uuid": "^3.3.3",
     "winston": "^3.2.1"
@@ -50,7 +50,7 @@
     "@types/node-persist": "0.0.33",
     "@types/uuid": "^3.4.5",
     "jsdoc-to-markdown": "^5.0.2",
-    "pkg": "^4.4.0",
+    "pkg": "^5.8.1",
     "qunit": "^2.9.3",
     "typescript": "^3.6.4"
   },
