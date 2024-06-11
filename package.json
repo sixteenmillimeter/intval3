@@ -50,7 +50,7 @@
     "@types/node-persist": "0.0.33",
     "@types/uuid": "^3.4.5",
     "jsdoc-to-markdown": "^5.0.2",
-    "pkg": "^4.4.0",
+    "pkg": "^4.5.1",
     "qunit": "^2.9.3",
     "typescript": "^3.6.4"
   },
