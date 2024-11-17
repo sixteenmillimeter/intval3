@@ -16,7 +16,7 @@
     "appcenter-analytics": "^2.6.1",
     "appcenter-crashes": "^2.6.1",
     "cordova-android": "^7.1.4",
-    "cordova-ios": "^5.1.1",
+    "cordova-ios": "^7.1.1",
     "cordova-plugin-appcenter-analytics": "^0.5.1",
     "cordova-plugin-appcenter-crashes": "^0.5.1",
     "cordova-plugin-appcenter-shared": "^0.5.1",
