@@ -1,5 +1,7 @@
 # INTVAL3
 
+![intval3 wireframe rendering next to mobile app UI ](./img/intval3.jpg)
+
 ### [Project Home - git.sixteenmillimeter.com/16mm/intval3](https://git.sixteenmillimeter.com/16mm/intval3)
 
 * Github Mirror - [github.com/sixteenmillimeter/intval3](https://github.com/sixteenmillimeter/intval3)
